@@ -3841,7 +3841,7 @@
     {
       "parameters": {
         "method": "GET",
-        "url": "={{$json.photo_url}}",
+        "url": "={{$json.current_url}}",
         "options": {
           "response": {
             "response": {
@@ -4188,15 +4188,15 @@
     },
     {
       "parameters": {
-        "chatId": "={{$json.chat_id}}",
-        "text": "Не удалось получить изображение концепта. Пробую следующий…",
+        "chatId": "={{$json.chat_id || $json.telegram_id || $node['Telegram Trigger'].json.message.chat.id}}",
+        "text": "={{'Не удалось получить изображение концепта. Отправляю ТЗ для дизайнера:\n\n' + ($json.caption || 'Концепт') + '\n' + 'Промпт: ' + ($json.prompt_text || 'не указано') + '\n' + 'Провайдеры/ошибки: ' + ((Array.isArray($json.download_errors) && $json.download_errors.length) ? $json.download_errors.join(' | ') : 'нет данных')}}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
         }
       },
       "id": "ad1913d1-eb42-45ec-b914-671adb623246",
-      "name": "Send Concept Download Failed",
+      "name": "Send Concept Text Fallback",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
@@ -4209,6 +4209,66 @@
           "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j=$json||{}; const chat_id=Number(j.chat_id || $node['Normalize']?.json?.chat_id || $node['Telegram Trigger']?.json?.message?.chat?.id || 0); const primary=j.photo_url||''; const fallbackText=encodeURIComponent((j.prompt_text||`Концепт ${j.concept_index||1}`).slice(0,180)); const fallback=`https://placehold.co/1024x1024/png?text=${fallbackText}`; const urls=[primary,fallback].filter(Boolean); return {json:{...j, chat_id, urls, try_index: Number(j.try_index||0), current_url: urls[0]||'', provider: 'primary', download_errors: Array.isArray(j.download_errors)?j.download_errors:[] }};"
+      },
+      "id": "7528ffd8-3bd1-4926-9a76-aab6a323f58c",
+      "name": "Prepare Image URLs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ Number($json.try_index || 0) }}",
+              "rightValue": "={{ (Array.isArray($json.urls) ? $json.urls.length : 0) - 1 }}",
+              "operator": {
+                "type": "number",
+                "operation": "smaller"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3196cce2-5412-4324-bf53-03edd931a321",
+      "name": "IF Has Next URL",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2280,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j=$json||{}; const idx=Number(j.try_index||0)+1; const urls=Array.isArray(j.urls)?j.urls:[]; const providers=['primary','fallback_1','fallback_2']; const err=(j.error && (j.error.message || j.error.description || JSON.stringify(j.error))) || ''; const download_errors=[...(Array.isArray(j.download_errors)?j.download_errors:[])]; if(err) download_errors.push(err.slice(0,300)); return {json:{...j, try_index: idx, current_url: urls[idx] || '', provider: providers[idx] || `fallback_${idx}`, download_errors}};"
+      },
+      "id": "94b8a7d8-a795-40eb-8f1b-454d79a4610f",
+      "name": "Next URL Try",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2500,
+        680
+      ]
     }
   ],
   "pinData": {},
@@ -4942,7 +5002,7 @@
       "main": [
         [
           {
-            "node": "Download Design Concept Image",
+            "node": "Prepare Image URLs",
             "type": "main",
             "index": 0
           }
@@ -5039,7 +5099,7 @@
         ],
         [
           {
-            "node": "Send Concept Download Failed",
+            "node": "IF Has Next URL",
             "type": "main",
             "index": 0
           }
@@ -5057,7 +5117,47 @@
         ]
       ]
     },
-    "Send Concept Download Failed": {
+    "Prepare Image URLs": {
+      "main": [
+        [
+          {
+            "node": "Download Design Concept Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Has Next URL": {
+      "main": [
+        [
+          {
+            "node": "Next URL Try",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Concept Text Fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Next URL Try": {
+      "main": [
+        [
+          {
+            "node": "Download Design Concept Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Concept Text Fallback": {
       "main": [
         [
           {
