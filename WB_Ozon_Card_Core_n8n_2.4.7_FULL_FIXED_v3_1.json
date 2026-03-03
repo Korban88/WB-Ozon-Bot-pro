@@ -27,7 +27,8 @@
     },
     {
       "parameters": {
-        "jsCode": "const u = $input.first().json;\n\nconst msg = u.message || u.edited_message || null;\nconst cq = u.callback_query || null;\nconst isCallback = !!cq;\n\nconst telegramIdRaw =\n  (cq && cq.from && cq.from.id) ||\n  (msg && msg.from && msg.from.id) ||\n  null;\n\nconst chatIdRaw =\n  (cq && cq.message && cq.message.chat && cq.message.chat.id) ||\n  (msg && msg.chat && msg.chat.id) ||\n  null;\n\nconst telegram_id = (telegramIdRaw !== null && telegramIdRaw !== undefined) ? Number(telegramIdRaw) : null;\nconst chat_id = (chatIdRaw !== null && chatIdRaw !== undefined) ? Number(chatIdRaw) : null;\n\nconst update_id = (u.update_id !== undefined && u.update_id !== null) ? Number(u.update_id) : null;\n\nconst message_id =\n  (cq && cq.message && cq.message.message_id !== undefined) ? Number(cq.message.message_id) :\n  (msg && msg.message_id !== undefined) ? Number(msg.message_id) :\n  null;\n\nconst rawText = isCallback\n  ? (cq.data || '')\n  : ((msg && (msg.text || msg.caption)) || '');\n\nconst text = String(rawText).trim();\nconst callback_data = isCallback ? String(cq.data || '') : '';\nconst callback_query_id = (isCallback && cq.id) ? String(cq.id) : '';\n\nconst photos =\n  (msg && msg.photo) ? msg.photo :\n  (cq && cq.message && cq.message.photo) ? cq.message.photo :\n  [];\n\nconst has_photo = Array.isArray(photos) && photos.length > 0;\nconst photo_file_id = has_photo ? String(photos[photos.length - 1].file_id || '') : '';\n\nreturn {\n  json: {\n    telegram_id,\n    chat_id,\n    text,\n    callback_data,\n    is_callback: isCallback,\n    has_photo,\n    photo_file_id,\n    callback_query_id,\n    update_id,\n    message_id,\n  }\n};"
+        "jsCode": "const u = $input.first().json;\n\nconst msg = u.message || u.edited_message || null;\nconst cq = u.callback_query || null;\nconst isCallback = !!cq;\n\nconst telegramIdRaw =\n  (cq && cq.from && cq.from.id) ||\n  (msg && msg.from && msg.from.id) ||\n  null;\n\nconst chatIdRaw =\n  (cq && cq.message && cq.message.chat && cq.message.chat.id) ||\n  (msg && msg.chat && msg.chat.id) ||\n  null;\n\nconst telegram_id = (telegramIdRaw !== null && telegramIdRaw !== undefined) ? Number(telegramIdRaw) : null;\nconst chat_id = (chatIdRaw !== null && chatIdRaw !== undefined) ? Number(chatIdRaw) : null;\n\nconst update_id = (u.update_id !== undefined && u.update_id !== null) ? Number(u.update_id) : null;\n\nconst message_id =\n  (cq && cq.message && cq.message.message_id !== undefined) ? Number(cq.message.message_id) :\n  (msg && msg.message_id !== undefined) ? Number(msg.message_id) :\n  null;\n\nconst rawText = isCallback\n  ? (cq.data || '')\n  : ((msg && (msg.text || msg.caption)) || '');\n\nconst text = String(rawText).trim();\nconst callback_data = isCallback ? String(cq.data || '') : '';\nconst callback_query_id = (isCallback && cq.id) ? String(cq.id) : '';\n\nconst photos =\n  (msg && msg.photo) ? msg.photo :\n  (cq && cq.message && cq.message.photo) ? cq.message.photo :\n  [];\n\nconst has_photo = Array.isArray(photos) && photos.length > 0;\nconst photo_file_id = has_photo ? String(photos[photos.length - 1].file_id || '') : '';\n\nreturn {\n  json: {\n    telegram_id,\n    chat_id,\n    text,\n    callback_data,\n    is_callback: isCallback,\n    has_photo,\n    photo_file_id,\n    callback_query_id,\n    update_id,\n    message_id,\n  }\n};",
+        "mode": "runOnceForEachItem"
       },
       "id": "145efc1a-43a6-4e07-9eb3-7c591ce790c5",
       "name": "Normalize",
@@ -2314,7 +2315,8 @@
     },
     {
       "parameters": {
-        "jsCode": "const j = $json;\nconst content = j?.choices?.[0]?.message?.content ?? j?.choices?.[0]?.text ?? '';\nconst raw_text = (typeof content === 'string' ? content : JSON.stringify(content)).trim();\n\nlet parsed = null;\ntry { parsed = JSON.parse(raw_text); } catch (e) {\n  const m = raw_text.match(/\\{[\\s\\S]*\\}/);\n  if (m) { try { parsed = JSON.parse(m[0]); } catch (_) {} }\n}\n\nconst fallback = {\n  card: { title: (j.title || 'Товар').toString(), short_description: 'Недостаточно данных для финальной карточки. Уточните параметры товара.', benefits: [], specs: [], keywords: [] },\n  marketing: { segments: [], usp_line: '', cover_headlines: [], slide_blocks: [] },\n  service: { notes: [], warnings: ['Не удалось собрать валидный ответ модели. Попробуйте другое фото или добавьте уточнения.'] }\n};\n\nif (!parsed || typeof parsed !== 'object') parsed = fallback;\nif (!parsed.card || typeof parsed.card !== 'object') parsed.card = fallback.card;\nif (!parsed.marketing || typeof parsed.marketing !== 'object') parsed.marketing = fallback.marketing;\nif (!parsed.service || typeof parsed.service !== 'object') parsed.service = fallback.service;\n\nparsed.card.benefits = Array.isArray(parsed.card.benefits) ? parsed.card.benefits : [];\nparsed.card.specs = Array.isArray(parsed.card.specs) ? parsed.card.specs : [];\nparsed.card.keywords = Array.isArray(parsed.card.keywords) ? parsed.card.keywords : [];\nparsed.marketing.segments = Array.isArray(parsed.marketing.segments) ? parsed.marketing.segments : [];\nparsed.marketing.cover_headlines = Array.isArray(parsed.marketing.cover_headlines) ? parsed.marketing.cover_headlines : [];\nparsed.marketing.slide_blocks = Array.isArray(parsed.marketing.slide_blocks) ? parsed.marketing.slide_blocks : [];\nparsed.service.notes = Array.isArray(parsed.service.notes) ? parsed.service.notes : [];\nparsed.service.warnings = Array.isArray(parsed.service.warnings) ? parsed.service.warnings : [];\n\nreturn { json: { ...j, final_json: parsed, card: parsed.card, marketing: parsed.marketing, service: parsed.service, raw_text } };"
+        "jsCode": "const j = $json;\nconst content = j?.choices?.[0]?.message?.content ?? j?.choices?.[0]?.text ?? '';\nconst raw_text = (typeof content === 'string' ? content : JSON.stringify(content)).trim();\n\nlet parsed = null;\ntry { parsed = JSON.parse(raw_text); } catch (e) {\n  const m = raw_text.match(/\\{[\\s\\S]*\\}/);\n  if (m) { try { parsed = JSON.parse(m[0]); } catch (_) {} }\n}\n\nconst fallback = {\n  card: { title: (j.title || 'Товар').toString(), short_description: 'Недостаточно данных для финальной карточки. Уточните параметры товара.', benefits: [], specs: [], keywords: [] },\n  marketing: { segments: [], usp_line: '', cover_headlines: [], slide_blocks: [] },\n  service: { notes: [], warnings: ['Не удалось собрать валидный ответ модели. Попробуйте другое фото или добавьте уточнения.'] }\n};\n\nif (!parsed || typeof parsed !== 'object') parsed = fallback;\nif (!parsed.card || typeof parsed.card !== 'object') parsed.card = fallback.card;\nif (!parsed.marketing || typeof parsed.marketing !== 'object') parsed.marketing = fallback.marketing;\nif (!parsed.service || typeof parsed.service !== 'object') parsed.service = fallback.service;\n\nparsed.card.benefits = Array.isArray(parsed.card.benefits) ? parsed.card.benefits : [];\nparsed.card.specs = Array.isArray(parsed.card.specs) ? parsed.card.specs : [];\nparsed.card.keywords = Array.isArray(parsed.card.keywords) ? parsed.card.keywords : [];\nparsed.marketing.segments = Array.isArray(parsed.marketing.segments) ? parsed.marketing.segments : [];\nparsed.marketing.cover_headlines = Array.isArray(parsed.marketing.cover_headlines) ? parsed.marketing.cover_headlines : [];\nparsed.marketing.slide_blocks = Array.isArray(parsed.marketing.slide_blocks) ? parsed.marketing.slide_blocks : [];\nparsed.service.notes = Array.isArray(parsed.service.notes) ? parsed.service.notes : [];\nparsed.service.warnings = Array.isArray(parsed.service.warnings) ? parsed.service.warnings : [];\n\nreturn { json: { ...j, final_json: parsed, card: parsed.card, marketing: parsed.marketing, service: parsed.service, raw_text } };",
+        "mode": "runOnceForEachItem"
       },
       "id": "eec46fcb-9dd8-4c6e-84ec-9e5d1c1f074a",
       "name": "Parse Strategy",
@@ -2333,6 +2335,23 @@
           "appendAttribution": false,
           "disable_web_page_preview": true,
           "parse_mode": "HTML"
+        },
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Сгенерировать дизайн-концепт",
+                    "additionalFields": {
+                      "callback_data": "DESIGN_CONCEPT"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
       "id": "050dd0c4-6764-4757-bd36-7428e18873af",
@@ -2380,7 +2399,8 @@
             "marketplace": "={{ $json.marketplace || \"\" }}",
             "category": "={{ $json.category || \"\" }}",
             "title": "={{ $json.title || \"\" }}",
-            "benefits": "={{ $json.benefits || \"\" }}"
+            "benefits": "={{ $json.benefits || \"\" }}",
+            "updated_at": "={{ $now }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -3637,7 +3657,8 @@
     },
     {
       "parameters": {
-        "jsCode": "const j = $json;\n\nlet qs =\n  j.clarifications_questions ??\n  j.strategy?.clarifications_questions ??\n  [];\n\nlet listText = \"\";\n\nif (Array.isArray(qs)) {\n  listText = qs\n    .map((q, i) => `${i + 1}. ${String(q).trim()}`)\n    .join(\"\\n\");\n} else {\n  listText = String(qs || \"\").trim();\n}\n\n// если модель/предыдущие шаги уже добавили заголовок/инструкцию — чистим\nlistText = listText\n  .replace(/^\\s*Уточняющие вопросы:\\s*/gi, \"\")\n  .replace(/\\n\\s*Уточняющие вопросы:\\s*/gi, \"\\n\")\n  .replace(/\\n?\\s*Ответь одним сообщением[\\s\\S]*$/i, \"\")\n  .trim();\n\nconst text = (\n  \"Уточняющие вопросы:\\n\" +\n  (listText || \"Уточни, пожалуйста, ключевые характеристики товара (размер/материал/комплектацию/важные функции).\") +\n  \"\\n\\nОтветь одним сообщением, можно списком.\"\n).trim();\n\nreturn { json: { ...j, text } };"
+        "jsCode": "const j = $json;\n\nlet qs =\n  j.clarifications_questions ??\n  j.strategy?.clarifications_questions ??\n  [];\n\nlet listText = \"\";\n\nif (Array.isArray(qs)) {\n  listText = qs\n    .map((q, i) => `${i + 1}. ${String(q).trim()}`)\n    .join(\"\\n\");\n} else {\n  listText = String(qs || \"\").trim();\n}\n\n// если модель/предыдущие шаги уже добавили заголовок/инструкцию — чистим\nlistText = listText\n  .replace(/^\\s*Уточняющие вопросы:\\s*/gi, \"\")\n  .replace(/\\n\\s*Уточняющие вопросы:\\s*/gi, \"\\n\")\n  .replace(/\\n?\\s*Ответь одним сообщением[\\s\\S]*$/i, \"\")\n  .trim();\n\nconst text = (\n  \"Уточняющие вопросы:\\n\" +\n  (listText || \"Уточни, пожалуйста, ключевые характеристики товара (размер/материал/комплектацию/важные функции).\") +\n  \"\\n\\nОтветь одним сообщением, можно списком.\"\n).trim();\n\nreturn { json: { ...j, text } };",
+        "mode": "runOnceForEachItem"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3652,20 +3673,18 @@
       "parameters": {
         "conditions": {
           "options": {
-            "caseSensitive": true,
+            "caseSensitive": false,
             "leftValue": "",
             "typeValidation": "strict",
             "version": 3
           },
           "conditions": [
             {
-              "id": "6651f359-9d12-4ff7-bc8b-aabdeef3e647",
-              "leftValue": "={{ ($node[\"Normalize\"].json.text || \"\") }}",
-              "rightValue": "/",
+              "leftValue": "={{ ($json.text || '').trim().toLowerCase() }}",
+              "rightValue": "^(/start|start|menu|меню|назад|на шаг назад|как это работает)$",
               "operator": {
                 "type": "string",
-                "operation": "startsWith",
-                "name": "filter.operator.startsWith"
+                "operation": "regex"
               }
             }
           ],
@@ -3694,7 +3713,7 @@
       "parameters": {
         "mode": "runOnceForEachItem",
         "language": "javaScript",
-        "jsCode": "const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst j = $json || {};\nconst card = j.card || {};\nconst marketing = j.marketing || {};\nconst service = j.service || {};\nconst normalized = j.normalized || {};\n\nconst lines = [];\nlines.push(`<b>${esc(card.title || j.title || 'Карточка товара')}</b>`);\nif (marketing.usp_line) lines.push(esc(marketing.usp_line));\nif (Array.isArray(service.notes) && service.notes[0]) lines.push(esc(service.notes[0]));\n\nlines.push('');\nlines.push('<b>Короткое описание</b>');\nlines.push(esc(card.short_description || 'не указано'));\n\nlines.push('');\nlines.push('<b>Преимущества</b>');\nconst benefits = Array.isArray(card.benefits) ? card.benefits : [];\nif (benefits.length) {\n  for (const b of benefits) lines.push(`• ${esc(b)}`);\n} else {\n  lines.push('• не указано');\n}\n\nlines.push('');\nlines.push('<b>Характеристики</b>');\nconst specs = Array.isArray(card.specs) ? card.specs : [];\nif (specs.length) {\n  for (const s of specs) lines.push(`• ${esc(s?.key || 'Параметр')}: ${esc(s?.value || 'не указано')}`);\n} else {\n  lines.push('• не указано');\n}\n\nlines.push('');\nlines.push('<b>Ключевые слова</b>');\nlines.push(esc((Array.isArray(card.keywords) ? card.keywords : []).join(', ') || 'не указано'));\n\nlines.push('');\nlines.push('<b>Идеи для обложки</b>');\nfor (const h of (Array.isArray(marketing.cover_headlines) ? marketing.cover_headlines : [])) lines.push(`• ${esc(h)}`);\n\nlines.push('');\nlines.push('<b>Идеи для слайдов</b>');\nfor (const s of (Array.isArray(marketing.slide_blocks) ? marketing.slide_blocks : [])) lines.push(`• ${esc(s)}`);\n\nconst warnings = [\n  ...(Array.isArray(service.warnings) ? service.warnings : []),\n  ...(Array.isArray(normalized.unknowns) ? normalized.unknowns : []),\n].filter(Boolean);\n\nif (warnings.length) {\n  lines.push('');\n  lines.push('<b>Что важно уточнить</b>');\n  for (const w of warnings.slice(0, 8)) lines.push(`• ${esc(w)}`);\n}\n\nconst text = lines.join('\\n').trim();\nconst limit = 3900;\nconst chunks = [];\nlet remaining = text;\n\nwhile (remaining.length > limit) {\n  let cut = remaining.lastIndexOf('\\n', limit);\n  if (cut < 1000) cut = limit;\n  chunks.push(remaining.slice(0, cut).trim());\n  remaining = remaining.slice(cut).trim();\n}\n\nif (remaining) chunks.push(remaining);\n\nreturn { json: { ...j, result_text_formatted: text, parts: chunks } };"
+        "jsCode": "const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst j = $json || {};\nconst card = j.card || {};\nconst marketing = j.marketing || {};\nconst service = j.service || {};\nconst normalized = j.normalized || {};\n\nconst uniq = (arr=[]) => [...new Set(arr.map(x=>String(x||'').trim()).filter(Boolean))];\n\nlet keywords = Array.isArray(card.keywords) ? card.keywords : [];\nkeywords = uniq(keywords);\nif (keywords.length < 12) {\n  const seed = [j.title, j.category, j.marketplace, ...(Array.isArray(card.benefits)?card.benefits:[])];\n  const words = uniq(seed.join(' ').toLowerCase().replace(/[^a-zа-я0-9\\s-]/gi,' ').split(/\\s+/).filter(w=>w.length>2));\n  for (const w of words) {\n    if (keywords.length >= 18) break;\n    if (!keywords.includes(w)) keywords.push(w);\n  }\n}\nif (keywords.length < 12) {\n  keywords = uniq([...keywords, 'купить', 'цена', 'доставка', 'оригинал', 'для дома', 'для работы', 'для подарка', 'практичный', 'качественный', 'современный', 'популярный', 'выгодно']).slice(0, 18);\n}\n\nconst cover = uniq(Array.isArray(marketing.cover_headlines) ? marketing.cover_headlines : []).slice(0,7);\nconst slides = uniq(Array.isArray(marketing.slide_blocks) ? marketing.slide_blocks : []).slice(0,10);\nconst benefits = uniq(Array.isArray(card.benefits) ? card.benefits : []).slice(0,7);\nconst specs = Array.isArray(card.specs) ? card.specs : [];\n\nconst lines = [];\nlines.push(`◆ <b>${esc(card.title || j.title || 'Карточка товара')}</b>`);\nif (marketing.usp_line) lines.push(esc(marketing.usp_line));\nlines.push(esc(card.short_description || 'Описание сформировано на основе предоставленных данных.'));\n\nlines.push('');\nlines.push('<b>Короткое описание</b>');\nlines.push(esc(card.short_description || 'Недостаточно данных, часть параметров требует уточнения.'));\n\nlines.push('');\nlines.push('<b>Преимущества</b>');\nif (benefits.length) for (const b of benefits) lines.push(`• ${esc(b)}`);\nelse lines.push('• не указано');\n\nlines.push('');\nlines.push('<b>Характеристики</b>');\nif (specs.length) {\n  for (const s of specs.slice(0,12)) lines.push(`• ${esc(s?.key || 'Параметр')}: ${esc(s?.value || 'не указано')}`);\n} else lines.push('• не указано');\n\nlines.push('');\nlines.push('<b>Ключевые слова</b>');\nlines.push(esc(keywords.slice(0,30).join(', ')));\n\nlines.push('');\nlines.push('<b>Обложка: варианты заголовков</b>');\nif (cover.length) for (const h of cover) lines.push(`• ${esc(h)}`);\nelse lines.push('• Акцент на главной выгоде и понятном результате для покупателя.');\n\nlines.push('');\nlines.push('<b>План слайдов (текст + визуал)</b>');\nif (slides.length) for (const s of slides) lines.push(`• ${esc(s)}`);\nelse {\n  const fallbackSlides = [\n    'Слайд 1: оффер и ключевая выгода; визуал — товар крупным планом на чистом фоне.',\n    'Слайд 2: 3 главных преимущества; визуал — иконки и короткие подписи.',\n    'Слайд 3: сценарий использования; визуал — контекст применения.',\n    'Слайд 4: характеристики; визуал — структурированная таблица.',\n    'Слайд 5: комплектация/детали; визуал — выноски на фото.',\n    'Слайд 6: сравнение с альтернативами; визуал — нейтральные колонки.',\n    'Слайд 7: качество и материалы; визуал — фактура/крупные фрагменты.',\n    'Слайд 8: финальный CTA; визуал — товар + короткий призыв.'\n  ];\n  for (const s of fallbackSlides) lines.push(`• ${esc(s)}`);\n}\n\nconst warnings = uniq([\n  ...(Array.isArray(service.warnings) ? service.warnings : []),\n  ...(Array.isArray(normalized.unknowns) ? normalized.unknowns : []),\n]);\nif (warnings.length) {\n  lines.push('');\n  lines.push('<b>Что важно уточнить</b>');\n  for (const w of warnings.slice(0,10)) lines.push(`• ${esc(w)}`);\n}\n\nconst text = lines.join('\\n').trim() || 'Не удалось собрать карточку. Попробуйте другое фото или добавьте уточнения.';\nconst limit = 3900;\nconst chunks = [];\nlet remaining = text;\nwhile (remaining.length > limit) {\n  let cut = remaining.lastIndexOf('\\n', limit);\n  if (cut < 1200) cut = limit;\n  chunks.push(remaining.slice(0, cut).trim());\n  remaining = remaining.slice(cut).trim();\n}\nif (remaining) chunks.push(remaining);\nreturn { json: { ...j, result_text_formatted: text, parts: chunks.length ? chunks : [text] } };"
       }
     },
     {
@@ -4010,7 +4029,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const j=$input.first().json||{}; const title=(j.title||'товар').toString(); const cat=(j.category||'категория').toString(); const mp=(j.marketplace||'маркетплейс').toString(); const base=[`Дизайн карточки для ${title} в категории ${cat} на ${mp}. Стиль популярных карточек категории: чистый фон, крупный товар, высокий контраст, акцент на выгоды, без копирования брендов.`, `Инфографика для ${title}: современная композиция, 2-3 акцентных цвета, плашки преимуществ, читаемые шрифты, структура под мобильный просмотр.`, `Минималистичный премиальный макет для ${title}: нейтральный фон, аккуратные иконки, блок характеристик, фокус на удобстве и качестве.`, `Конверсионный дизайн для ${title}: оффер на обложке, блок УТП, сценарий использования, визуальные маркеры доверия без лишних деталей.`, `Категорийный стиль для ${cat}: рыночные паттерны оформления маркетплейсов, чистая типографика, карточка товара в центре, без сторонних логотипов.`]; return base.map((p,i)=>{const seed=encodeURIComponent(`${j.telegram_id||'u'}-${Date.now()}-${i}`);const prompt=encodeURIComponent(p);return {json:{...j,concept_index:i+1,concept_total:base.length,is_last_concept:i===base.length-1,caption:`Концепт ${i+1}/5`,photo_url:`https://image.pollinations.ai/p/${prompt}?width=1024&height=1024&seed=${seed}`}}});",
+        "jsCode": "const j=$input.first().json||{}; const title=(j.title||'товар').toString(); const cat=(j.category||'категория').toString(); const mp=(j.marketplace||'маркетплейс').toString(); const prompts=[`Обложка карточки ${title} для ${mp}, категория ${cat}. Светлый фон, четкая типографика, акцент на выгоде, чистая инфографика без логотипов брендов.`, `Обложка ${title}: темный контрастный фон, яркие акценты, крупный товар в центре, лаконичные подписи преимуществ, современная сетка.`, `Обложка ${title}: пастельная палитра, мягкие тени, premium минимализм, блок УТП и 3 преимущества, удобочитаемые шрифты.`, `Обложка ${title}: динамичная диагональная композиция, цветовые плашки, выделение характеристик, визуал под маркетплейс-формат.`, `Обложка ${title}: нейтральный фон + акцентный цвет категории ${cat}, фокус на товаре и результате использования, чистый продающий стиль.`]; return prompts.map((p,i)=>{const seed=encodeURIComponent(`${j.telegram_id||'u'}-${Date.now()}-${i}`); const prompt=encodeURIComponent(p); return {json:{...j,concept_index:i+1,concept_total:5,is_last_concept:i===4,caption:`Концепт ${i+1}/5`,photo_url:`https://image.pollinations.ai/p/${prompt}?width=1024&height=1024&seed=${seed}`}};});",
         "mode": "runOnceForAllItems"
       },
       "id": "c43a9966-8935-480d-b70c-910190caf21e",
@@ -5102,13 +5121,7 @@
     },
     "Session: Done": {
       "main": [
-        [
-          {
-            "node": "Send Design CTA",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "IF Last Concept": {
