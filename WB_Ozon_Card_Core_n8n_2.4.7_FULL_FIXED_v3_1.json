@@ -20,14 +20,14 @@
       "webhookId": "035e6ab7-5628-4231-9c68-5e3f05a2675d",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const u = $input.first().json;\n\nconst msg = u.message || u.edited_message || null;\nconst cq = u.callback_query || null;\n\nconst isCallback = !!cq;\n\n// --- IDs ---\nconst telegramIdRaw =\n  (cq && cq.from && cq.from.id) ||\n  (msg && msg.from && msg.from.id) ||\n  null;\n\nconst chatIdRaw =\n  (cq && cq.message && cq.message.chat && cq.message.chat.id) ||\n  (msg && msg.chat && msg.chat.id) ||\n  null;\n\nconst telegram_id = (telegramIdRaw !== null && telegramIdRaw !== undefined) ? Number(telegramIdRaw) : null;\nconst chat_id = (chatIdRaw !== null && chatIdRaw !== undefined) ? Number(chatIdRaw) : null;\n\n// --- message/update identifiers (for debugging & dedupe) ---\nconst update_id = (u.update_id !== undefined && u.update_id !== null) ? Number(u.update_id) : null;\n\nconst message_id =\n  (cq && cq.message && cq.message.message_id !== undefined) ? Number(cq.message.message_id) :\n  (msg && msg.message_id !== undefined) ? Number(msg.message_id) :\n  null;\n\n// --- text / caption ---\nconst rawText = isCallback\n  ? (cq.data || '')\n  : ((msg && (msg.text || msg.caption)) || '');\n\nconst text = String(rawText).trim();\n\n// --- callback data ---\nconst callback_data = isCallback ? String(cq.data || '') : '';\nconst callback_query_id = (isCallback && cq.id) ? String(cq.id) : '';\n\n// --- photos ---\nconst photos =\n  (msg && msg.photo) ? msg.photo :\n  (cq && cq.message && cq.message.photo) ? cq.message.photo :\n  [];\n\nconst has_photo = Array.isArray(photos) && photos.length > 0;\nconst photo_file_id = has_photo ? String(photos[photos.length - 1].file_id || '') : '';\n\n// --- output ---\nreturn [\n  {\n    telegram_id,\n    chat_id,\n    text,\n    callback_data,\n    is_callback: isCallback,\n    has_photo,\n    photo_file_id,\n    callback_query_id,\n    update_id,\n    message_id,\n  }\n];"
+        "jsCode": "const u = $input.first().json;\n\nconst msg = u.message || u.edited_message || null;\nconst cq = u.callback_query || null;\nconst isCallback = !!cq;\n\nconst telegramIdRaw =\n  (cq && cq.from && cq.from.id) ||\n  (msg && msg.from && msg.from.id) ||\n  null;\n\nconst chatIdRaw =\n  (cq && cq.message && cq.message.chat && cq.message.chat.id) ||\n  (msg && msg.chat && msg.chat.id) ||\n  null;\n\nconst telegram_id = (telegramIdRaw !== null && telegramIdRaw !== undefined) ? Number(telegramIdRaw) : null;\nconst chat_id = (chatIdRaw !== null && chatIdRaw !== undefined) ? Number(chatIdRaw) : null;\n\nconst update_id = (u.update_id !== undefined && u.update_id !== null) ? Number(u.update_id) : null;\n\nconst message_id =\n  (cq && cq.message && cq.message.message_id !== undefined) ? Number(cq.message.message_id) :\n  (msg && msg.message_id !== undefined) ? Number(msg.message_id) :\n  null;\n\nconst rawText = isCallback\n  ? (cq.data || '')\n  : ((msg && (msg.text || msg.caption)) || '');\n\nconst text = String(rawText).trim();\nconst callback_data = isCallback ? String(cq.data || '') : '';\nconst callback_query_id = (isCallback && cq.id) ? String(cq.id) : '';\n\nconst photos =\n  (msg && msg.photo) ? msg.photo :\n  (cq && cq.message && cq.message.photo) ? cq.message.photo :\n  [];\n\nconst has_photo = Array.isArray(photos) && photos.length > 0;\nconst photo_file_id = has_photo ? String(photos[photos.length - 1].file_id || '') : '';\n\nreturn {\n  json: {\n    telegram_id,\n    chat_id,\n    text,\n    callback_data,\n    is_callback: isCallback,\n    has_photo,\n    photo_file_id,\n    callback_query_id,\n    update_id,\n    message_id,\n  }\n};"
       },
       "id": "145efc1a-43a6-4e07-9eb3-7c591ce790c5",
       "name": "Normalize",
@@ -496,8 +496,8 @@
       "webhookId": "99d1f0fb-83ed-4746-9494-281453869025",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -571,8 +571,8 @@
       "webhookId": "b7ae0c9b-0d76-42ce-90dc-ec88a79560ee",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -800,8 +800,8 @@
       "webhookId": "dffd34f7-6477-447c-8865-75b828e1b9d1",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -1300,8 +1300,8 @@
       "webhookId": "ad4ea9dc-5b97-4e6b-8120-aa231a7f928a",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -1528,8 +1528,8 @@
       "webhookId": "f025c160-58f8-42a9-b734-13a92814bcc5",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -1742,8 +1742,8 @@
       "webhookId": "04aef38e-93c3-4bb3-a1cd-37a97ebfbd8a",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -1964,8 +1964,8 @@
       "webhookId": "13804869-c48f-4807-bbc9-a8cb1fb254bd",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -2161,14 +2161,22 @@
       "parameters": {
         "method": "POST",
         "url": "https://openrouter.ai/api/v1/chat/completions",
-        "authentication": "predefinedCredentialType",
+        "authentication": "none",
         "nodeCredentialType": "openRouterApi",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.OPENROUTER_API_KEY}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
               "name": "HTTP-Referer",
-              "value": "https://n8n.arthurkorban.ru/"
+              "value": "https://example.local/"
             },
             {
               "name": "X-Title",
@@ -2188,17 +2196,11 @@
       "position": [
         4048,
         1264
-      ],
-      "credentials": {
-        "openRouterApi": {
-          "id": "mP6iIs9yq1tlqn63",
-          "name": "OpenRouter account"
-        }
-      }
+      ]
     },
     {
       "parameters": {
-        "jsCode": "const j = $json;\n\nconst content =\n  j?.choices?.[0]?.message?.content ??\n  j?.choices?.[0]?.delta?.content ??\n  j?.choices?.[0]?.text ??\n  \"\";\n\nconst raw_text = (typeof content === \"string\" ? content : JSON.stringify(content)).trim();\n\nlet parsed = null;\ntry {\n  parsed = JSON.parse(raw_text);\n} catch (e) {\n  const m = raw_text.match(/\\{[\\s\\S]*\\}/);\n  if (m) {\n    try { parsed = JSON.parse(m[0]); } catch (e2) {}\n  }\n}\n\nif (!parsed || typeof parsed !== \"object\") {\n  return {\n    json: {\n      ...j,\n      raw_text,\n      strategy: null,\n      need_clarifications: true,\n      clarifications_questions: \"Не удалось получить валидный JSON от модели. Повтори запрос.\",\n      text: \"Не удалось получить валидный JSON от модели. Повтори запрос.\",\n    },\n  };\n}\n\nconst need = !!parsed.need_clarifications;\nconst qArr = Array.isArray(parsed.clarifications_questions) ? parsed.clarifications_questions : [];\nconst qText = (() => {\n  if (!qArr.length) return \"\";\n  const base = \"Уточняющие вопросы:\\n\" + qArr.map((q, i) => `${i+1}. ${String(q).trim()}`).join(\"\\n\");\n  const tail = \"Ответь одним сообщением, можно списком.\";\n  const already = base.toLowerCase().includes(tail.toLowerCase());\n  return base + (already ? \"\" : (\"\\n\\n\" + tail));\n})();\n\nreturn {\n  json: {\n    ...j,\n    raw_text,\n    strategy: parsed,\n    need_clarifications: need,\n    // в таблице и Telegram удобнее строкой\n    clarifications_questions: qText,\n    // для совместимости с твоими существующими нодами (Session: Set stage = clarifications и Send Clarifications)\n    text: qText,\n  },\n};"
+        "jsCode": "const j = $json;\nconst content = j?.choices?.[0]?.message?.content ?? j?.choices?.[0]?.text ?? '';\nconst raw_text = (typeof content === 'string' ? content : JSON.stringify(content)).trim();\n\nlet parsed = null;\ntry { parsed = JSON.parse(raw_text); } catch (e) {\n  const m = raw_text.match(/\\{[\\s\\S]*\\}/);\n  if (m) { try { parsed = JSON.parse(m[0]); } catch (_) {} }\n}\n\nconst fallback = {\n  card: { title: (j.title || 'Товар').toString(), short_description: 'Недостаточно данных для финальной карточки. Уточните параметры товара.', benefits: [], specs: [], keywords: [] },\n  marketing: { segments: [], usp_line: '', cover_headlines: [], slide_blocks: [] },\n  service: { notes: [], warnings: ['Не удалось собрать валидный ответ модели. Попробуйте другое фото или добавьте уточнения.'] }\n};\n\nif (!parsed || typeof parsed !== 'object') parsed = fallback;\nif (!parsed.card || typeof parsed.card !== 'object') parsed.card = fallback.card;\nif (!parsed.marketing || typeof parsed.marketing !== 'object') parsed.marketing = fallback.marketing;\nif (!parsed.service || typeof parsed.service !== 'object') parsed.service = fallback.service;\n\nparsed.card.benefits = Array.isArray(parsed.card.benefits) ? parsed.card.benefits : [];\nparsed.card.specs = Array.isArray(parsed.card.specs) ? parsed.card.specs : [];\nparsed.card.keywords = Array.isArray(parsed.card.keywords) ? parsed.card.keywords : [];\nparsed.marketing.segments = Array.isArray(parsed.marketing.segments) ? parsed.marketing.segments : [];\nparsed.marketing.cover_headlines = Array.isArray(parsed.marketing.cover_headlines) ? parsed.marketing.cover_headlines : [];\nparsed.marketing.slide_blocks = Array.isArray(parsed.marketing.slide_blocks) ? parsed.marketing.slide_blocks : [];\nparsed.service.notes = Array.isArray(parsed.service.notes) ? parsed.service.notes : [];\nparsed.service.warnings = Array.isArray(parsed.service.warnings) ? parsed.service.warnings : [];\n\nreturn { json: { ...j, final_json: parsed, card: parsed.card, marketing: parsed.marketing, service: parsed.service, raw_text } };"
       },
       "id": "eec46fcb-9dd8-4c6e-84ec-9e5d1c1f074a",
       "name": "Parse Strategy",
@@ -2212,7 +2214,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "={{$json.result_text_formatted || $json.result_text || $json.text || $json.raw_text || $json.choices?.[0]?.message?.content || ''}}",
+        "text": "={{$json.part_text || $json.result_text_formatted || \"Не удалось собрать карточку. Попробуйте другое фото или уточните характеристики.\"}}",
         "additionalFields": {
           "appendAttribution": false,
           "disable_web_page_preview": true,
@@ -2230,8 +2232,8 @@
       "webhookId": "6de3f6fb-f1ff-4d74-ae68-51758a418f48",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -2399,8 +2401,8 @@
       "retryOnFail": true,
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       },
       "onError": "continueRegularOutput"
@@ -2600,8 +2602,8 @@
       "webhookId": "6341f0f8-a24a-422d-b268-d2b131848790",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -2678,8 +2680,8 @@
       "webhookId": "13804869-c48f-4807-bbc9-a8cb1fb254bd",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -2723,8 +2725,8 @@
       "webhookId": "f566af10-4bdb-4a6b-a737-c804df9b29a0",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -2813,7 +2815,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j = $json;\n\nconst marketplace = (j.marketplace || \"\").toString().trim();\nconst category = (j.category || \"\").toString().trim();\nconst title_raw = (j.title || \"\").toString().trim();\n\nconst normd = j.normalized || {};\nconst specs = Array.isArray(normd.specs) ? normd.specs : [];\nconst features = Array.isArray(normd.features) ? normd.features : [];\nconst benefits = Array.isArray(normd.benefits) ? normd.benefits : [];\nconst use_cases = Array.isArray(normd.use_cases) ? normd.use_cases : [];\nconst audiences = Array.isArray(normd.audiences) ? normd.audiences : [];\n\nconst clarA = (j.clarifications_answers || \"\").toString().trim();\n\nconst b64 = (j.image_base64_clean || j.image_base64 || \"\").toString().trim();\n\nconst system = `\nТы — senior e-commerce strategist (WB/Ozon) и конструктор продающих карточек.\nНужно выдать стратегию карточки, которая будет использоваться дальше для генерации слайдов и дизайн-концептов.\n\nПРАВИЛА (строго):\n- НЕ добавляй новых фактов/характеристик. Используй только то, что дано в specs/features/title_raw/clarifications_answers и то, что ОЧЕВИДНО видно на фото.\n- Если критичные параметры для покупки отсутствуют (например объём/мощность/материал/комплектация, когда это важно) — need_clarifications=true и задай вопросы (до 6).\n- Slide_blocks должны быть в стиле маркетплейса: короткие продающие блоки про товар. Никаких \"контактов\", \"спецпредложений\", \"отзывы\" как отдельный слайд, если это не продуктовый факт.\n- Пиши коротко, без воды.\n\nВерни СТРОГО JSON без лишнего текста.`;\n\nconst facts_input = {\n  marketplace,\n  category,\n  title_raw,\n  extracted: {\n    brand: normd.brand || \"\",\n    model: normd.model || \"\",\n    color: normd.color || \"\",\n    specs,\n    features,\n    benefits,\n    use_cases,\n    audiences\n  },\n  clarifications_answers: clarA || \"\"\n};\n\nconst prompt = `\nДАНО (структура, не добавляй ничего сверх этого):\n${JSON.stringify(facts_input, null, 2).slice(0, 12000)}\n\nСделай:\n1) Позиционирование: 2–3 сегмента аудитории (если недостаточно данных — осторожно, не фантазируй).\n2) УТП (1 строка) — без выдуманных цифр.\n3) 3 варианта обложки (короткие заголовки 4–8 слов).\n4) Структура слайдов 8–10 шт. В формате:\n   \"Слайд 1: ...\", \"Слайд 2: ...\".\n   Используй маркетплейс-скелет: обложка, выгоды, ключевые параметры, безопасность/качество (если есть), сценарии, детали/комплектация (если есть), закрытие возражения.\n5) facts: только то, что реально дано (кратко).\n6) unknowns: что важно уточнить (кратко).\n7) Если unknowns критичны — need_clarifications=true и вопросы.\n\nФормат ответа:\n{\n  \"need_clarifications\": true/false,\n  \"clarifications_questions\": [\"...\"],\n  \"facts\": [\"...\"],\n  \"unknowns\": [\"...\"],\n  \"positioning\": {\n    \"segments\": [{\"name\":\"...\",\"pain\":\"...\",\"promise\":\"...\"}],\n    \"usp_line\": \"...\",\n    \"cover_headlines\": [\"...\",\"...\",\"...\"],\n    \"slide_blocks\": [\"Слайд 1: ...\", \"...\"]\n  }\n}\n`;\n\nconst body = {\n  model: \"openai/gpt-4o-mini\",\n  temperature: 0.35,\n  messages: [\n    { role: \"system\", content: system.trim() },\n    {\n      role: \"user\",\n      content: [\n        { type: \"text\", text: prompt.trim() },\n        ...(b64 ? [{ type: \"image_url\", image_url: { url: `data:image/jpeg;base64,${b64}` } }] : []),\n      ],\n    },\n  ],\n};\n\nreturn { json: { ...j, openrouter_body: body } };"
+        "jsCode": "const j = $json;\nconst normalized = j.normalized || {};\nconst b64 = (j.image_base64_clean || '').toString().trim();\n\nconst inputData = {\n  marketplace: (j.marketplace || '').toString().trim(),\n  category: (j.category || '').toString().trim(),\n  title: (j.title || '').toString().trim(),\n  benefits: (j.benefits || '').toString().trim(),\n  clarifications_answers: (j.clarifications_answers || '').toString().trim(),\n  facts: Array.isArray(normalized.facts) ? normalized.facts : [],\n  unknowns: Array.isArray(normalized.unknowns) ? normalized.unknowns : [],\n};\n\nconst system = `\nТы senior e-commerce copywriter для WB/Ozon.\nВерни строго JSON структуры:\n{\n  \"card\": {\"title\":\"\",\"short_description\":\"\",\"benefits\":[],\"specs\":[{\"key\":\"\",\"value\":\"\"}],\"keywords\":[]},\n  \"marketing\": {\"segments\":[{\"name\":\"\",\"pain\":\"\",\"promise\":\"\"}],\"usp_line\":\"\",\"cover_headlines\":[],\"slide_blocks\":[]},\n  \"service\": {\"notes\":[],\"warnings\":[]}\n}\n\nПравила:\n- Не выдумывай факты и характеристики. Если параметр неизвестен, пиши \"не указано\" или добавляй предупреждение.\n- Русский язык, деловой и краткий стиль.\n- Никаких эмодзи.\n- Для cover_headlines дай 3-5 вариантов, для slide_blocks 8-10 блоков.\n`;\n\nconst body = {\n  model: $env.OPENROUTER_TEXT_MODEL || 'openai/gpt-4o-mini',\n  temperature: 0.35,\n  response_format: { type: 'json_object' },\n  messages: [\n    { role: 'system', content: system.trim() },\n    {\n      role: 'user',\n      content: [\n        { type: 'text', text: `Входные данные:\n${JSON.stringify(inputData, null, 2)}` },\n        ...(b64 ? [{ type: 'image_url', image_url: { url: `data:image/jpeg;base64,${b64}` } }] : []),\n      ],\n    },\n  ],\n};\n\nreturn { json: { ...j, openrouter_body: body } };"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3048,8 +3050,8 @@
       "webhookId": "cf97638a-902b-47bd-ac7d-db91f24e5079",
       "credentials": {
         "telegramApi": {
-          "id": "hLim6R0tiFfxd2cX",
-          "name": "WB\\Ozone Bot"
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
     },
@@ -3388,7 +3390,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j = $json;\n\nconst marketplace = (j.marketplace || \"\").toString().trim();\nconst category = (j.category || \"\").toString().trim();\nconst title_raw = (j.title || \"\").toString().trim();\nconst benefits_raw = (j.benefits || \"\").toString().trim();\nconst clarA = (j.clarifications_answers || \"\").toString().trim();\n\nconst det = j.parsed_deterministic || {};\nconst detSpecs = Array.isArray(det.specs) ? det.specs : [];\nconst detLeftover = (det.leftover_text || \"\").toString().trim();\n\nconst system = `\nТы — ассистент по нормализации данных для карточек товаров WB/Ozon.\nТвоя задача — разложить сырой текст пользователя по структуре: характеристики, особенности, выгоды, сценарии использования, аудитории.\nКРИТИЧЕСКИ ВАЖНО:\n- НЕ добавляй новых фактов. Только переразметка того, что написал пользователь (и того, что явно указано в title).\n- Если пользователь дал цифры/единицы — сохраняй их как есть.\n- Если информации нет — оставляй поле пустым, не выдумывай.\nВерни СТРОГО JSON без текста вокруг.`;\n\nconst prompt = `\nВход (учти, что clarifications_answers — это ответы пользователя на уточнения, их можно использовать как факты):\nmarketplace: ${marketplace || \"не указан\"}\ncategory: ${category || \"не указана\"}\ntitle_raw: ${title_raw || \"пусто\"}\nbenefits_raw: ${benefits_raw || \"пусто\"}\nclarifications_answers: ${clarA || \"(нет)\"}\n\nУже извлечено детерминированно (может быть неполным):\ndetected_specs: ${JSON.stringify(detSpecs).slice(0, 6000)}\n\nОстаток текста (если есть):\n${detLeftover ? detLeftover : \"(нет)\"}\n\nНужно вернуть JSON:\n{\n  \"brand\": \"\",\n  \"model\": \"\",\n  \"color\": \"\",\n  \"specs\": [{\"key\":\"\",\"value\":\"\",\"unit\":\"\",\"source\":\"user\",\"confidence\":0.0}],\n  \"features\": [\"...\"],\n  \"benefits\": [\"...\"],\n  \"use_cases\": [\"...\"],\n  \"audiences\": [\"...\"],\n  \"risky_claims\": [\"...\"]\n}\n\nПравила:\n- brand/model/color заполняй только если явно есть в title_raw/benefits_raw/clarifications_answers.\n- specs: характеристики и параметры (цифры, единицы, материалы, комплектация, размеры и т.п.) только из входа.\n- features: конструктив/особенности (например \"световой индикатор\", \"двухступенчатое открытие\") — только если есть в тексте.\n- benefits: формулировки \"почему это хорошо\" (если в тексте есть).\n- use_cases: где/как использовать (если в тексте есть).\n- audiences: кому подходит (если в тексте есть или очевидно из category; но без фантазии — лучше оставить пустым).\n- risky_claims: любые утверждения, которые звучат как маркетинговые обещания/гарантии/сроки/уникальные свойства — если они есть во входе.\n`;\n\nconst body = {\n  model: \"openai/gpt-4o-mini\",\n  temperature: 0.2,\n  messages: [\n    { role: \"system\", content: system.trim() },\n    { role: \"user\", content: prompt.trim() }\n  ]\n};\n\nreturn { json: { ...j, openrouter_body: body } };"
+        "jsCode": "const j = $json;\nconst marketplace = (j.marketplace || '').toString().trim();\nconst category = (j.category || '').toString().trim();\nconst title = (j.title || '').toString().trim();\nconst benefits = (j.benefits || '').toString().trim();\nconst clarifications_answers = (j.clarifications_answers || '').toString().trim();\nconst imageBase64 = (j.image_base64_clean || '').toString().trim();\n\nconst system = `\nТы анализируешь карточку товара для WB/Ozon. Возвращай только факты из входных данных и фото.\nНельзя выдумывать характеристики, материалы, объёмы, мощность, комплектацию и любые числовые параметры.\nЕсли данных не хватает для безопасной генерации карточки, ставь need_clarifications=true и задай до 5 коротких вопросов.\nВерни строго JSON-объект.\n`;\n\nconst userData = {\n  marketplace, category, title, benefits, clarifications_answers,\n  image_present: !!imageBase64\n};\n\nconst prompt = `Верни JSON структуры:\n{\n  \"need_clarifications\": boolean,\n  \"clarifications_questions\": string[],\n  \"facts\": string[],\n  \"unknowns\": string[]\n}\n\nДанные:\n${JSON.stringify(userData, null, 2)}`;\n\nconst body = {\n  model: $env.OPENROUTER_TEXT_MODEL || 'openai/gpt-4o-mini',\n  temperature: 0.2,\n  response_format: { type: 'json_object' },\n  messages: [\n    { role: 'system', content: system.trim() },\n    {\n      role: 'user',\n      content: [\n        { type: 'text', text: prompt },\n        ...(imageBase64 ? [{ type: 'image_url', image_url: { url: `data:image/jpeg;base64,${imageBase64}` } }] : []),\n      ],\n    },\n  ],\n};\n\nreturn { json: { ...j, openrouter_body: body } };"
       },
       "id": "61a47940-d960-4e89-98d4-e642c8a49544",
       "name": "Build Normalize Body",
@@ -3403,14 +3405,22 @@
       "parameters": {
         "method": "POST",
         "url": "https://openrouter.ai/api/v1/chat/completions",
-        "authentication": "predefinedCredentialType",
+        "authentication": "none",
         "nodeCredentialType": "openRouterApi",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.OPENROUTER_API_KEY}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
               "name": "HTTP-Referer",
-              "value": "https://n8n.arthurkorban.ru/"
+              "value": "https://example.local/"
             },
             {
               "name": "X-Title",
@@ -3430,18 +3440,12 @@
       "position": [
         3296,
         1264
-      ],
-      "credentials": {
-        "openRouterApi": {
-          "id": "mP6iIs9yq1tlqn63",
-          "name": "OpenRouter account"
-        }
-      }
+      ]
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j = $json;\nconst content = j?.choices?.[0]?.message?.content ?? \"\";\nconst text = (typeof content === \"string\" ? content : JSON.stringify(content)).trim();\n\nlet parsed = null;\ntry { parsed = JSON.parse(text); } catch (e) {\n  const m = text.match(/\\{[\\s\\S]*\\}/);\n  if (m) { try { parsed = JSON.parse(m[0]); } catch (e2) {} }\n}\n\nif (!parsed || typeof parsed !== \"object\") {\n  parsed = {\n    brand: \"\",\n    model: \"\",\n    color: \"\",\n    specs: [],\n    features: [],\n    benefits: [],\n    use_cases: [],\n    audiences: [],\n    risky_claims: []\n  };\n}\n\nreturn {\n  json: {\n    ...j,\n    normalized: parsed\n  }\n};"
+        "jsCode": "const j = $json;\nconst content = j?.choices?.[0]?.message?.content ?? '';\nconst raw = (typeof content === 'string' ? content : JSON.stringify(content)).trim();\n\nconst safe = { need_clarifications: true, clarifications_questions: ['Уточни ключевые параметры товара: размер, материал, комплектацию и важные функции.'], facts: [], unknowns: ['Недостаточно данных для точной карточки.'] };\n\nlet parsed = null;\ntry { parsed = JSON.parse(raw); } catch (e) {\n  const m = raw.match(/\\{[\\s\\S]*\\}/);\n  if (m) { try { parsed = JSON.parse(m[0]); } catch (_) {} }\n}\nif (!parsed || typeof parsed !== 'object') parsed = safe;\n\nconst normalized = {\n  need_clarifications: !!parsed.need_clarifications,\n  clarifications_questions: Array.isArray(parsed.clarifications_questions) ? parsed.clarifications_questions.map(x => String(x).trim()).filter(Boolean) : [],\n  facts: Array.isArray(parsed.facts) ? parsed.facts.map(x => String(x).trim()).filter(Boolean) : [],\n  unknowns: Array.isArray(parsed.unknowns) ? parsed.unknowns.map(x => String(x).trim()).filter(Boolean) : [],\n};\nif (!normalized.clarifications_questions.length && normalized.need_clarifications) {\n  normalized.clarifications_questions = safe.clarifications_questions;\n}\n\nreturn { json: { ...j, normalized, clarifications_questions: normalized.clarifications_questions } };"
       },
       "id": "17668eaa-de79-4e87-a987-64d028f78e19",
       "name": "Parse Normalize",
@@ -3511,8 +3515,21 @@
       "parameters": {
         "mode": "runOnceForEachItem",
         "language": "javaScript",
-        "jsCode": "// Форматируем итоговую карточку в читабельный HTML-текст для Telegram\n// ВАЖНО: Mode = Run Once for Each Item => возвращаем ОДИН item: { json: {...} }\n\nconst esc = (s) => String(s ?? \"\")\n  .replace(/&/g, \"&amp;\")\n  .replace(/</g, \"&lt;\")\n  .replace(/>/g, \"&gt;\");\n\nconst j = $json || {};\nconst card = j.card || j; // на всякий случай\n\nconst facts = Array.isArray(card.facts) ? card.facts : [];\nconst segments = card.positioning?.segments || [];\nconst usp = card.positioning?.usp_line || \"\";\nconst headlines = card.positioning?.cover_headlines || [];\nconst slides = card.positioning?.slide_blocks || [];\n\nlet out = \"\";\n\nif (facts.length) {\n  out += \"<b>Факты</b>\\n\";\n  for (const f of facts) out += `• ${esc(f)}\\n`;\n}\n\nif (segments.length) {\n  out += \"\\n<b>ЦА и посыл</b>\\n\";\n  for (const s of segments) {\n    const name = s?.name ? esc(s.name) : \"Сегмент\";\n    const pain = s?.pain ? esc(s.pain) : \"\";\n    const promise = s?.promise ? esc(s.promise) : \"\";\n    out += `• <b>${name}</b>\\n`;\n    if (pain) out += `  — Боль: ${pain}\\n`;\n    if (promise) out += `  — Обещание: ${promise}\\n`;\n  }\n}\n\nif (usp) {\n  out += `\\n<b>USP</b>\\n${esc(usp)}\\n`;\n}\n\nif (headlines.length) {\n  out += \"\\n<b>Заголовки обложки</b>\\n\";\n  for (const h of headlines) out += `• ${esc(h)}\\n`;\n}\n\nif (slides.length) {\n  out += \"\\n<b>Слайды</b>\\n\";\n  for (const s of slides) out += `• ${esc(s)}\\n`;\n}\n\nout = out.trim();\n\n// Telegram лимит ~4096, оставляем запас\nout = out.slice(0, 3800);\n\nreturn {\n  json: {\n    ...j,\n    result_text_formatted: out,\n  }\n};\n"
+        "jsCode": "const esc = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');\nconst j = $json || {};\nconst card = j.card || {};\nconst marketing = j.marketing || {};\nconst service = j.service || {};\nconst normalized = j.normalized || {};\n\nconst lines = [];\nlines.push(`<b>${esc(card.title || j.title || 'Карточка товара')}</b>`);\nif (marketing.usp_line) lines.push(`${esc(marketing.usp_line)}`);\nif (Array.isArray(service.notes) && service.notes[0]) lines.push(`${esc(service.notes[0])}`);\n\nlines.push(`\n<b>Короткое описание</b>`);\nlines.push(esc(card.short_description || 'не указано'));\n\nlines.push(`\n<b>Преимущества</b>`);\nfor (const b of (Array.isArray(card.benefits) ? card.benefits : [])) lines.push(`• ${esc(b)}`);\nif (!Array.isArray(card.benefits) || !card.benefits.length) lines.push('• не указано');\n\nlines.push(`\n<b>Характеристики</b>`);\nconst specs = Array.isArray(card.specs) ? card.specs : [];\nif (specs.length) {\n  for (const s of specs) lines.push(`• ${esc(s?.key || 'Параметр')}: ${esc(s?.value || 'не указано')}`);\n} else {\n  lines.push('• не указано');\n}\n\nlines.push(`\n<b>Ключевые слова</b>`);\nlines.push(esc((Array.isArray(card.keywords) ? card.keywords : []).join(', ') || 'не указано'));\n\nlines.push(`\n<b>Идеи для обложки</b>`);\nfor (const h of (Array.isArray(marketing.cover_headlines) ? marketing.cover_headlines : [])) lines.push(`• ${esc(h)}`);\n\nlines.push(`\n<b>Идеи для слайдов</b>`);\nfor (const s of (Array.isArray(marketing.slide_blocks) ? marketing.slide_blocks : [])) lines.push(`• ${esc(s)}`);\n\nconst warnings = [\n  ...(Array.isArray(service.warnings) ? service.warnings : []),\n  ...(Array.isArray(normalized.unknowns) ? normalized.unknowns : []),\n].filter(Boolean);\nif (warnings.length) {\n  lines.push(`\n<b>Что важно уточнить</b>`);\n  for (const w of warnings.slice(0, 8)) lines.push(`• ${esc(w)}`);\n}\n\nconst text = lines.join('\n').trim();\nconst limit = 3900;\nconst chunks = [];\nlet remaining = text;\nwhile (remaining.length > limit) {\n  let cut = remaining.lastIndexOf('\n', limit);\n  if (cut < 1000) cut = limit;\n  chunks.push(remaining.slice(0, cut).trim());\n  remaining = remaining.slice(cut).trim();\n}\nif (remaining) chunks.push(remaining);\n\nreturn { json: { ...j, result_text_formatted: text, parts: chunks } };"
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = $json; const parts = Array.isArray(j.parts) && j.parts.length ? j.parts : [j.result_text_formatted || 'Не удалось подготовить результат.']; return parts.map((p,i)=>({json:{...j, part_text: parts.length>1 ? `Часть ${i+1}/${parts.length}\\n\\n${p}` : p}}));"
+      },
+      "id": "637c25d0-30fe-49d1-9423-7ef395b7e505",
+      "name": "Split Result Parts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1850,
+        240
+      ]
     }
   ],
   "pinData": {},
@@ -3980,7 +3997,7 @@
         ],
         [
           {
-            "node": "Send Result",
+            "node": "Split Result Parts",
             "type": "main",
             "index": 0
           }
@@ -4167,6 +4184,17 @@
         [
           {
             "node": "IF Need Clarifications",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Result Parts": {
+      "main": [
+        [
+          {
+            "node": "Send Result",
             "type": "main",
             "index": 0
           }
