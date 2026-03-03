@@ -457,7 +457,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Карточка WB/Ozon PRO  Соберу для твоего товара: \n• SEO-название под поиск \n• 5 буллетов под конверсию \n• описание без воды \n• ключевые слова \n• ТЗ на инфографику  \n\nНужно 3–5 минут. Нажми «Сделать карточку» — начнём.",
+        "text": "https://picsum.photos/seed/wbozon-menu/1200/700\n\n🚀 <b>Карточка WB/Ozon PRO-bot</b>\n\nСоберу для вашего товара:\n• SEO-название под поиск\n• 5 буллетов под конверсию\n• описание без воды\n• ключевые слова\n• ТЗ на инфографику\n\n<i>Нужно 3–5 минут.</i> Нажмите «Сделать карточку» — начнём.",
         "replyMarkup": "inlineKeyboard",
         "inlineKeyboard": {
           "rows": [
@@ -482,7 +482,8 @@
           ]
         },
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
         }
       },
       "id": "ae70e5e3-1452-4dbd-98f9-bc84b12703c1",
@@ -538,7 +539,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Как это работает:\n\n1) Выбираешь маркетплейс и категорию\n2) Пишешь название товара\n3) Пишешь преимущества\n4) Отправляешь 1 фото\n\nЯ верну: название, буллеты, описание, ключи и ТЗ на инфографику.",
+        "text": "🧭 <b>Как это работает</b>\n\n1) Выбираете маркетплейс и категорию\n2) Пишете название товара\n3) Пишете преимущества\n4) Отправляете 1 фото\n\nНа выходе: готовая карточка и идеи для дизайна.",
         "replyMarkup": "inlineKeyboard",
         "inlineKeyboard": {
           "rows": [
@@ -557,7 +558,8 @@
           ]
         },
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
         }
       },
       "id": "008d00a4-c2d9-459d-93c9-d87a5405b137",
@@ -761,8 +763,8 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Выбери маркетплейс:",
-        "replyMarkup": "inlineKeyboard",
+        "text": "https://picsum.photos/seed/wbozon-marketplace/1200/700\n\n🏪 <b>Шаг 1/5.</b> Выберите маркетплейс.",
+        "replyMarkup": "replyKeyboard",
         "inlineKeyboard": {
           "rows": [
             {
@@ -786,7 +788,27 @@
           ]
         },
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  },
+                  {
+                    "text": "На шаг назад"
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
       "id": "4684ec46-c321-4126-9f56-957795e60e49",
@@ -1207,8 +1229,8 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Выбери категорию товара:",
-        "replyMarkup": "inlineKeyboard",
+        "text": "https://picsum.photos/seed/wbozon-category/1200/700\n\n🗂️ <b>Шаг 2/5.</b> Выберите категорию товара.",
+        "replyMarkup": "replyKeyboard",
         "inlineKeyboard": {
           "rows": [
             {
@@ -1286,7 +1308,27 @@
           ]
         },
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  },
+                  {
+                    "text": "На шаг назад"
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
       "id": "3841c1e2-b34e-4ae9-848c-4b157672d10e",
@@ -1512,9 +1554,30 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Напиши название товара. Можно в одну строку.\n\nПример: «Кроссовки мужские кожаные, белые»",
+        "text": "https://picsum.photos/seed/wbozon-title/1200/700\n\n📝 <b>Шаг 3/5.</b> Напишите название товара.\n\n<i>Пример:</i> «Кроссовки мужские кожаные, белые».",
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  },
+                  {
+                    "text": "На шаг назад"
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
       "id": "97cd1955-7d9c-4bb1-ace6-dfc4d676150a",
@@ -1726,9 +1789,30 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Теперь напиши преимущества товара. \nМожно списком через запятую или с новой строки.",
+        "text": "https://picsum.photos/seed/wbozon-benefits/1200/700\n\n✨ <b>Шаг 4/5.</b> Напишите преимущества товара.\nМожно через запятую или с новой строки.",
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  },
+                  {
+                    "text": "На шаг назад"
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
       "id": "f54d12cf-16b6-4bd4-be1b-91c7e0fbf7e3",
@@ -1948,9 +2032,30 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Отправь 1 фото товара (как в карточке). \nЛучше без текста на картинке. \nПосле фото я соберу карточку.",
+        "text": "https://picsum.photos/seed/wbozon-photo/1200/700\n\n📷 <b>Шаг 5/5.</b> Отправьте 1 фото товара.\n<i>Лучше без текста на изображении.</i>",
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  },
+                  {
+                    "text": "На шаг назад"
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
       "id": "148d193b-fe51-4d32-ad7f-e35fbc108843",
@@ -2509,8 +2614,8 @@
     {
       "parameters": {
         "chatId": "={{$json.chat_id}}",
-        "text": "Выбери категорию кнопкой ниже.",
-        "replyMarkup": "inlineKeyboard",
+        "text": "Выберите категорию кнопкой ниже.",
+        "replyMarkup": "replyKeyboard",
         "inlineKeyboard": {
           "rows": [
             {
@@ -2588,7 +2693,27 @@
           ]
         },
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  },
+                  {
+                    "text": "На шаг назад"
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
       "type": "n8n-nodes-base.telegram",
@@ -2664,9 +2789,30 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Отправь 1 фото товара (как в карточке). \nЛучше без текста на картинке. \nПосле фото я соберу карточку.",
+        "text": "📷 <b>Шаг 5/5.</b> Отправьте 1 фото товара.\n<i>Лучше без текста на изображении.</i>",
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  },
+                  {
+                    "text": "На шаг назад"
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
       "id": "c1f4af53-cf46-4c68-b33b-47b74e398955",
@@ -3034,9 +3180,30 @@
     {
       "parameters": {
         "chatId": "={{$node[\"Normalize\"].json.chat_id}}",
-        "text": "={{$json.text}}",
+        "text": "={{ 'https://picsum.photos/seed/wbozon-clarify/1200/700\\n\\n' + ($json.text || '') }}",
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  },
+                  {
+                    "text": "На шаг назад"
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
       "type": "n8n-nodes-base.telegram",
@@ -3520,7 +3687,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const j = $json; const parts = Array.isArray(j.parts) && j.parts.length ? j.parts : [j.result_text_formatted || 'Не удалось подготовить результат.']; return parts.map((p,i)=>({json:{...j, part_text: parts.length>1 ? `Часть ${i+1}/${parts.length}\\n\\n${p}` : p}}));"
+        "jsCode": "const j = $json; const parts = Array.isArray(j.parts) && j.parts.length ? j.parts : [j.result_text_formatted || 'Не удалось подготовить результат.']; return parts.map((p,i)=>({json:{...j, part_text: parts.length>1 ? `Часть ${i+1}/${parts.length}\\n\\n${p}` : p, part_index:i+1, parts_total:parts.length, is_last_part:i===parts.length-1 }}));"
       },
       "id": "637c25d0-30fe-49d1-9423-7ef395b7e505",
       "name": "Split Result Parts",
@@ -3529,6 +3696,468 @@
       "position": [
         1850,
         240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "на шаг назад",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "назад",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "ec159faa-2632-4210-8d01-80c5726f332b",
+      "name": "IF Back Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        980,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j=$json; const stage=(j.stage||'idle').toString(); const map={select_marketplace:{to:'idle',msg:'Возвращаемся в меню. Нажмите «Сделать карточку».'},select_category:{to:'select_marketplace',msg:'Возвращаемся на выбор маркетплейса.'},ask_title:{to:'select_category',msg:'Возвращаемся на выбор категории.'},ask_benefits:{to:'ask_title',msg:'Возвращаемся к названию товара. Отправьте новое название.'},ask_photo:{to:'ask_benefits',msg:'Возвращаемся к преимуществам. Отправьте преимущества заново.'},clarifications:{to:'ask_photo',msg:'Возвращаемся к шагу с фото. Отправьте фото товара.'},generating:{to:'ask_photo',msg:'Идёт обработка. Возвращаю к шагу фото — отправьте фото снова.'},idle:{to:'idle',msg:'Вы уже в меню.'}}; const x=map[stage]||map.idle; return {json:{...j, back_stage:x.to, back_text:`<b>Шаг назад выполнен.</b>\n${x.msg}`}};",
+        "mode": "runOnceForEachItem"
+      },
+      "id": "3453e62b-de09-4fba-9ee6-307ae3b528a3",
+      "name": "Back Router",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+            "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}",
+            "stage": "={{ $json.back_stage }}",
+            "updated_at": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "18d1c83f-5f8d-4dc3-ba6e-3eddd0e3e5d5",
+      "name": "Session: Step back",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "={{ $json.back_text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  },
+                  {
+                    "text": "На шаг назад"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "ad2e7266-fcc9-4408-a623-a5cfbdb1a3b5",
+      "name": "Send Back Info",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1640,
+        160
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "DESIGN_CONCEPT",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "создать дизайн-концепт",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "f743d650-58ce-43f2-9983-fe76f9f6d16a",
+      "name": "IF Design Concept",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1450,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j=$input.first().json; const base=[`Карточка товара ${j.title||''} на ${j.marketplace||'маркетплейсе'}. Современный премиальный стиль.`, `Инфографика ${j.category||'товара'}: чистый фон, акцент на продукт, контрастные плашки выгод.`, `Минималистичный концепт для ${j.title||'товара'} с понятной иерархией блоков и CTA.`, `Концепт с яркими преимуществами и блоком характеристик для ${j.marketplace||'WB/Ozon'}.`, `Премиальный лайфстайл-концепт для ${j.title||'товара'} с акцентом на доверие.`]; return base.map((p,i)=>{const seed=encodeURIComponent(`${j.telegram_id||'u'}-${Date.now()}-${i}`);const prompt=encodeURIComponent(p);return {json:{...j,concept_index:i+1,concept_total:base.length,is_last_concept:i===base.length-1,caption:`<b>Концепт ${i+1}/5</b>\n${p}`,photo_url:`https://image.pollinations.ai/p/${prompt}?width=1024&height=1024&seed=${seed}`}}});",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "c43a9966-8935-480d-b70c-910190caf21e",
+      "name": "Build Design Concepts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{$env.TELEGRAM_BOT_TOKEN}}/sendPhoto",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\"chat_id\": $node[\"Normalize\"].json.chat_id, \"photo\": $json.photo_url, \"caption\": $json.caption, \"parse_mode\":\"HTML\" } }}",
+        "options": {}
+      },
+      "id": "4e067e3d-92c9-4353-abd1-b1430d299066",
+      "name": "Send Design Concept Photo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1910,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "<b>Готово.</b> Отправил 5 дизайн-концептов.\nЕсли нужно, нажмите «Сделать карточку» для нового товара.",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  },
+                  {
+                    "text": "На шаг назад"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "772aca0c-dc2c-49cd-a6a5-50547a70c097",
+      "name": "Send Design Done",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2140,
+        520
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ !!$json.is_last_part }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3278aec7-522f-4281-a397-546fdf00ec93",
+      "name": "IF Last Part",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3880,
+        1520
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "<b>Хотите визуальную подачу?</b>\nНажмите кнопку ниже, и я подготовлю 5 дизайн-концептов под ваш товар.",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Создать дизайн-концепт",
+                    "additionalFields": {
+                      "callback_data": "DESIGN_CONCEPT"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "acfa45ff-acca-4322-812b-e012d18403e1",
+      "name": "Send Design CTA",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        4300,
+        1520
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ !!$json.is_last_concept }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d353e1a8-1dd9-4d4c-a0da-c18c7eb1842a",
+      "name": "IF Last Concept",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2050,
+        520
       ]
     }
   ],
@@ -3665,7 +4294,7 @@
         ],
         [
           {
-            "node": "IF Marketplace chosen",
+            "node": "IF Design Concept",
             "type": "main",
             "index": 0
           }
@@ -3888,7 +4517,7 @@
       "main": [
         [
           {
-            "node": "Session: Done",
+            "node": "IF Last Part",
             "type": "main",
             "index": 0
           }
@@ -4026,7 +4655,7 @@
         ],
         [
           {
-            "node": "IF Start",
+            "node": "IF Back Command",
             "type": "main",
             "index": 0
           }
@@ -4165,7 +4794,7 @@
       "main": [
         [
           {
-            "node": "IF Start",
+            "node": "IF Back Command",
             "type": "main",
             "index": 0
           }
@@ -4199,6 +4828,121 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "IF Back Command": {
+      "main": [
+        [
+          {
+            "node": "Back Router",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Back Router": {
+      "main": [
+        [
+          {
+            "node": "Session: Step back",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Step back": {
+      "main": [
+        [
+          {
+            "node": "Send Back Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Design Concept": {
+      "main": [
+        [
+          {
+            "node": "Build Design Concepts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Marketplace chosen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Design Concepts": {
+      "main": [
+        [
+          {
+            "node": "Send Design Concept Photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Design Concept Photo": {
+      "main": [
+        [
+          {
+            "node": "IF Last Concept",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Last Part": {
+      "main": [
+        [
+          {
+            "node": "Session: Done",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Session: Done": {
+      "main": [
+        [
+          {
+            "node": "Send Design CTA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Last Concept": {
+      "main": [
+        [
+          {
+            "node": "Send Design Done",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
       ]
     }
   },
