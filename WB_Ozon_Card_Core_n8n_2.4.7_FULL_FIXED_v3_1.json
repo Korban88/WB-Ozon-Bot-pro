@@ -498,8 +498,7 @@
                 ]
               }
             }
-          ],
-          "resizeKeyboard": true
+          ]
         }
       },
       "id": "ae70e5e3-1452-4dbd-98f9-bc84b12703c1",
@@ -836,8 +835,7 @@
                 ]
               }
             }
-          ],
-          "resizeKeyboard": true
+          ]
         }
       },
       "id": "4684ec46-c321-4126-9f56-957795e60e49",
@@ -1333,8 +1331,7 @@
                 ]
               }
             }
-          ],
-          "resizeKeyboard": true
+          ]
         }
       },
       "id": "3841c1e2-b34e-4ae9-848c-4b157672d10e",
@@ -1589,8 +1586,7 @@
                 ]
               }
             }
-          ],
-          "resizeKeyboard": true
+          ]
         }
       },
       "id": "97cd1955-7d9c-4bb1-ace6-dfc4d676150a",
@@ -1831,8 +1827,7 @@
                 ]
               }
             }
-          ],
-          "resizeKeyboard": true
+          ]
         }
       },
       "id": "f54d12cf-16b6-4bd4-be1b-91c7e0fbf7e3",
@@ -2081,8 +2076,7 @@
                 ]
               }
             }
-          ],
-          "resizeKeyboard": true
+          ]
         }
       },
       "id": "148d193b-fe51-4d32-ad7f-e35fbc108843",
@@ -2718,8 +2712,7 @@
                 ]
               }
             }
-          ],
-          "resizeKeyboard": true
+          ]
         }
       },
       "type": "n8n-nodes-base.telegram",
@@ -2824,8 +2817,7 @@
                 ]
               }
             }
-          ],
-          "resizeKeyboard": true
+          ]
         }
       },
       "id": "c1f4af53-cf46-4c68-b33b-47b74e398955",
@@ -3222,8 +3214,7 @@
                 ]
               }
             }
-          ],
-          "resizeKeyboard": true
+          ]
         }
       },
       "type": "n8n-nodes-base.telegram",
@@ -3955,8 +3946,7 @@
                 ]
               }
             }
-          ],
-          "resizeKeyboard": true
+          ]
         }
       },
       "id": "ad2e7266-fcc9-4408-a623-a5cfbdb1a3b5",
