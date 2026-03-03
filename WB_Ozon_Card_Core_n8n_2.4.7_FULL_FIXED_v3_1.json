@@ -286,7 +286,7 @@
             {
               "id": "33d69192-9f9d-4bbf-b002-c5a40e008b78",
               "leftValue": "={{ ($json.text || '').trim().toLowerCase() }}",
-              "rightValue": "^(\\/?start|menu)$",
+              "rightValue": "^(\\/?start|menu|меню)$",
               "operator": {
                 "type": "string",
                 "operation": "regex"
@@ -457,33 +457,49 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "https://picsum.photos/seed/wbozon-menu/1200/700\n\n🚀 <b>Карточка WB/Ozon PRO-bot</b>\n\nСоберу для вашего товара:\n• SEO-название под поиск\n• 5 буллетов под конверсию\n• описание без воды\n• ключевые слова\n• ТЗ на инфографику\n\n<i>Нужно 3–5 минут.</i> Нажмите «Сделать карточку» — начнём.",
-        "replyMarkup": "inlineKeyboard",
-        "inlineKeyboard": {
+        "text": "<b>Карточка WB/Ozon PRO-bot</b>\n\nСоберу для вашего товара:\n• SEO-название под поиск\n• 5 буллетов под конверсию\n• описание без воды\n• ключевые слова\n• ТЗ на инфографику\n\n<i>Нужно 3–5 минут.</i> Нажмите «Сделать карточку» — начнём.",
+        "replyMarkup": "replyKeyboard",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "replyKeyboard": {
           "rows": [
             {
               "row": {
                 "buttons": [
                   {
-                    "text": "=Сделать карточку",
-                    "additionalFields": {
-                      "callback_data": "GEN"
-                    }
+                    "text": "Сделать карточку"
                   },
                   {
-                    "text": "Как это работает",
-                    "additionalFields": {
-                      "callback_data": "HELP"
-                    }
+                    "text": "Как это работает"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Назад"
                   }
                 ]
               }
             }
-          ]
-        },
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "HTML"
+          ],
+          "resizeKeyboard": true
         }
       },
       "id": "ae70e5e3-1452-4dbd-98f9-bc84b12703c1",
@@ -521,9 +537,17 @@
                 "operation": "equals",
                 "name": "filter.operator.equals"
               }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "как это работает",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
           ],
-          "combinator": "and"
+          "combinator": "or"
         },
         "options": {}
       },
@@ -597,9 +621,17 @@
                 "operation": "equals",
                 "name": "filter.operator.equals"
               }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "сделать карточку",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
           ],
-          "combinator": "and"
+          "combinator": "or"
         },
         "options": {}
       },
@@ -763,30 +795,8 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "https://picsum.photos/seed/wbozon-marketplace/1200/700\n\n🏪 <b>Шаг 1/5.</b> Выберите маркетплейс.",
+        "text": "<b>Шаг 1/5.</b> Выберите маркетплейс.",
         "replyMarkup": "replyKeyboard",
-        "inlineKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Wildberries",
-                    "additionalFields": {
-                      "callback_data": "MP_WB"
-                    }
-                  },
-                  {
-                    "text": "Ozon",
-                    "additionalFields": {
-                      "callback_data": "MP_OZON"
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        },
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -797,18 +807,37 @@
               "row": {
                 "buttons": [
                   {
+                    "text": "Wildberries"
+                  },
+                  {
+                    "text": "Ozon"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
                     "text": "Старт"
                   },
                   {
                     "text": "Меню"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
                   {
-                    "text": "На шаг назад"
+                    "text": "Назад"
                   }
                 ]
               }
             }
-          ]
+          ],
+          "resizeKeyboard": true
         }
       },
       "id": "4684ec46-c321-4126-9f56-957795e60e49",
@@ -849,11 +878,11 @@
             },
             {
               "id": "c87e2beb-b9cf-4c01-b2db-14cc366a3a57",
-              "leftValue": "={{ $json.text }}",
-              "rightValue": "MP_",
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "^(MP_WB|MP_OZON|WILDBERRIES|OZON)$",
               "operator": {
                 "type": "string",
-                "operation": "startsWith"
+                "operation": "regex"
               }
             }
           ],
@@ -883,11 +912,10 @@
             {
               "id": "5aa1a18e-0f1e-47e0-961b-9b8099465264",
               "leftValue": "={{ ($json.text || '').trim().toUpperCase() }}",
-              "rightValue": "MP_WB",
+              "rightValue": "^(MP_WB|WILDBERRIES)$",
               "operator": {
                 "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
+                "operation": "regex"
               }
             }
           ],
@@ -1061,11 +1089,10 @@
             {
               "id": "3f6caa83-f28f-4108-86f1-33b47cc4481a",
               "leftValue": "={{ ($json.text || '').trim().toUpperCase() }}",
-              "rightValue": "MP_OZON",
+              "rightValue": "^(MP_OZON|OZON)$",
               "operator": {
                 "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
+                "operation": "regex"
               }
             }
           ],
@@ -1229,84 +1256,8 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "https://picsum.photos/seed/wbozon-category/1200/700\n\n🗂️ <b>Шаг 2/5.</b> Выберите категорию товара.",
+        "text": "<b>Шаг 2/5.</b> Выберите категорию товара.",
         "replyMarkup": "replyKeyboard",
-        "inlineKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Одежда",
-                    "additionalFields": {
-                      "callback_data": "CAT_APPAREL"
-                    }
-                  },
-                  {
-                    "text": "Обувь",
-                    "additionalFields": {
-                      "callback_data": "CAT_SHOES"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Красота",
-                    "additionalFields": {
-                      "callback_data": "CAT_BEAUTY"
-                    }
-                  },
-                  {
-                    "text": "Дом и кухня",
-                    "additionalFields": {
-                      "callback_data": "CAT_HOME"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Электроника",
-                    "additionalFields": {
-                      "callback_data": "CAT_ELECTRONICS"
-                    }
-                  },
-                  {
-                    "text": "Детям",
-                    "additionalFields": {
-                      "callback_data": "CAT_KIDS"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Спорт",
-                    "additionalFields": {
-                      "callback_data": "CAT_SPORT"
-                    }
-                  },
-                  {
-                    "text": "Авто",
-                    "additionalFields": {
-                      "callback_data": "CAT_AUTO"
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        },
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -1317,18 +1268,73 @@
               "row": {
                 "buttons": [
                   {
+                    "text": "Электроника"
+                  },
+                  {
+                    "text": "Детям"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Спорт"
+                  },
+                  {
+                    "text": "Авто"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Дом и кухня"
+                  },
+                  {
+                    "text": "Одежда"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Обувь"
+                  },
+                  {
+                    "text": "Красота"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
                     "text": "Старт"
                   },
                   {
                     "text": "Меню"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
                   {
-                    "text": "На шаг назад"
+                    "text": "Назад"
                   }
                 ]
               }
             }
-          ]
+          ],
+          "resizeKeyboard": true
         }
       },
       "id": "3841c1e2-b34e-4ae9-848c-4b157672d10e",
@@ -1369,11 +1375,11 @@
             },
             {
               "id": "c80cea91-508d-45fd-adae-a5be36677e81",
-              "leftValue": "={{$json.text}}",
-              "rightValue": "CAT_",
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "^(CAT_|ЭЛЕКТРОНИКА|ДЕТЯМ|СПОРТ|АВТО|ДОМ И КУХНЯ|ОДЕЖДА|ОБУВЬ|КРАСОТА)",
               "operator": {
                 "type": "string",
-                "operation": "startsWith"
+                "operation": "regex"
               }
             }
           ],
@@ -1392,7 +1398,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const code = ($json.text || '').trim().toUpperCase();\n\nconst map = {\n  CAT_APPAREL: 'Одежда',\n  CAT_SHOES: 'Обувь',\n  CAT_BEAUTY: 'Красота и уход',\n  CAT_HOME: 'Дом и кухня',\n  CAT_ELECTRONICS: 'Электроника',\n  CAT_KIDS: 'Детские товары',\n  CAT_SPORT: 'Спорт и отдых',\n  CAT_AUTO: 'Авто-товары',\n};\n\nreturn [{\n  json: {\n    ...$json,\n    category_mapped: map[code] || 'Другое',\n  }\n}];"
+        "jsCode": "const code = ($json.text || '').trim().toUpperCase();\n\nconst map = {\n  CAT_APPAREL: 'Одежда',\n  CAT_SHOES: 'Обувь',\n  CAT_BEAUTY: 'Красота и уход',\n  CAT_HOME: 'Дом и кухня',\n  CAT_ELECTRONICS: 'Электроника',\n  CAT_KIDS: 'Детские товары',\n  CAT_SPORT: 'Спорт и отдых',\n  CAT_AUTO: 'Авто-товары',\n  'ОДЕЖДА': 'Одежда',\n  'ОБУВЬ': 'Обувь',\n  'КРАСОТА': 'Красота и уход',\n  'ДОМ И КУХНЯ': 'Дом и кухня',\n  'ЭЛЕКТРОНИКА': 'Электроника',\n  'ДЕТЯМ': 'Детские товары',\n  'СПОРТ': 'Спорт и отдых',\n  'АВТО': 'Авто-товары',\n};\n\nreturn [{\n  json: {\n    ...$json,\n    category_mapped: map[code] || 'Другое',\n  }\n}];"
       },
       "id": "38011d70-c799-44bf-8cac-91fdf595d63c",
       "name": "Map category",
@@ -1554,7 +1560,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "https://picsum.photos/seed/wbozon-title/1200/700\n\n📝 <b>Шаг 3/5.</b> Напишите название товара.\n\n<i>Пример:</i> «Кроссовки мужские кожаные, белые».",
+        "text": "<b>Шаг 3/5.</b> Напишите название товара.\n\n<i>Пример:</i> «Кроссовки мужские кожаные, белые».",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -1570,14 +1576,21 @@
                   },
                   {
                     "text": "Меню"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
                   {
-                    "text": "На шаг назад"
+                    "text": "Назад"
                   }
                 ]
               }
             }
-          ]
+          ],
+          "resizeKeyboard": true
         }
       },
       "id": "97cd1955-7d9c-4bb1-ace6-dfc4d676150a",
@@ -1789,7 +1802,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "https://picsum.photos/seed/wbozon-benefits/1200/700\n\n✨ <b>Шаг 4/5.</b> Напишите преимущества товара.\nМожно через запятую или с новой строки.",
+        "text": "<b>Шаг 4/5.</b> Напишите преимущества товара.\nМожно через запятую или с новой строки.",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -1805,14 +1818,21 @@
                   },
                   {
                     "text": "Меню"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
                   {
-                    "text": "На шаг назад"
+                    "text": "Назад"
                   }
                 ]
               }
             }
-          ]
+          ],
+          "resizeKeyboard": true
         }
       },
       "id": "f54d12cf-16b6-4bd4-be1b-91c7e0fbf7e3",
@@ -2032,7 +2052,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "https://picsum.photos/seed/wbozon-photo/1200/700\n\n📷 <b>Шаг 5/5.</b> Отправьте 1 фото товара.\n<i>Лучше без текста на изображении.</i>",
+        "text": "<b>Шаг 5/5.</b> Отправьте 1 фото товара.\n<i>Лучше без текста на изображении.</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -2048,14 +2068,21 @@
                   },
                   {
                     "text": "Меню"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
                   {
-                    "text": "На шаг назад"
+                    "text": "Назад"
                   }
                 ]
               }
             }
-          ]
+          ],
+          "resizeKeyboard": true
         }
       },
       "id": "148d193b-fe51-4d32-ad7f-e35fbc108843",
@@ -2616,82 +2643,6 @@
         "chatId": "={{$json.chat_id}}",
         "text": "Выберите категорию кнопкой ниже.",
         "replyMarkup": "replyKeyboard",
-        "inlineKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Одежда",
-                    "additionalFields": {
-                      "callback_data": "CAT_APPAREL"
-                    }
-                  },
-                  {
-                    "text": "Обувь",
-                    "additionalFields": {
-                      "callback_data": "CAT_SHOES"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Красота",
-                    "additionalFields": {
-                      "callback_data": "CAT_BEAUTY"
-                    }
-                  },
-                  {
-                    "text": "Дом и кухня",
-                    "additionalFields": {
-                      "callback_data": "CAT_HOME"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Электроника",
-                    "additionalFields": {
-                      "callback_data": "CAT_ELECTRONICS"
-                    }
-                  },
-                  {
-                    "text": "Детям",
-                    "additionalFields": {
-                      "callback_data": "CAT_KIDS"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Спорт",
-                    "additionalFields": {
-                      "callback_data": "CAT_SPORT"
-                    }
-                  },
-                  {
-                    "text": "Авто",
-                    "additionalFields": {
-                      "callback_data": "CAT_AUTO"
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        },
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -2702,18 +2653,73 @@
               "row": {
                 "buttons": [
                   {
+                    "text": "Электроника"
+                  },
+                  {
+                    "text": "Детям"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Спорт"
+                  },
+                  {
+                    "text": "Авто"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Дом и кухня"
+                  },
+                  {
+                    "text": "Одежда"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Обувь"
+                  },
+                  {
+                    "text": "Красота"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
                     "text": "Старт"
                   },
                   {
                     "text": "Меню"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
                   {
-                    "text": "На шаг назад"
+                    "text": "Назад"
                   }
                 ]
               }
             }
-          ]
+          ],
+          "resizeKeyboard": true
         }
       },
       "type": "n8n-nodes-base.telegram",
@@ -2789,7 +2795,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "📷 <b>Шаг 5/5.</b> Отправьте 1 фото товара.\n<i>Лучше без текста на изображении.</i>",
+        "text": "<b>Шаг 5/5.</b> Отправьте 1 фото товара.\n<i>Лучше без текста на изображении.</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -2805,14 +2811,21 @@
                   },
                   {
                     "text": "Меню"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
                   {
-                    "text": "На шаг назад"
+                    "text": "Назад"
                   }
                 ]
               }
             }
-          ]
+          ],
+          "resizeKeyboard": true
         }
       },
       "id": "c1f4af53-cf46-4c68-b33b-47b74e398955",
@@ -3180,7 +3193,7 @@
     {
       "parameters": {
         "chatId": "={{$node[\"Normalize\"].json.chat_id}}",
-        "text": "={{ 'https://picsum.photos/seed/wbozon-clarify/1200/700\\n\\n' + ($json.text || '') }}",
+        "text": "={{ $json.text || \"\" }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -3196,14 +3209,21 @@
                   },
                   {
                     "text": "Меню"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
                   {
-                    "text": "На шаг назад"
+                    "text": "Назад"
                   }
                 ]
               }
             }
-          ]
+          ],
+          "resizeKeyboard": true
         }
       },
       "type": "n8n-nodes-base.telegram",
@@ -3723,6 +3743,14 @@
                 "type": "string",
                 "operation": "equals"
               }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "назад",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
           ],
           "combinator": "or"
@@ -3914,14 +3942,21 @@
                   },
                   {
                     "text": "Меню"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
                   {
-                    "text": "На шаг назад"
+                    "text": "Назад"
                   }
                 ]
               }
             }
-          ]
+          ],
+          "resizeKeyboard": true
         }
       },
       "id": "ad2e7266-fcc9-4408-a623-a5cfbdb1a3b5",
