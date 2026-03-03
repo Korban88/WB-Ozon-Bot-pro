@@ -543,38 +543,9 @@
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
         "text": "<b>Как это работает</b>\n\n1) Выбираете маркетплейс и категорию\n2) Пишете название товара\n3) Пишете преимущества\n4) Отправляете 1 фото\n\nНа выходе: готовая карточка и идеи для дизайна.",
-        "replyMarkup": "replyKeyboard",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
-        },
-        "replyKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Старт"
-                  },
-                  {
-                    "text": "Назад"
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Как это работает"
-                  },
-                  {
-                    "text": "Меню"
-                  }
-                ]
-              }
-            }
-          ]
         }
       },
       "id": "008d00a4-c2d9-459d-93c9-d87a5405b137",
@@ -1541,35 +1512,6 @@
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
-        },
-        "replyMarkup": "replyKeyboard",
-        "replyKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Старт"
-                  },
-                  {
-                    "text": "Назад"
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Как это работает"
-                  },
-                  {
-                    "text": "Меню"
-                  }
-                ]
-              }
-            }
-          ]
         }
       },
       "id": "97cd1955-7d9c-4bb1-ace6-dfc4d676150a",
@@ -1785,35 +1727,6 @@
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
-        },
-        "replyMarkup": "replyKeyboard",
-        "replyKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Старт"
-                  },
-                  {
-                    "text": "Назад"
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Как это работает"
-                  },
-                  {
-                    "text": "Меню"
-                  }
-                ]
-              }
-            }
-          ]
         }
       },
       "id": "f54d12cf-16b6-4bd4-be1b-91c7e0fbf7e3",
@@ -2037,35 +1950,6 @@
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
-        },
-        "replyMarkup": "replyKeyboard",
-        "replyKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Старт"
-                  },
-                  {
-                    "text": "Назад"
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Как это работает"
-                  },
-                  {
-                    "text": "Меню"
-                  }
-                ]
-              }
-            }
-          ]
         }
       },
       "id": "148d193b-fe51-4d32-ad7f-e35fbc108843",
@@ -2807,35 +2691,6 @@
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
-        },
-        "replyMarkup": "replyKeyboard",
-        "replyKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Старт"
-                  },
-                  {
-                    "text": "Назад"
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Как это работает"
-                  },
-                  {
-                    "text": "Меню"
-                  }
-                ]
-              }
-            }
-          ]
         }
       },
       "id": "c1f4af53-cf46-4c68-b33b-47b74e398955",
@@ -3207,35 +3062,6 @@
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
-        },
-        "replyMarkup": "replyKeyboard",
-        "replyKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Старт"
-                  },
-                  {
-                    "text": "Назад"
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Как это работает"
-                  },
-                  {
-                    "text": "Меню"
-                  }
-                ]
-              }
-            }
-          ]
         }
       },
       "type": "n8n-nodes-base.telegram",
@@ -3941,35 +3767,6 @@
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
-        },
-        "replyMarkup": "replyKeyboard",
-        "replyKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Старт"
-                  },
-                  {
-                    "text": "Назад"
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Как это работает"
-                  },
-                  {
-                    "text": "Меню"
-                  }
-                ]
-              }
-            }
-          ]
         }
       },
       "id": "ad2e7266-fcc9-4408-a623-a5cfbdb1a3b5",
@@ -4029,7 +3826,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const j=$input.first().json||{};const chat_id = Number(j.chat_id || j?.result?.chat?.id || j.telegram_id || 0);const title=(j.title||'товар').toString();const cat=(j.category||'категория').toString();const mp=(j.marketplace||'маркетплейс').toString();const variants=[{tone:'светлый фон, синий акцент, минимализм',layout:'товар крупно по центру'},{tone:'темный контраст, оранжевый акцент',layout:'диагональная композиция'},{tone:'пастельный фон, зелёный акцент',layout:'split-layout 60/40'},{tone:'нейтральный фон, красный акцент',layout:'товар слева, выгоды справа'},{tone:'графитовый фон, золотой акцент',layout:'плашки преимуществ вокруг товара'}];return variants.map((v,i)=>{const promptText=`Обложка карточки ${title} для ${mp}, категория ${cat}. Marketplace infographics style. ${v.tone}. ${v.layout}. Крупный товар, чистая типографика, зоны под заголовок и 3-4 буллета, без логотипов и чужих брендов.`;const seed=encodeURIComponent(`${j.telegram_id||'u'}-${Date.now()}-${i}`);const prompt=encodeURIComponent(promptText);return {json:{...j, chat_id, concept_index:i+1, concept_total:5, is_last_concept:i===4, caption:`Концепт ${i+1}/5 — ${v.tone}`, photo_url:`https://image.pollinations.ai/p/${prompt}?width=1024&height=1024&seed=${seed}`}};});",
+        "jsCode": "const j=$input.first().json||{};const chat_id = Number(j.chat_id || j?.result?.chat?.id || 0);const title=(j.title||'товар').toString();const cat=(j.category||'категория').toString();const mp=(j.marketplace||'маркетплейс').toString();const benefits=(j.benefits||'').toString();const variants=[{tone:'светлый фон, синий акцент, минимализм',layout:'товар крупно по центру'},{tone:'темный контраст, оранжевый акцент',layout:'диагональная композиция'},{tone:'пастельный фон, зелёный акцент',layout:'split-layout 60/40'},{tone:'нейтральный фон, красный акцент',layout:'товар слева, выгоды справа'},{tone:'графитовый фон, золотой акцент',layout:'плашки преимуществ вокруг товара'}];return variants.map((v,i)=>{const prompt_text=`Обложка карточки ${title} для ${mp}, категория ${cat}. Преимущества: ${benefits||'не указано'}. Marketplace infographics style. ${v.tone}. ${v.layout}. Крупный товар, чистая типографика, зоны под заголовок и 3-4 буллета, без логотипов и чужих брендов.`;const seed=encodeURIComponent(`${Date.now()}-${i}-${chat_id||'u'}`);const photo_url=`https://image.pollinations.ai/p/${encodeURIComponent(prompt_text)}?width=1024&height=1024&seed=${seed}`;return {json:{...j, chat_id, concept_index:i+1, concept_total:5, is_last_concept:i===4, prompt_text, caption:`Концепт ${i+1}/5 — ${v.tone}`, photo_url}};});",
         "mode": "runOnceForAllItems"
       },
       "id": "c43a9966-8935-480d-b70c-910190caf21e",
@@ -4043,21 +3840,28 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "=https://api.telegram.org/bot{{$env.TELEGRAM_BOT_TOKEN}}/sendPhoto",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ {\"chat_id\": $json.chat_id, \"photo\": $json.photo_url, \"caption\": $json.caption, \"parse_mode\":\"HTML\" } }}",
-        "options": {}
+        "method": "GET",
+        "url": "={{$json.photo_url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "concept_image"
+            }
+          },
+          "timeout": 60000,
+          "followRedirect": true
+        }
       },
       "id": "4e067e3d-92c9-4353-abd1-b1430d299066",
-      "name": "Send Design Concept Photo",
+      "name": "Download Design Concept Image",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
         1910,
         520
-      ]
+      ],
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -4066,35 +3870,6 @@
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
-        },
-        "replyMarkup": "replyKeyboard",
-        "replyKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Старт"
-                  },
-                  {
-                    "text": "Назад"
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Как это работает"
-                  },
-                  {
-                    "text": "Меню"
-                  }
-                ]
-              }
-            }
-          ]
         }
       },
       "id": "772aca0c-dc2c-49cd-a6a5-50547a70c097",
@@ -4310,35 +4085,6 @@
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
-        },
-        "replyMarkup": "replyKeyboard",
-        "replyKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Старт"
-                  },
-                  {
-                    "text": "Назад"
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Как это работает"
-                  },
-                  {
-                    "text": "Меню"
-                  }
-                ]
-              }
-            }
-          ]
         }
       },
       "id": "57431ada-304a-410c-929e-8d039f73d104",
@@ -4373,6 +4119,89 @@
       "position": [
         1500,
         520
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ !!$binary.concept_image }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "369b8b0a-c707-4071-a2c3-2da03b2fff8f",
+      "name": "IF Concept Image Downloaded",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2060,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{$json.chat_id}}",
+        "binaryData": true,
+        "binaryProperty": "concept_image",
+        "additionalFields": {
+          "caption": "={{$json.caption}}",
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "72d731b7-5e1f-4888-9328-ac9fca5b276b",
+      "name": "Send Design Concept Photo Binary",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2280,
+        560
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json.chat_id}}",
+        "text": "Не удалось получить изображение концепта. Пробую следующий…",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "ad1913d1-eb42-45ec-b914-671adb623246",
+      "name": "Send Concept Download Failed",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2280,
+        720
       ],
       "credentials": {
         "telegramApi": {
@@ -5113,18 +4942,7 @@
       "main": [
         [
           {
-            "node": "Send Design Concept Photo",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send Design Concept Photo": {
-      "main": [
-        [
-          {
-            "node": "IF Last Concept",
+            "node": "Download Design Concept Image",
             "type": "main",
             "index": 0
           }
@@ -5197,6 +5015,57 @@
     "Send Design Progress": {
       "main": [
         []
+      ]
+    },
+    "Download Design Concept Image": {
+      "main": [
+        [
+          {
+            "node": "IF Concept Image Downloaded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Concept Image Downloaded": {
+      "main": [
+        [
+          {
+            "node": "Send Design Concept Photo Binary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Concept Download Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Design Concept Photo Binary": {
+      "main": [
+        [
+          {
+            "node": "IF Last Concept",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Concept Download Failed": {
+      "main": [
+        [
+          {
+            "node": "IF Last Concept",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
