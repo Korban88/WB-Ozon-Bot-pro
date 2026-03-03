@@ -4029,7 +4029,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const j=$input.first().json||{}; const title=(j.title||'товар').toString(); const cat=(j.category||'категория').toString(); const mp=(j.marketplace||'маркетплейс').toString(); const prompts=[`Обложка карточки ${title} для ${mp}, категория ${cat}. Светлый фон, четкая типографика, акцент на выгоде, чистая инфографика без логотипов брендов.`, `Обложка ${title}: темный контрастный фон, яркие акценты, крупный товар в центре, лаконичные подписи преимуществ, современная сетка.`, `Обложка ${title}: пастельная палитра, мягкие тени, premium минимализм, блок УТП и 3 преимущества, удобочитаемые шрифты.`, `Обложка ${title}: динамичная диагональная композиция, цветовые плашки, выделение характеристик, визуал под маркетплейс-формат.`, `Обложка ${title}: нейтральный фон + акцентный цвет категории ${cat}, фокус на товаре и результате использования, чистый продающий стиль.`]; return prompts.map((p,i)=>{const seed=encodeURIComponent(`${j.telegram_id||'u'}-${Date.now()}-${i}`); const prompt=encodeURIComponent(p); return {json:{...j,concept_index:i+1,concept_total:5,is_last_concept:i===4,caption:`Концепт ${i+1}/5`,photo_url:`https://image.pollinations.ai/p/${prompt}?width=1024&height=1024&seed=${seed}`}};});",
+        "jsCode": "const j=$input.first().json||{};const chat_id = Number(j.chat_id || j.telegram_id || 0);const title=(j.title||'товар').toString();const cat=(j.category||'категория').toString();const mp=(j.marketplace||'маркетплейс').toString();const variants=[{tone:'светлый фон, синий акцент, минимализм',layout:'товар крупно по центру'},{tone:'темный контраст, оранжевый акцент',layout:'диагональная композиция'},{tone:'пастельный фон, зелёный акцент',layout:'split-layout 60/40'},{tone:'нейтральный фон, красный акцент',layout:'товар слева, выгоды справа'},{tone:'графитовый фон, золотой акцент',layout:'плашки преимуществ вокруг товара'}];return variants.map((v,i)=>{const promptText=`Обложка карточки ${title} для ${mp}, категория ${cat}. Marketplace infographics style. ${v.tone}. ${v.layout}. Крупный товар, чистая типографика, зоны под заголовок и 3-4 буллета, без логотипов и чужих брендов.`;const seed=encodeURIComponent(`${j.telegram_id||'u'}-${Date.now()}-${i}`);const prompt=encodeURIComponent(promptText);return {json:{...j, chat_id, concept_index:i+1, concept_total:5, is_last_concept:i===4, caption:`Концепт ${i+1}/5 — ${v.tone}`, photo_url:`https://image.pollinations.ai/p/${prompt}?width=1024&height=1024&seed=${seed}`}};});",
         "mode": "runOnceForAllItems"
       },
       "id": "c43a9966-8935-480d-b70c-910190caf21e",
@@ -4047,7 +4047,7 @@
         "url": "=https://api.telegram.org/bot{{$env.TELEGRAM_BOT_TOKEN}}/sendPhoto",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\"chat_id\": $node[\"Normalize\"].json.chat_id, \"photo\": $json.photo_url, \"caption\": $json.caption, \"parse_mode\":\"HTML\" } }}",
+        "jsonBody": "={{ {\"chat_id\": $json.chat_id, \"photo\": $json.photo_url, \"caption\": $json.caption, \"parse_mode\":\"HTML\" } }}",
         "options": {}
       },
       "id": "4e067e3d-92c9-4353-abd1-b1430d299066",
@@ -4061,7 +4061,7 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "chatId": "={{ $json.chat_id }}",
         "text": "<b>Готово.</b> Отправил дизайн-концепты.\nЕсли нужно, нажмите «Сделать карточку» для нового товара.",
         "additionalFields": {
           "appendAttribution": false,
@@ -4350,6 +4350,30 @@
         3480
       ],
       "webhookId": "99d1f0fb-83ed-4746-9494-281453869025",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "Генерирую 5 дизайн-концептов...",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "7846ad9c-f01f-4c2f-97bd-c33f7111b0f2",
+      "name": "Send Design Progress",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1500,
+        520
+      ],
       "credentials": {
         "telegramApi": {
           "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
@@ -5151,7 +5175,7 @@
       "main": [
         [
           {
-            "node": "Build Design Concepts",
+            "node": "Send Design Progress",
             "type": "main",
             "index": 0
           }
@@ -5159,6 +5183,17 @@
         [
           {
             "node": "Send Design Disabled",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Design Progress": {
+      "main": [
+        [
+          {
+            "node": "Build Design Concepts",
             "type": "main",
             "index": 0
           }
