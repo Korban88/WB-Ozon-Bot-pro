@@ -4029,7 +4029,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const j=$input.first().json||{};const chat_id = Number(j.chat_id || j.telegram_id || 0);const title=(j.title||'товар').toString();const cat=(j.category||'категория').toString();const mp=(j.marketplace||'маркетплейс').toString();const variants=[{tone:'светлый фон, синий акцент, минимализм',layout:'товар крупно по центру'},{tone:'темный контраст, оранжевый акцент',layout:'диагональная композиция'},{tone:'пастельный фон, зелёный акцент',layout:'split-layout 60/40'},{tone:'нейтральный фон, красный акцент',layout:'товар слева, выгоды справа'},{tone:'графитовый фон, золотой акцент',layout:'плашки преимуществ вокруг товара'}];return variants.map((v,i)=>{const promptText=`Обложка карточки ${title} для ${mp}, категория ${cat}. Marketplace infographics style. ${v.tone}. ${v.layout}. Крупный товар, чистая типографика, зоны под заголовок и 3-4 буллета, без логотипов и чужих брендов.`;const seed=encodeURIComponent(`${j.telegram_id||'u'}-${Date.now()}-${i}`);const prompt=encodeURIComponent(promptText);return {json:{...j, chat_id, concept_index:i+1, concept_total:5, is_last_concept:i===4, caption:`Концепт ${i+1}/5 — ${v.tone}`, photo_url:`https://image.pollinations.ai/p/${prompt}?width=1024&height=1024&seed=${seed}`}};});",
+        "jsCode": "const j=$input.first().json||{};const chat_id = Number(j.chat_id || j?.result?.chat?.id || j.telegram_id || 0);const title=(j.title||'товар').toString();const cat=(j.category||'категория').toString();const mp=(j.marketplace||'маркетплейс').toString();const variants=[{tone:'светлый фон, синий акцент, минимализм',layout:'товар крупно по центру'},{tone:'темный контраст, оранжевый акцент',layout:'диагональная композиция'},{tone:'пастельный фон, зелёный акцент',layout:'split-layout 60/40'},{tone:'нейтральный фон, красный акцент',layout:'товар слева, выгоды справа'},{tone:'графитовый фон, золотой акцент',layout:'плашки преимуществ вокруг товара'}];return variants.map((v,i)=>{const promptText=`Обложка карточки ${title} для ${mp}, категория ${cat}. Marketplace infographics style. ${v.tone}. ${v.layout}. Крупный товар, чистая типографика, зоны под заголовок и 3-4 буллета, без логотипов и чужих брендов.`;const seed=encodeURIComponent(`${j.telegram_id||'u'}-${Date.now()}-${i}`);const prompt=encodeURIComponent(promptText);return {json:{...j, chat_id, concept_index:i+1, concept_total:5, is_last_concept:i===4, caption:`Концепт ${i+1}/5 — ${v.tone}`, photo_url:`https://image.pollinations.ai/p/${prompt}?width=1024&height=1024&seed=${seed}`}};});",
         "mode": "runOnceForAllItems"
       },
       "id": "c43a9966-8935-480d-b70c-910190caf21e",
@@ -5178,6 +5178,11 @@
             "node": "Send Design Progress",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Build Design Concepts",
+            "type": "main",
+            "index": 0
           }
         ],
         [
@@ -5191,13 +5196,7 @@
     },
     "Send Design Progress": {
       "main": [
-        [
-          {
-            "node": "Build Design Concepts",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     }
   },
