@@ -3995,7 +3995,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Команды доступны в нижней панели.",
+        "text": "Меню:",
         "replyMarkup": "replyKeyboard",
         "replyKeyboard": {
           "rows": [
@@ -4003,7 +4003,7 @@
               "row": {
                 "buttons": [
                   {
-                    "text": "Карточка"
+                    "text": "Старт"
                   },
                   {
                     "text": "Меню"
@@ -4188,7 +4188,7 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $json.chat_id || $json.telegram_id || $node['Telegram Trigger'].json.message.chat.id }}",
+        "chatId": "={{$json.chat_id || $node['Normalize'].json.chat_id || $node['Session: Pick'].json.chat_id}}",
         "text": "={{$json.fallback_text}}",
         "additionalFields": {
           "appendAttribution": false,
@@ -4273,7 +4273,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j=$json||{}; const idx=Number(j.concept_index||1); const caption=(j.caption||`Концепт ${idx}/5`).toString(); const prompt=(j.prompt_text||'не указано').toString(); const errs=(Array.isArray(j.download_errors)&&j.download_errors.length)?j.download_errors.slice(-2).join(' | '):''; const lines=[`<b>Концепт ${idx}/5</b>`,`<b>ТЗ для дизайнера</b>`,caption,`Промпт: ${prompt}`]; if(errs) lines.push(`Тех.статус: ${errs}`); return {json:{...j, fallback_text: lines.join('\\n')}};"
+        "jsCode": "const j=$json||{};const normChat = $node['Normalize']?.json?.chat_id ?? null;const sessionChat = $node['Session: Pick']?.json?.chat_id ?? null;const chat_id = (j.chat_id ?? normChat ?? sessionChat ?? null);const idx=Number(j.concept_index||1);const caption=(j.caption||`Концепт ${idx}/5`).toString();const prompt=(j.prompt_text||'не указано').toString();const errs=(Array.isArray(j.download_errors)&&j.download_errors.length)?j.download_errors.slice(-2).join(' | '):'';const lines=[`<b>Концепт ${idx}/5</b>`,`<b>ТЗ для дизайнера</b>`,caption,`Промпт: ${prompt}`];if(errs) lines.push(`Тех.статус: ${errs}`);const fallback_text=lines.join('\\n').slice(0,3800);return {json:{...j, chat_id, fallback_text}};"
       },
       "id": "022ef161-426e-462b-9178-b0d61e5fa1dd",
       "name": "Build Concept Fallback Text",
