@@ -3826,7 +3826,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const j=$input.first().json||{};const chat_id = Number(j.chat_id || j?.result?.chat?.id || 0);const title=(j.title||'товар').toString();const cat=(j.category||'категория').toString();const mp=(j.marketplace||'маркетплейс').toString();const benefits=(j.benefits||'').toString();const variants=[{tone:'светлый фон, синий акцент, минимализм',layout:'товар крупно по центру'},{tone:'темный контраст, оранжевый акцент',layout:'диагональная композиция'},{tone:'пастельный фон, зелёный акцент',layout:'split-layout 60/40'},{tone:'нейтральный фон, красный акцент',layout:'товар слева, выгоды справа'},{tone:'графитовый фон, золотой акцент',layout:'плашки преимуществ вокруг товара'}];return variants.map((v,i)=>{const prompt_text=`Обложка карточки ${title} для ${mp}, категория ${cat}. Преимущества: ${benefits||'не указано'}. Marketplace infographics style. ${v.tone}. ${v.layout}. Крупный товар, чистая типографика, зоны под заголовок и 3-4 буллета, без логотипов и чужих брендов.`;const seed=encodeURIComponent(`${Date.now()}-${i}-${chat_id||'u'}`);const photo_url=`https://image.pollinations.ai/p/${encodeURIComponent(prompt_text)}?width=1024&height=1024&seed=${seed}`;return {json:{...j, chat_id, concept_index:i+1, concept_total:5, is_last_concept:i===4, prompt_text, caption:`Концепт ${i+1}/5 — ${v.tone}`, photo_url}};});",
+        "jsCode": "const j = $input.first().json || {}; const resolvedChat = (j.chat_id !== undefined && j.chat_id !== null && `${j.chat_id}` !== '') ? Number(j.chat_id) : (($node['Normalize'] && $node['Normalize'].json && $node['Normalize'].json.chat_id !== undefined && $node['Normalize'].json.chat_id !== null) ? Number($node['Normalize'].json.chat_id) : (($node['Session: Pick'] && $node['Session: Pick'].json && $node['Session: Pick'].json.chat_id !== undefined && $node['Session: Pick'].json.chat_id !== null) ? Number($node['Session: Pick'].json.chat_id) : null)); const chat_id = Number.isFinite(resolvedChat) ? resolvedChat : null; const title=(j.title||'товар').toString(); const cat=(j.category||'категория').toString(); const mp=(j.marketplace||'маркетплейс').toString(); const benefits=(j.benefits||'').toString(); const variants=[{style:'Минимализм',palette:'светлый фон + синий акцент',background:'чистый студийный фон',layout:'товар крупно по центру, акценты снизу'},{style:'Контраст',palette:'графит + оранжевый',background:'контрастный темный фон',layout:'диагональная композиция, динамичные плашки'},{style:'Эко',palette:'пастель + зелёный акцент',background:'мягкий градиент',layout:'split-layout 60/40, товар и выгоды'},{style:'Каталог',palette:'нейтральный + красный акцент',background:'светлая геометрическая текстура',layout:'товар слева, выгоды справа'},{style:'Премиум',palette:'графит + золотой акцент',background:'темный студийный фон',layout:'товар в центре, плашки преимуществ вокруг'}]; return variants.map((v,i)=>{ const concept_index=i+1; const prompt_text=`Обложка карточки товара ${title} для ${mp}, категория ${cat}. Преимущества: ${benefits||'не указано'}. Стиль: ${v.style}. Палитра: ${v.palette}. Фон: ${v.background}. Композиция: ${v.layout}. Добавь зоны под заголовок и 3-4 буллета, аккуратные инфографические плашки, без логотипов, без водяных знаков, без лишнего текста.`; const seed=encodeURIComponent(`${Date.now()}-${i}-${chat_id ?? 'u'}`); const photo_url=`https://image.pollinations.ai/p/${encodeURIComponent(prompt_text)}?width=1024&height=1024&seed=${seed}`; return { json:{...j, chat_id, concept_index, concept_total:5, is_last_concept:i===4, style:v.style, palette:v.palette, background:v.background, layout_notes:v.layout, prompt_text, caption:`Концепт ${concept_index}/5 — ${v.style}; ${v.palette}; ${v.background}`, photo_url, image_url: photo_url } }; });",
         "mode": "runOnceForAllItems"
       },
       "id": "c43a9966-8935-480d-b70c-910190caf21e",
@@ -3995,7 +3995,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Меню:",
+        "text": "Меню",
         "replyMarkup": "replyKeyboard",
         "replyKeyboard": {
           "rows": [
@@ -4163,7 +4163,7 @@
       "parameters": {
         "resource": "message",
         "operation": "sendPhoto",
-        "chatId": "={{$json.chat_id}}",
+        "chatId": "={{$json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id}}",
         "binaryData": true,
         "binaryProperty": "concept_image",
         "additionalFields": {
@@ -4188,7 +4188,7 @@
     },
     {
       "parameters": {
-        "chatId": "={{$json.chat_id || $node['Normalize'].json.chat_id || $node['Session: Pick'].json.chat_id}}",
+        "chatId": "={{$json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id}}",
         "text": "={{$json.fallback_text}}",
         "additionalFields": {
           "appendAttribution": false,
@@ -4213,7 +4213,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j=$json||{}; const chat_id=Number(j.chat_id || $node['Normalize']?.json?.chat_id || $node['Telegram Trigger']?.json?.message?.chat?.id || 0); const primary=j.photo_url||''; const fallbackText=encodeURIComponent((j.prompt_text||`Концепт ${j.concept_index||1}`).slice(0,180)); const fallback=`https://placehold.co/1024x1024/png?text=${fallbackText}`; const urls=[primary,fallback].filter(Boolean); return {json:{...j, chat_id, urls, try_index: Number(j.try_index||0), current_url: urls[0]||'', provider: 'primary', download_errors: Array.isArray(j.download_errors)?j.download_errors:[] }};"
+        "jsCode": "const j=$json||{}; const chat_id = (j.chat_id !== undefined && j.chat_id !== null && `${j.chat_id}` !== '') ? Number(j.chat_id) : null; const primary=(j.photo_url||'').toString(); const fallbackText=encodeURIComponent((j.prompt_text||`Концепт ${j.concept_index||1}`).slice(0,180)); const fallback=`https://placehold.co/1024x1024/png?text=${fallbackText}`; const urls=[primary,fallback].filter(Boolean); return {json:{...j, chat_id, urls, try_index: Number(j.try_index||0), current_url: urls[0]||'', provider:'primary', download_errors:Array.isArray(j.download_errors)?j.download_errors:[] }};"
       },
       "id": "7528ffd8-3bd1-4926-9a76-aab6a323f58c",
       "name": "Prepare Image URLs",
@@ -4273,7 +4273,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j=$json||{};const normChat = $node['Normalize']?.json?.chat_id ?? null;const sessionChat = $node['Session: Pick']?.json?.chat_id ?? null;const chat_id = (j.chat_id ?? normChat ?? sessionChat ?? null);const idx=Number(j.concept_index||1);const caption=(j.caption||`Концепт ${idx}/5`).toString();const prompt=(j.prompt_text||'не указано').toString();const errs=(Array.isArray(j.download_errors)&&j.download_errors.length)?j.download_errors.slice(-2).join(' | '):'';const lines=[`<b>Концепт ${idx}/5</b>`,`<b>ТЗ для дизайнера</b>`,caption,`Промпт: ${prompt}`];if(errs) lines.push(`Тех.статус: ${errs}`);const fallback_text=lines.join('\\n').slice(0,3800);return {json:{...j, chat_id, fallback_text}};"
+        "jsCode": "const j=$json||{}; const chat_id = (j.chat_id !== undefined && j.chat_id !== null && `${j.chat_id}` !== '') ? Number(j.chat_id) : null; const idx=Number(j.concept_index||1); const caption=(j.caption||`Концепт ${idx}/5`).toString(); const prompt=(j.prompt_text||'не указано').toString(); const errs=(Array.isArray(j.download_errors)&&j.download_errors.length)?j.download_errors.slice(-2).join(' | '):''; const lines=[`<b>Концепт ${idx}/5</b>`,`<b>ТЗ для дизайнера</b>`,caption,`Промпт: ${prompt}`]; if(errs) lines.push(`Тех.статус: ${errs}`); const fallback_text=lines.join('\\n').slice(0,3800); return {json:{...j, chat_id, fallback_text}};"
       },
       "id": "022ef161-426e-462b-9178-b0d61e5fa1dd",
       "name": "Build Concept Fallback Text",
