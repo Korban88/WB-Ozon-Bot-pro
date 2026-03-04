@@ -3539,7 +3539,7 @@
       "parameters": {
         "mode": "runOnceForEachItem",
         "language": "javaScript",
-        "jsCode": "const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst j = $json || {};\nconst card = j.card || {};\nconst marketing = j.marketing || {};\nconst service = j.service || {};\nconst normalized = j.normalized || {};\n\nconst uniq = (arr=[]) => [...new Set(arr.map(x=>String(x||'').trim()).filter(Boolean))];\n\nlet keywords = Array.isArray(card.keywords) ? card.keywords : [];\nkeywords = uniq(keywords);\nif (keywords.length < 12) {\n  const seed = [j.title, j.category, j.marketplace, ...(Array.isArray(card.benefits)?card.benefits:[])];\n  const words = uniq(seed.join(' ').toLowerCase().replace(/[^a-zа-я0-9\\s-]/gi,' ').split(/\\s+/).filter(w=>w.length>2));\n  for (const w of words) {\n    if (keywords.length >= 18) break;\n    if (!keywords.includes(w)) keywords.push(w);\n  }\n}\nif (keywords.length < 12) {\n  keywords = uniq([...keywords, 'купить', 'цена', 'доставка', 'оригинал', 'для дома', 'для работы', 'для подарка', 'практичный', 'качественный', 'современный', 'популярный', 'выгодно']).slice(0, 18);\n}\n\nconst cover = uniq(Array.isArray(marketing.cover_headlines) ? marketing.cover_headlines : []).slice(0,7);\nconst slides = uniq(Array.isArray(marketing.slide_blocks) ? marketing.slide_blocks : []).slice(0,10);\nconst benefits = uniq(Array.isArray(card.benefits) ? card.benefits : []).slice(0,7);\nconst sourceFacts = [j.title, j.benefits, j.clarifications_answers, ...(Array.isArray(normalized.facts) ? normalized.facts : [])].join(' ').toLowerCase();\nconst rawSpecs = Array.isArray(card.specs) ? card.specs : [];\nconst specs = rawSpecs.filter((s) => {\n  const key = String((s && s.key) || '').trim().toLowerCase();\n  const val = String((s && s.value) || '').trim().toLowerCase();\n  if (!key && !val) return false;\n  if (val === 'не указано' || key === 'не указано') return true;\n  if (!sourceFacts) return false;\n  const probe = `${key} ${val}`.trim();\n  return probe && sourceFacts.includes(val) || sourceFacts.includes(key);\n});\n\nconst lines = [];\nlines.push(`◆ <b>${esc(card.title || j.title || 'Карточка товара')}</b>`);\nif (marketing.usp_line) lines.push(esc(marketing.usp_line));\nlines.push(esc(card.short_description || 'Описание сформировано на основе предоставленных данных.'));\n\nlines.push('');\nlines.push('<b>Короткое описание</b>');\nlines.push(esc(card.short_description || 'Недостаточно данных, часть параметров требует уточнения.'));\n\nlines.push('');\nlines.push('<b>Преимущества</b>');\nif (benefits.length) for (const b of benefits) lines.push(`• ${esc(b)}`);\nelse lines.push('• не указано');\n\nlines.push('');\nlines.push('<b>Характеристики</b>');\nif (specs.length) {\n  for (const s of specs.slice(0,12)) lines.push(`• ${esc(s?.key || 'Параметр')}: ${esc(s?.value || 'не указано')}`);\n} else lines.push('• не указано');\n\nlines.push('');\nlines.push('<b>Ключевые слова</b>');\nlines.push(esc(keywords.slice(0,30).join(', ')));\n\nlines.push('');\nlines.push('<b>Обложка: варианты заголовков</b>');\nif (cover.length) for (const h of cover) lines.push(`• ${esc(h)}`);\nelse lines.push('• Акцент на главной выгоде и понятном результате для покупателя.');\n\nlines.push('');\nlines.push('<b>План слайдов (текст + визуал)</b>');\nif (slides.length) for (const s of slides) lines.push(`• ${esc(s)}`);\nelse {\n  const fallbackSlides = [\n    'Слайд 1: оффер и ключевая выгода; визуал — товар крупным планом на чистом фоне.',\n    'Слайд 2: 3 главных преимущества; визуал — иконки и короткие подписи.',\n    'Слайд 3: сценарий использования; визуал — контекст применения.',\n    'Слайд 4: характеристики; визуал — структурированная таблица.',\n    'Слайд 5: комплектация/детали; визуал — выноски на фото.',\n    'Слайд 6: сравнение с альтернативами; визуал — нейтральные колонки.',\n    'Слайд 7: качество и материалы; визуал — фактура/крупные фрагменты.',\n    'Слайд 8: финальный CTA; визуал — товар + короткий призыв.'\n  ];\n  for (const s of fallbackSlides) lines.push(`• ${esc(s)}`);\n}\n\nconst warnings = uniq([\n  ...(Array.isArray(service.warnings) ? service.warnings : []),\n  ...(Array.isArray(normalized.unknowns) ? normalized.unknowns : []),\n]);\nif (warnings.length) {\n  lines.push('');\n  lines.push('<b>Что важно уточнить</b>');\n  for (const w of warnings.slice(0,10)) lines.push(`• ${esc(w)}`);\n}\n\nconst text = lines.join('\\n').trim() || 'Не удалось собрать карточку. Попробуйте другое фото или добавьте уточнения.';\nconst limit = 3900;\nconst chunks = [];\nlet remaining = text;\nwhile (remaining.length > limit) {\n  let cut = remaining.lastIndexOf('\\n', limit);\n  if (cut < 1200) cut = limit;\n  chunks.push(remaining.slice(0, cut).trim());\n  remaining = remaining.slice(cut).trim();\n}\nif (remaining) chunks.push(remaining);\nreturn { json: { ...j, result_text_formatted: text, parts: chunks.length ? chunks : [text] } };"
+        "jsCode": "const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst j = $json || {};\nconst card = j.card || {};\nconst marketing = j.marketing || {};\nconst service = j.service || {};\nconst normalized = j.normalized || {};\n\nconst uniq = (arr=[]) => [...new Set(arr.map(x=>String(x||'').trim()).filter(Boolean))];\n\nlet keywords = Array.isArray(card.keywords) ? card.keywords : [];\nkeywords = uniq(keywords);\nif (keywords.length < 12) {\n  const seed = [j.title, j.category, j.marketplace, ...(Array.isArray(card.benefits)?card.benefits:[])];\n  const words = uniq(seed.join(' ').toLowerCase().replace(/[^a-zа-я0-9\\s-]/gi,' ').split(/\\s+/).filter(w=>w.length>2));\n  for (const w of words) {\n    if (keywords.length >= 18) break;\n    if (!keywords.includes(w)) keywords.push(w);\n  }\n}\nif (keywords.length < 12) {\n  keywords = uniq([...keywords, 'купить', 'цена', 'доставка', 'оригинал', 'для дома', 'для работы', 'для подарка', 'практичный', 'качественный', 'современный', 'популярный', 'выгодно']).slice(0, 18);\n}\n\nconst cover = uniq(Array.isArray(marketing.cover_headlines) ? marketing.cover_headlines : []).slice(0,7);\nconst slides = uniq(Array.isArray(marketing.slide_blocks) ? marketing.slide_blocks : []).slice(0,10);\nconst benefits = uniq(Array.isArray(card.benefits) ? card.benefits : []).slice(0,7);\nconst sourceFacts = [j.title, j.benefits, j.clarifications_answers, ...(Array.isArray(normalized.facts) ? normalized.facts : [])].join(' ').toLowerCase();\nconst rawSpecs = Array.isArray(card.specs) ? card.specs : [];\nconst specs = rawSpecs.filter((s) => {\n  const key = String((s && s.key) || '').trim().toLowerCase();\n  const val = String((s && s.value) || '').trim().toLowerCase();\n  if (!key && !val) return false;\n  if (val === 'не указано' || key === 'не указано') return true;\n  if (!sourceFacts) return false;\n  const probe = `${key} ${val}`.trim();\n  if (!probe) return false;\n  return sourceFacts.includes(val) || sourceFacts.includes(key) || sourceFacts.includes(probe);\n});\n\nconst lines = [];\nlines.push(`◆ <b>${esc(card.title || j.title || 'Карточка товара')}</b>`);\nif (marketing.usp_line) lines.push(esc(marketing.usp_line));\nlines.push(esc(card.short_description || 'Описание сформировано на основе предоставленных данных.'));\n\nlines.push('');\nlines.push('<b>Короткое описание</b>');\nlines.push(esc(card.short_description || 'Недостаточно данных, часть параметров требует уточнения.'));\n\nlines.push('');\nlines.push('<b>Преимущества</b>');\nif (benefits.length) for (const b of benefits) lines.push(`• ${esc(b)}`);\nelse lines.push('• не указано');\n\nlines.push('');\nlines.push('<b>Характеристики</b>');\nif (specs.length) {\n  for (const s of specs.slice(0,12)) lines.push(`• ${esc(s?.key || 'Параметр')}: ${esc(s?.value || 'не указано')}`);\n} else lines.push('• не указано');\n\nlines.push('');\nlines.push('<b>Ключевые слова</b>');\nlines.push(esc(keywords.slice(0,30).join(', ')));\n\nlines.push('');\nlines.push('<b>Обложка: варианты заголовков</b>');\nif (cover.length) for (const h of cover) lines.push(`• ${esc(h)}`);\nelse lines.push('• Акцент на главной выгоде и понятном результате для покупателя.');\n\nlines.push('');\nlines.push('<b>План слайдов (текст + визуал)</b>');\nif (slides.length) for (const s of slides) lines.push(`• ${esc(s)}`);\nelse {\n  const fallbackSlides = [\n    'Слайд 1: оффер и ключевая выгода; визуал — товар крупным планом на чистом фоне.',\n    'Слайд 2: 3 главных преимущества; визуал — иконки и короткие подписи.',\n    'Слайд 3: сценарий использования; визуал — контекст применения.',\n    'Слайд 4: характеристики; визуал — структурированная таблица.',\n    'Слайд 5: комплектация/детали; визуал — выноски на фото.',\n    'Слайд 6: сравнение с альтернативами; визуал — нейтральные колонки.',\n    'Слайд 7: качество и материалы; визуал — фактура/крупные фрагменты.',\n    'Слайд 8: финальный CTA; визуал — товар + короткий призыв.'\n  ];\n  for (const s of fallbackSlides) lines.push(`• ${esc(s)}`);\n}\n\nconst warnings = uniq([\n  ...(Array.isArray(service.warnings) ? service.warnings : []),\n  ...(Array.isArray(normalized.unknowns) ? normalized.unknowns : []),\n]);\nif (warnings.length) {\n  lines.push('');\n  lines.push('<b>Что важно уточнить</b>');\n  for (const w of warnings.slice(0,10)) lines.push(`• ${esc(w)}`);\n}\n\nconst text = lines.join('\\n').trim() || 'Не удалось собрать карточку. Попробуйте другое фото или добавьте уточнения.';\nconst limit = 3900;\nconst chunks = [];\nlet remaining = text;\nwhile (remaining.length > limit) {\n  let cut = remaining.lastIndexOf('\\n', limit);\n  if (cut < 1200) cut = limit;\n  chunks.push(remaining.slice(0, cut).trim());\n  remaining = remaining.slice(cut).trim();\n}\nif (remaining) chunks.push(remaining);\nreturn { json: { ...j, result_text_formatted: text, parts: chunks.length ? chunks : [text] } };"
       }
     },
     {
@@ -3826,7 +3826,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const j = $input.first().json || {};const pick = (...vals) => { for (const v of vals) { if (v !== undefined && v !== null && `${v}` !== '') return v; } return null; };const norm = ($node['Normalize'] && $node['Normalize'].json) ? $node['Normalize'].json : {};const sess = ($node['Session: Pick'] && $node['Session: Pick'].json) ? $node['Session: Pick'].json : {};const chatRaw = pick(j.chat_id, sess.chat_id, norm.chat_id);const chat_id = (chatRaw === null) ? null : Number(chatRaw);const title=(pick(j.title,sess.title)||'товар').toString();const cat=(pick(j.category,sess.category)||'категория').toString();const mp=(pick(j.marketplace,sess.marketplace)||'маркетплейс').toString();const benefits=(pick(j.benefits,sess.benefits)||'').toString();const core=`Товар: ${title}. Категория: ${cat}. Маркетплейс: ${mp}. Преимущества: ${benefits || 'не указано'}. Ориентируйся на визуальные паттерны карточек конкурентов в этой категории.`;const variants=[{style:'Минимализм',palette:'светлый фон + синий акцент',background:'чистый студийный фон',layout:'товар крупно по центру, инфоблоки снизу'},{style:'Контраст',palette:'графит + оранжевый',background:'контрастный темный фон',layout:'диагональная композиция с динамичными плашками'},{style:'Эко',palette:'пастель + зелёный акцент',background:'мягкий градиент',layout:'split-layout 60/40, товар + буллеты'},{style:'Каталог',palette:'нейтральный + красный акцент',background:'светлая геометрическая текстура',layout:'товар слева, выгоды справа'},{style:'Премиум',palette:'графит + золотой акцент',background:'темный студийный фон',layout:'товар в центре, акценты по периметру'}];return variants.map((v,i)=>{const concept_index=i+1;const prompt_text=`${core} Стиль: ${v.style}. Палитра: ${v.palette}. Фон: ${v.background}. Композиция: ${v.layout}. Реалистичный рекламный key visual, без логотипов, без водяных знаков, без лишнего текста.`;const image_prompt=`${title}, ${cat}, ${mp}, ${v.style}, ${v.palette}, ${v.background}, ${v.layout}, ecommerce product card key visual, clean typography zones, no logos, no watermark`;const seed=encodeURIComponent(`${Date.now()}-${i}-${chat_id ?? 'u'}`);const photo_url=`https://image.pollinations.ai/p/${encodeURIComponent(image_prompt)}?model=flux&width=1024&height=1024&seed=${seed}&nologo=true`;return {json:{...j, chat_id, concept_index, concept_total:5, is_last_concept:i===4, style:v.style, palette:v.palette, background:v.background, layout_notes:v.layout, prompt_text, caption:`Концепт ${concept_index}/5 — ${v.style}; ${v.palette}; ${v.background}`, photo_url, image_url: photo_url}};});",
+        "jsCode": "const j = $input.first().json || {};\nconst pick = (...vals) => { for (const v of vals) { if (v !== undefined && v !== null && `${v}`.trim() !== '') return v; } return null; };\nconst norm = ($node['Normalize'] && $node['Normalize'].json) ? $node['Normalize'].json : {};\nconst sess = ($node['Session: Pick'] && $node['Session: Pick'].json) ? $node['Session: Pick'].json : {};\nconst chatRaw = pick(j.chat_id, sess.chat_id, norm.chat_id);\nconst chat_id = (chatRaw === null) ? null : Number(chatRaw);\nconst title = (pick(j.title, sess.title) || 'товар').toString();\nconst category = (pick(j.category, sess.category) || 'категория').toString();\nconst marketplace = (pick(j.marketplace, sess.marketplace) || 'маркетплейс').toString();\nconst benefits = (pick(j.benefits, sess.benefits) || 'не указано').toString();\n\nconst compHints = {\n  'Электроника': ['чистый светлый фон', 'контрастные иконки', 'подсветка контура'],\n  'Одежда': ['мягкий градиент', 'лайфстайл фон', 'акцент на фактуре'],\n  'Дом': ['уютный интерьер', 'натуральные цвета', 'минималистичные плашки'],\n};\nconst hintKey = Object.keys(compHints).find(k => category.toLowerCase().includes(k.toLowerCase()));\nconst marketHint = marketplace.toUpperCase().includes('OZON') ? 'структурные инфоблоки и контрастные плашки' : 'крупный товар и выгоды в буллетах';\nconst catHints = hintKey ? compHints[hintKey].join(', ') : 'градиентный фон, чистая типографика, плашки с выгодами';\nconst core = `Товар: ${title}. Категория: ${category}. Маркетплейс: ${marketplace}. Преимущества: ${benefits}. Паттерны конкурентов: ${marketHint}; ${catHints}.`;\n\nconst variants = [\n  { style: 'Минимализм', palette: 'белый + синий', background: 'чистый студийный', layout: 'товар по центру, 3 буллета снизу' },\n  { style: 'Контраст', palette: 'графит + оранжевый', background: 'темный контрастный', layout: 'диагональная композиция, плашки справа' },\n  { style: 'Инфографика', palette: 'светло-серый + красный', background: 'геометрический фон', layout: 'товар слева, характеристики справа' },\n  { style: 'Лайфстайл', palette: 'теплый беж + зеленый', background: 'контекстный интерьер', layout: 'товар крупно, выгоды в выносках' },\n  { style: 'Премиум', palette: 'графит + золотой', background: 'темный градиент', layout: 'товар в центре, симметричные акценты' },\n];\n\nreturn variants.map((v, i) => {\n  const concept_index = i + 1;\n  const prompt_text = `${core} Концепт ${concept_index}/5. Стиль: ${v.style}. Палитра: ${v.palette}. Фон: ${v.background}. Композиция: ${v.layout}. Сделай продающий key visual для карточки товара, без логотипов и водяных знаков, с зонами под заголовок и буллеты.`;\n  const image_prompt = `${title}, ${category}, ${marketplace}, ${v.style}, ${v.palette}, ${v.background}, ${v.layout}, ecommerce product card, infographics zones, no logos, no watermark`;\n  const seed = encodeURIComponent(`${Date.now()}-${i}-${chat_id ?? 'u'}`);\n  const photo_url = `https://image.pollinations.ai/p/${encodeURIComponent(image_prompt)}?model=flux&width=1024&height=1024&seed=${seed}&nologo=true`;\n  const caption = `Концепт ${concept_index}/5 — ${v.style}; ${v.palette}; ${v.background}`;\n\n  return {\n    json: {\n      ...j,\n      chat_id,\n      marketplace,\n      category,\n      title,\n      benefits,\n      concept_index,\n      concept_total: 5,\n      prompt_text,\n      image_prompt,\n      caption,\n      photo_url,\n      image_url: photo_url,\n      ctx_chat_id: chat_id,\n      ctx_concept_index: concept_index,\n      ctx_concept_total: 5,\n      ctx_prompt_text: prompt_text,\n      ctx_caption: caption,\n      ctx_image_url: photo_url,\n    },\n  };\n});",
         "mode": "runOnceForAllItems"
       },
       "id": "c43a9966-8935-480d-b70c-910190caf21e",
@@ -3996,7 +3996,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "",
+        "text": "Меню:",
         "replyMarkup": "replyKeyboard",
         "replyKeyboard": {
           "rows": [
@@ -4004,25 +4004,10 @@
               "row": {
                 "buttons": [
                   {
-                    "text": "Старт"
-                  },
-                  {
                     "text": "Карт."
                   },
                   {
                     "text": "Меню"
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Назад"
-                  },
-                  {
-                    "text": "Помощь"
                   }
                 ]
               }
@@ -4167,7 +4152,7 @@
       "parameters": {
         "resource": "message",
         "operation": "sendPhoto",
-        "chatId": "={{$json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id}}",
+        "chatId": "={{$json.ctx_chat_id || $json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id}}",
         "binaryData": true,
         "binaryProperty": "concept_image",
         "additionalFields": {
@@ -4192,7 +4177,7 @@
     },
     {
       "parameters": {
-        "chatId": "={{$json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id}}",
+        "chatId": "={{$json.ctx_chat_id || $json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id}}",
         "text": "={{$json.fallback_text}}",
         "additionalFields": {
           "appendAttribution": false,
@@ -4217,7 +4202,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j=$json||{};const chat_id = (j.chat_id !== undefined && j.chat_id !== null && `${j.chat_id}` !== '') ? Number(j.chat_id) : null;const p=(j.photo_url||j.image_url||'').toString();const seed=encodeURIComponent(`${Date.now()}-${j.concept_index||1}-${chat_id ?? 'u'}`);const promptMini=encodeURIComponent((j.prompt_text||`Концепт ${j.concept_index||1}`).slice(0,240));const fallback1=`https://image.pollinations.ai/p/${promptMini}?width=1024&height=1024&seed=${seed}`;const fallback2=`https://picsum.photos/seed/${seed}/1024/1024`;const urls=[p,fallback1,fallback2].filter(Boolean);return {json:{...j, chat_id, urls, try_index:Number(j.try_index||0), current_url:urls[0]||'', provider:'primary', download_errors:Array.isArray(j.download_errors)?j.download_errors:[]}};"
+        "jsCode": "const j = $json || {};\nconst pick = (...v) => { for (const x of v) { if (x !== undefined && x !== null && `${x}` !== '') return x; } return null; };\nconst chatRaw = pick(j.ctx_chat_id, j.chat_id);\nconst chat_id = chatRaw === null ? null : Number(chatRaw);\nconst concept_index = Number(pick(j.ctx_concept_index, j.concept_index, 1));\nconst prompt_text = (pick(j.ctx_prompt_text, j.prompt_text) || `Концепт ${concept_index}/5`).toString();\nconst caption = (pick(j.ctx_caption, j.caption) || `Концепт ${concept_index}/5`).toString();\nconst main = (pick(j.ctx_image_url, j.photo_url, j.image_url) || '').toString();\nconst seed = encodeURIComponent(`${Date.now()}-${concept_index}-${chat_id ?? 'u'}`);\nconst altPoll = `https://image.pollinations.ai/p/${encodeURIComponent(prompt_text.slice(0, 320))}?model=flux&width=1024&height=1024&seed=${seed}`;\nconst altPicsum = `https://picsum.photos/seed/${seed}/1024/1024`;\nconst urls = [main, altPoll, altPicsum].filter(Boolean);\n\nreturn {\n  json: {\n    ...j,\n    chat_id,\n    concept_index,\n    prompt_text,\n    caption,\n    urls,\n    try_index: Number(j.try_index || 0),\n    current_url: urls[0] || '',\n    provider: 'primary',\n    download_errors: Array.isArray(j.download_errors) ? j.download_errors : [],\n    ctx_chat_id: chat_id,\n    ctx_concept_index: concept_index,\n    ctx_concept_total: Number(pick(j.ctx_concept_total, j.concept_total, 5)),\n    ctx_prompt_text: prompt_text,\n    ctx_caption: caption,\n    ctx_image_url: main,\n  },\n};"
       },
       "id": "7528ffd8-3bd1-4926-9a76-aab6a323f58c",
       "name": "Prepare Image URLs",
@@ -4263,7 +4248,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j=$json||{}; const idx=Number(j.try_index||0)+1; const urls=Array.isArray(j.urls)?j.urls:[]; const providers=['primary','fallback_1','fallback_2']; const err=(j.error && (j.error.message || j.error.description || JSON.stringify(j.error))) || ''; const download_errors=[...(Array.isArray(j.download_errors)?j.download_errors:[])]; if(err) download_errors.push(err.slice(0,300)); return {json:{...j, try_index: idx, current_url: urls[idx] || '', provider: providers[idx] || `fallback_${idx}`, download_errors}};"
+        "jsCode": "const j = $json || {};\nconst idx = Number(j.try_index || 0) + 1;\nconst urls = Array.isArray(j.urls) ? j.urls : [];\nconst providers = ['primary', 'fallback_pollinations', 'fallback_picsum'];\nconst err = (j.error && (j.error.message || j.error.description || JSON.stringify(j.error))) || '';\nconst download_errors = [...(Array.isArray(j.download_errors) ? j.download_errors : [])];\nif (err) download_errors.push(err.slice(0, 300));\nreturn { json: { ...j, try_index: idx, current_url: urls[idx] || '', provider: providers[idx] || `fallback_${idx}`, download_errors } };"
       },
       "id": "94b8a7d8-a795-40eb-8f1b-454d79a4610f",
       "name": "Next URL Try",
@@ -4277,7 +4262,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j=$json||{}; const chat_id = (j.chat_id !== undefined && j.chat_id !== null && `${j.chat_id}` !== '') ? Number(j.chat_id) : null; const idx=Number(j.concept_index||1); const caption=(j.caption||`Концепт ${idx}/5`).toString(); const prompt=(j.prompt_text||'не указано').toString(); const errs=(Array.isArray(j.download_errors)&&j.download_errors.length)?j.download_errors.slice(-2).join(' | '):''; const lines=[`<b>Концепт ${idx}/5</b>`,`<b>ТЗ для дизайнера</b>`,caption,`Промпт: ${prompt}`]; if(errs) lines.push(`Тех.статус: ${errs}`); const fallback_text=lines.join('\\n').slice(0,3800); return {json:{...j, chat_id, fallback_text}};"
+        "jsCode": "const j = $json || {};\nconst pick = (...v) => { for (const x of v) { if (x !== undefined && x !== null && `${x}` !== '') return x; } return null; };\nconst chatRaw = pick(j.ctx_chat_id, j.chat_id);\nconst chat_id = chatRaw === null ? null : Number(chatRaw);\nconst idx = Number(pick(j.ctx_concept_index, j.concept_index, 1));\nconst total = Number(pick(j.ctx_concept_total, j.concept_total, 5));\nconst caption = (pick(j.ctx_caption, j.caption) || `Концепт ${idx}/${total}`).toString();\nconst prompt = (pick(j.ctx_prompt_text, j.prompt_text) || 'не указано').toString();\nconst errs = (Array.isArray(j.download_errors) && j.download_errors.length) ? j.download_errors.slice(-2).join(' | ') : '';\nconst lines = [`<b>Концепт ${idx}/${total}</b>`, `<b>ТЗ для дизайнера</b>`, caption, `Промпт: ${prompt}`];\nif (errs) lines.push(`Тех.статус: ${errs}`);\nconst fallback_text = lines.join('\\n').slice(0, 3800);\nreturn { json: { ...j, chat_id, concept_index: idx, concept_total: total, prompt_text: prompt, caption, fallback_text } };"
       },
       "id": "022ef161-426e-462b-9178-b0d61e5fa1dd",
       "name": "Build Concept Fallback Text",
@@ -4286,6 +4271,35 @@
       "position": [
         2460,
         840
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j=$json||{}; return { json: { ...j } };"
+      },
+      "id": "34029924-0628-4960-abba-e4d0d1ac96e2",
+      "name": "Design Context Keeper",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1900,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "4dd73f7c-3ea8-4db5-a78e-8a0665844c49",
+      "name": "Merge Design Download Context",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2100,
+        520
       ]
     }
   ],
@@ -5093,9 +5107,9 @@
       "main": [
         [
           {
-            "node": "IF Concept Image Downloaded",
+            "node": "Merge Design Download Context",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
@@ -5133,7 +5147,7 @@
       "main": [
         [
           {
-            "node": "Download Design Concept Image",
+            "node": "Design Context Keeper",
             "type": "main",
             "index": 0
           }
@@ -5162,7 +5176,7 @@
       "main": [
         [
           {
-            "node": "Download Design Concept Image",
+            "node": "Design Context Keeper",
             "type": "main",
             "index": 0
           }
@@ -5185,6 +5199,33 @@
         [
           {
             "node": "Send Concept Text Fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Design Context Keeper": {
+      "main": [
+        [
+          {
+            "node": "Download Design Concept Image",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Design Download Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Design Download Context": {
+      "main": [
+        [
+          {
+            "node": "IF Concept Image Downloaded",
             "type": "main",
             "index": 0
           }
