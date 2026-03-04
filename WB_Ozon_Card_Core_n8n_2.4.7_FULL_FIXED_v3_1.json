@@ -470,7 +470,7 @@
               "row": {
                 "buttons": [
                   {
-                    "text": "Сделать карточку",
+                    "text": "Карточка",
                     "additionalFields": {
                       "callback_data": "GEN"
                     }
@@ -519,10 +519,10 @@
             },
             {
               "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
-              "rightValue": "как это работает",
+              "rightValue": "^(как это работает|помощь)$",
               "operator": {
                 "type": "string",
-                "operation": "equals"
+                "operation": "regex"
               }
             }
           ],
@@ -586,10 +586,10 @@
             },
             {
               "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
-              "rightValue": "сделать карточку",
+              "rightValue": "^(сделать карточку|карточка)$",
               "operator": {
                 "type": "string",
-                "operation": "equals"
+                "operation": "regex"
               }
             }
           ],
@@ -4003,10 +4003,10 @@
               "row": {
                 "buttons": [
                   {
-                    "text": "Старт"
+                    "text": "Карточка"
                   },
                   {
-                    "text": "Назад"
+                    "text": "Меню"
                   }
                 ]
               }
@@ -4015,10 +4015,10 @@
               "row": {
                 "buttons": [
                   {
-                    "text": "Как это работает"
+                    "text": "Назад"
                   },
                   {
-                    "text": "Меню"
+                    "text": "Помощь"
                   }
                 ]
               }
@@ -4188,8 +4188,8 @@
     },
     {
       "parameters": {
-        "chatId": "={{$json.chat_id || $json.telegram_id || $node['Telegram Trigger'].json.message.chat.id}}",
-        "text": "={{'Не удалось получить изображение концепта. Отправляю ТЗ для дизайнера:\n\n' + ($json.caption || 'Концепт') + '\n' + 'Промпт: ' + ($json.prompt_text || 'не указано') + '\n' + 'Провайдеры/ошибки: ' + ((Array.isArray($json.download_errors) && $json.download_errors.length) ? $json.download_errors.join(' | ') : 'нет данных')}}",
+        "chatId": "={{ $json.chat_id || $json.telegram_id || $node['Telegram Trigger'].json.message.chat.id }}",
+        "text": "={{$json.fallback_text}}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -4268,6 +4268,20 @@
       "position": [
         2500,
         680
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j=$json||{}; const idx=Number(j.concept_index||1); const caption=(j.caption||`Концепт ${idx}/5`).toString(); const prompt=(j.prompt_text||'не указано').toString(); const errs=(Array.isArray(j.download_errors)&&j.download_errors.length)?j.download_errors.slice(-2).join(' | '):''; const lines=[`<b>Концепт ${idx}/5</b>`,`<b>ТЗ для дизайнера</b>`,caption,`Промпт: ${prompt}`]; if(errs) lines.push(`Тех.статус: ${errs}`); return {json:{...j, fallback_text: lines.join('\\n')}};"
+      },
+      "id": "022ef161-426e-462b-9178-b0d61e5fa1dd",
+      "name": "Build Concept Fallback Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2460,
+        840
       ]
     }
   ],
@@ -5139,7 +5153,7 @@
         ],
         [
           {
-            "node": "Send Concept Text Fallback",
+            "node": "Build Concept Fallback Text",
             "type": "main",
             "index": 0
           }
@@ -5162,6 +5176,17 @@
         [
           {
             "node": "IF Last Concept",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Concept Fallback Text": {
+      "main": [
+        [
+          {
+            "node": "Send Concept Text Fallback",
             "type": "main",
             "index": 0
           }
