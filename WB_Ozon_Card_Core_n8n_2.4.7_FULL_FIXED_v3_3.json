@@ -458,7 +458,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "<b>Карточка WB/Ozon PRO-bot</b>\n\nСоберу для вашего товара:\n• SEO-название под поиск\n• 5 буллетов под конверсию\n• описание без воды\n• ключевые слова\n• ТЗ на инфографику\n\nНужно 3–5 минут.",
+        "text": "👋 <b>Привет! Я WB/Ozon Card PRO-bot</b>\n\n🚀 <i>Помогу быстро собрать продающую карточку товара</i> для WB/Ozon:\n• SEO-название под поиск\n• понятные буллеты и преимущества\n• описание без воды\n• ключевые слова\n• идеи для обложки и слайдов\n\n✨ В среднем это занимает 3–5 минут.",
         "replyMarkup": "inlineKeyboard",
         "additionalFields": {
           "appendAttribution": false,
@@ -1723,7 +1723,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "<b>Шаг 4/5.</b> Напишите преимущества товара.\nМожно через запятую или с новой строки.",
+        "text": "<b>Шаг 4/5.</b> Напишите любую информацию о товаре: преимущества, характеристики, материал, размер, комплектацию, цвет и т.д.\n<i>Можно одним текстом, через запятую или с новой строки.</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -2185,7 +2185,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{$json.openrouter_body}}",
+        "jsonBody": "={{ JSON.stringify($json.openrouter_body || {}) }}",
         "options": {}
       },
       "id": "bfd10892-4b3c-443a-b324-82e52d258ebf",
@@ -3455,7 +3455,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{$json.openrouter_body}}",
+        "jsonBody": "={{ JSON.stringify($json.openrouter_body || {}) }}",
         "options": {}
       },
       "id": "abbbe811-37d8-452a-8a67-6b08776ef970",
@@ -3809,6 +3809,14 @@
                 "type": "string",
                 "operation": "equals"
               }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "DRAW_DESIGN_5_PAID",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
           ],
           "combinator": "or"
@@ -3867,7 +3875,7 @@
     {
       "parameters": {
         "chatId": "={{ $json.chat_id }}",
-        "text": "<b>Готово.</b> Отправил дизайн-концепты.\nЕсли нужно, нажмите «Сделать карточку» для нового товара.",
+        "text": "<b>Готово.</b> Отправил 5 визуальных вариантов дизайна.",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -4004,10 +4012,22 @@
               "row": {
                 "buttons": [
                   {
-                    "text": "Карт."
+                    "text": "Старт"
                   },
                   {
                     "text": "Меню"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Назад"
+                  },
+                  {
+                    "text": "Как это работает"
                   }
                 ]
               }
@@ -4095,7 +4115,7 @@
     {
       "parameters": {
         "chatId": "={{ $json.chat_id }}",
-        "text": "Генерирую 5 дизайн-концептов...",
+        "text": "🧠 Генерирую 5 подробных дизайн-концептов (текст)...",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -4299,6 +4319,191 @@
       "typeVersion": 3.2,
       "position": [
         2100,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "DRAW_DESIGN_5_PAID",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4706a4ca-1de0-4b96-b188-68f0ecf8f2be",
+      "name": "IF Draw Design Paid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id || $(\"Normalize\").first().json.chat_id }}",
+        "text": "✨ Рисую 5 вариантов дизайна... Это может занять до 1–2 минут.",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "9f4d5004-0402-41ac-8574-0218e25dddb0",
+      "name": "Send Draw Progress",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1780,
+        420
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.ctx_chat_id || $json.chat_id || $(\"Normalize\").first().json.chat_id }}",
+        "text": "Готово ✅\nВыбрал 5 концепций. Нажмите кнопку ниже, чтобы нарисовать 5 визуальных вариантов.",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Нарисовать дизайн (5 вариантов) — 400 ₽",
+                    "additionalFields": {
+                      "callback_data": "DRAW_DESIGN_5_PAID"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "158263ee-66f7-4ff3-809b-59f301a44c50",
+      "name": "Send Design Paywall CTA",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2560,
+        340
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id || $(\"Normalize\").first().json.chat_id }}",
+        "text": "⚙️ Генерирую текстовую карточку...",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "95f2f040-466b-44b1-a0d3-3646475391cb",
+      "name": "Send Card Progress",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3160,
+        1260
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($node[\"Normalize\"].json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "DRAW_DESIGN_5_PAID",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "30bd6a18-9ea3-4ce6-af2d-3a26b16b138f",
+      "name": "IF Render Mode",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2280,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($node[\"Normalize\"].json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "DRAW_DESIGN_5_PAID",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7a0f0877-966a-4583-a7c6-801f55fe5482",
+      "name": "IF Draw Flow Item",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1860,
         520
       ]
     }
@@ -4643,12 +4848,12 @@
       "main": [
         [
           {
-            "node": "TG: GetFile",
+            "node": "Send Card Progress",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Edit Fields1",
+            "node": "IF has saved photo",
             "type": "main",
             "index": 0
           }
@@ -5034,7 +5239,7 @@
       "main": [
         [
           {
-            "node": "Prepare Image URLs",
+            "node": "IF Draw Flow Item",
             "type": "main",
             "index": 0
           }
@@ -5062,7 +5267,7 @@
       "main": [
         [
           {
-            "node": "Send Design Done",
+            "node": "IF Render Mode",
             "type": "main",
             "index": 0
           }
@@ -5079,12 +5284,7 @@
       "main": [
         [
           {
-            "node": "Send Design Progress",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Build Design Concepts",
+            "node": "IF Draw Design Paid",
             "type": "main",
             "index": 0
           }
@@ -5230,6 +5430,80 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "Send Card Progress": {
+      "main": [
+        []
+      ]
+    },
+    "IF Draw Design Paid": {
+      "main": [
+        [
+          {
+            "node": "Send Draw Progress",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Build Design Concepts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Design Progress",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Build Design Concepts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Render Mode": {
+      "main": [
+        [
+          {
+            "node": "Send Design Done",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Design Paywall CTA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Draw Flow Item": {
+      "main": [
+        [
+          {
+            "node": "Prepare Image URLs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Concept Fallback Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Persistent Nav": {
+      "main": [
+        []
       ]
     }
   },
