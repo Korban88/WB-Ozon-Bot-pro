@@ -3863,7 +3863,7 @@
     {
       "parameters": {
         "method": "GET",
-        "url": "={{$json.current_url}}",
+        "url": "={{$json.photo_url}}",
         "options": {
           "response": {
             "response": {
@@ -3871,7 +3871,7 @@
               "outputPropertyName": "concept_image"
             }
           },
-          "timeout": 60000,
+          "timeout": 90000,
           "followRedirect": true
         }
       },
@@ -3884,7 +3884,7 @@
         520
       ],
       "continueOnFail": true,
-      "onError": "continueRegularOutput"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -4186,11 +4186,11 @@
       "parameters": {
         "resource": "message",
         "operation": "sendPhoto",
-        "chatId": "={{$json.ctx_chat_id || $json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id}}",
+        "chatId": "={{ $('Build Design Concepts').item.json.ctx_chat_id || $('Build Design Concepts').item.json.chat_id }}",
         "binaryData": true,
         "binaryProperty": "concept_image",
         "additionalFields": {
-          "caption": "={{$json.caption}}",
+          "caption": "={{ $('Build Design Concepts').item.json.caption || '' }}",
           "parse_mode": "HTML"
         }
       },
@@ -4198,6 +4198,8 @@
       "name": "Send Design Concept Photo Binary",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
+      "continueOnFail": true,
+      "onError": "continueErrorOutput",
       "position": [
         2280,
         560
@@ -5461,9 +5463,16 @@
       "main": [
         [
           {
-            "node": "Merge Design Download Context",
+            "node": "Send Design Concept Photo Binary",
             "type": "main",
-            "index": 1
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Concept Fallback Text",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -5488,6 +5497,13 @@
     },
     "Send Design Concept Photo Binary": {
       "main": [
+        [
+          {
+            "node": "Restore Concept Context DRAW",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Restore Concept Context DRAW",
@@ -5681,7 +5697,7 @@
       "main": [
         [
           {
-            "node": "Send Concept Photo URL",
+            "node": "Download Design Concept Image",
             "type": "main",
             "index": 0
           }
