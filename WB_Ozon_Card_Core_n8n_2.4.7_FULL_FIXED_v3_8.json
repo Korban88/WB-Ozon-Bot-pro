@@ -3098,7 +3098,7 @@
           "conditions": [
             {
               "id": "a51da54b-2d3f-40c8-a300-a564aa0fc4e1",
-              "leftValue": "={{ ($json.photo_file_id || '').trim() }}",
+              "leftValue": "={{ ($node[\"Session: Pick\"].json.photo_file_id || '').trim() }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
@@ -4529,7 +4529,7 @@
           "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -4557,7 +4557,7 @@
           "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -4585,7 +4585,7 @@
           "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -4613,7 +4613,7 @@
           "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -4641,7 +4641,7 @@
           "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -4669,7 +4669,7 @@
           "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -4697,7 +4697,7 @@
           "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -4725,7 +4725,7 @@
           "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueRegularOutput"
     }
   ],
   "pinData": {},
@@ -5780,6 +5780,17 @@
         [
           {
             "node": "Send: Ask photo(repeat)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Please Wait": {
+      "main": [
+        [
+          {
+            "node": "IF has saved photo",
             "type": "main",
             "index": 0
           }
