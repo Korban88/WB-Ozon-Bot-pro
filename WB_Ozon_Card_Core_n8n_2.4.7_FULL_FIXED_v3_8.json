@@ -1262,9 +1262,9 @@
                     }
                   },
                   {
-                    "text": "Одежда",
+                    "text": "Красота",
                     "additionalFields": {
-                      "callback_data": "CAT_CLOTHES"
+                      "callback_data": "CAT_BEAUTY"
                     }
                   }
                 ]
@@ -1274,15 +1274,27 @@
               "row": {
                 "buttons": [
                   {
-                    "text": "Обувь",
+                    "text": "Одежда и обувь",
                     "additionalFields": {
-                      "callback_data": "CAT_SHOES"
+                      "callback_data": "CAT_APPAREL"
                     }
                   },
                   {
-                    "text": "Красота",
+                    "text": "Товары для животных",
                     "additionalFields": {
-                      "callback_data": "CAT_BEAUTY"
+                      "callback_data": "CAT_PETS"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Другое",
+                    "additionalFields": {
+                      "callback_data": "CAT_OTHER"
                     }
                   }
                 ]
@@ -1330,7 +1342,7 @@
             {
               "id": "c80cea91-508d-45fd-adae-a5be36677e81",
               "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
-              "rightValue": "^(CAT_|ЭЛЕКТРОНИКА|ДЕТЯМ|СПОРТ|АВТО|ДОМ И КУХНЯ|ОДЕЖДА|ОБУВЬ|КРАСОТА)",
+              "rightValue": "^(CAT_|ЭЛЕКТРОНИКА|ДЕТЯМ|СПОРТ|АВТО|ДОМ И КУХНЯ|ОДЕЖДА|ОБУВЬ|КРАСОТА|ОДЕЖДА И ОБУВЬ|ТОВАРЫ ДЛЯ ЖИВОТНЫХ|ДРУГОЕ)",
               "operator": {
                 "type": "string",
                 "operation": "regex"
@@ -1352,7 +1364,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const code = ($json.text || '').trim().toUpperCase();\n\nconst map = {\n  CAT_APPAREL: 'Одежда',\n  CAT_SHOES: 'Обувь',\n  CAT_BEAUTY: 'Красота и уход',\n  CAT_HOME: 'Дом и кухня',\n  CAT_ELECTRONICS: 'Электроника',\n  CAT_KIDS: 'Детские товары',\n  CAT_SPORT: 'Спорт и отдых',\n  CAT_AUTO: 'Авто-товары',\n  'ОДЕЖДА': 'Одежда',\n  'ОБУВЬ': 'Обувь',\n  'КРАСОТА': 'Красота и уход',\n  'ДОМ И КУХНЯ': 'Дом и кухня',\n  'ЭЛЕКТРОНИКА': 'Электроника',\n  'ДЕТЯМ': 'Детские товары',\n  'СПОРТ': 'Спорт и отдых',\n  'АВТО': 'Авто-товары',\n};\n\nreturn [{\n  json: {\n    ...$json,\n    category_mapped: map[code] || 'Другое',\n  }\n}];"
+        "jsCode": "const code = ($json.text || '').trim().toUpperCase();\n\nconst map = {\n  CAT_APPAREL: 'Одежда и обувь',\n  CAT_SHOES: 'Одежда и обувь',\n  CAT_CLOTHES: 'Одежда и обувь',\n  CAT_BEAUTY: 'Красота и уход',\n  CAT_HOME: 'Дом и кухня',\n  CAT_ELECTRONICS: 'Электроника',\n  CAT_KIDS: 'Детские товары',\n  CAT_SPORT: 'Спорт и отдых',\n  CAT_AUTO: 'Авто-товары',\n  CAT_PETS: 'Товары для животных',\n  CAT_OTHER: 'Другое',\n  'ОДЕЖДА': 'Одежда и обувь',\n  'ОБУВЬ': 'Одежда и обувь',\n  'ОДЕЖДА И ОБУВЬ': 'Одежда и обувь',\n  'КРАСОТА': 'Красота и уход',\n  'ДОМ И КУХНЯ': 'Дом и кухня',\n  'ЭЛЕКТРОНИКА': 'Электроника',\n  'ДЕТЯМ': 'Детские товары',\n  'СПОРТ': 'Спорт и отдых',\n  'АВТО': 'Авто-товары',\n  'ТОВАРЫ ДЛЯ ЖИВОТНЫХ': 'Товары для животных',\n  'ДРУГОЕ': 'Другое',\n};\n\nreturn [{\n  json: {\n    ...$json,\n    category_mapped: map[code] || 'Другое',\n  }\n}];"
       },
       "id": "38011d70-c799-44bf-8cac-91fdf595d63c",
       "name": "Map category",
@@ -2591,9 +2603,9 @@
                     }
                   },
                   {
-                    "text": "Одежда",
+                    "text": "Красота",
                     "additionalFields": {
-                      "callback_data": "CAT_CLOTHES"
+                      "callback_data": "CAT_BEAUTY"
                     }
                   }
                 ]
@@ -2603,15 +2615,27 @@
               "row": {
                 "buttons": [
                   {
-                    "text": "Обувь",
+                    "text": "Одежда и обувь",
                     "additionalFields": {
-                      "callback_data": "CAT_SHOES"
+                      "callback_data": "CAT_APPAREL"
                     }
                   },
                   {
-                    "text": "Красота",
+                    "text": "Товары для животных",
                     "additionalFields": {
-                      "callback_data": "CAT_BEAUTY"
+                      "callback_data": "CAT_PETS"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Другое",
+                    "additionalFields": {
+                      "callback_data": "CAT_OTHER"
                     }
                   }
                 ]
@@ -2845,7 +2869,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j = $json;\nconst normalized = j.normalized || {};\nconst b64 = (j.image_base64_clean || '').toString().trim();\n\nconst inputData = {\n  marketplace: (j.marketplace || '').toString().trim(),\n  category: (j.category || '').toString().trim(),\n  title: (j.title || '').toString().trim(),\n  benefits: (j.benefits || '').toString().trim(),\n  clarifications_answers: (j.clarifications_answers || '').toString().trim(),\n  facts: Array.isArray(normalized.facts) ? normalized.facts : [],\n  unknowns: Array.isArray(normalized.unknowns) ? normalized.unknowns : [],\n};\n\nconst system = `\nТы senior e-commerce copywriter и market-analyst для WB/Ozon. Ты хорошо знаешь, как выглядят описания топовых товаров на WB и Ozon в данной категории.\nВерни строго JSON структуры:\n{\n  \"card\": {\"title\":\"\",\"short_description\":\"\",\"benefits\":[],\"specs\":[{\"key\":\"\",\"value\":\"\"}],\"keywords\":[]},\n  \"marketing\": {\"segments\":[{\"name\":\"\",\"pain\":\"\",\"promise\":\"\"}],\"usp_line\":\"\",\"cover_headlines\":[],\"slide_blocks\":[]},\n  \"service\": {\"notes\":[],\"warnings\":[]}\n}\n\nПравила:\n- short_description: 200-300 слов в стиле описаний топовых конкурентов на маркетплейсе. Упомяни сферу применения, целевую аудиторию, ключевые преимущества, сценарии использования, эффект для покупателя. Стиль живой, убедительный, без канцелярщины и шаблонных фраз.\n- specs: включай ТОЛЬКО характеристики, которые явно подтверждены фото или входными данными. Если значение неизвестно — не включай этот параметр вообще. Никаких значений \"не указано\" или \"неизвестно\" в specs.\n- keywords: ровно 15-25 поисковых фраз из 2-4 слов, которые реально вводят покупатели на WB/Ozon при поиске этого товара. Именно фразы, не одиночные слова.\n- Строго опирайся на входные данные и фото товара.\n- Проведи рыночное позиционирование по категории и маркетплейсу, но без выдуманных техпараметров.\n- Русский язык, деловой и убедительный стиль.\n- Никаких эмодзи.\n- Для cover_headlines дай 5-7 вариантов, для slide_blocks 8-10 блоков с продающей логикой.\n`;\n\nconst body = {\n  model: $env.OPENROUTER_TEXT_MODEL || 'openai/gpt-4o-mini',\n  temperature: 0.35,\n  response_format: { type: 'json_object' },\n  messages: [\n    { role: 'system', content: system.trim() },\n    {\n      role: 'user',\n      content: [\n        { type: 'text', text: `Входные данные:\n${JSON.stringify(inputData, null, 2)}` },\n        ...(b64 ? [{ type: 'image_url', image_url: { url: `data:image/jpeg;base64,${b64}` } }] : []),\n      ],\n    },\n  ],\n};\n\nreturn { json: { ...j, openrouter_body: body } };"
+        "jsCode": "const j = $json;\nconst normalized = j.normalized || {};\nconst b64 = (j.image_base64_clean || '').toString().trim();\n\nconst inputData = {\n  marketplace: (j.marketplace || '').toString().trim(),\n  category: (j.category || '').toString().trim(),\n  title: (j.title || '').toString().trim(),\n  benefits: (j.benefits || '').toString().trim(),\n  clarifications_answers: (j.clarifications_answers || '').toString().trim(),\n  facts: Array.isArray(normalized.facts) ? normalized.facts : [],\n  unknowns: Array.isArray(normalized.unknowns) ? normalized.unknowns : [],\n};\n\nconst system = `\nТы senior e-commerce copywriter и market-analyst для WB/Ozon. Ты хорошо знаешь, как выглядят описания топовых товаров на WB и Ozon в данной категории.\nВерни строго JSON структуры:\n{\n  \"card\": {\"title\":\"\",\"short_description\":\"\",\"benefits\":[],\"specs\":[{\"key\":\"\",\"value\":\"\"}],\"keywords\":[]},\n  \"marketing\": {\"segments\":[{\"name\":\"\",\"pain\":\"\",\"promise\":\"\"}],\"usp_line\":\"\",\"cover_headlines\":[],\"slide_blocks\":[]},\n  \"service\": {\"notes\":[],\"warnings\":[]}\n}\n\nПравила:\n- short_description: 200-300 слов в стиле описаний топовых конкурентов на маркетплейсе. Упомяни сферу применения, целевую аудиторию, ключевые преимущества, сценарии использования, эффект для покупателя. Стиль живой, убедительный, без канцелярщины и шаблонных фраз.\n- specs: включай ТОЛЬКО характеристики, которые явно подтверждены фото или входными данными. Если значение неизвестно — не включай этот параметр вообще. Никаких значений \"не указано\" или \"неизвестно\" в specs.\n- keywords: ровно 15-25 поисковых фраз из 2-4 слов, которые реально вводят покупатели на WB/Ozon при поиске этого товара. Именно фразы, не одиночные слова.\n- Строго опирайся на входные данные и фото товара.\n- Проведи рыночное позиционирование по категории и маркетплейсу, но без выдуманных техпараметров.\n- Русский язык, деловой и убедительный стиль.\n- Никаких эмодзи.\n- Для cover_headlines дай 5-7 вариантов, для slide_blocks 8-10 блоков с продающей логикой.\n`;\n\nconst body = {\n  model: $env.OPENROUTER_TEXT_MODEL || 'openai/gpt-4o-mini',\n  temperature: 0.35,\n  response_format: { type: 'json_object' },\n  messages: [\n    { role: 'system', content: system.trim() },\n    {\n      role: 'user',\n      content: `Входные данные:\\n${JSON.stringify(inputData, null, 2)}`,\n    },\n  ],\n};\n\nreturn { json: { ...j, openrouter_body: body } };"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -4446,7 +4470,7 @@
     {
       "parameters": {
         "chatId": "={{ $json.chat_id || $(\"Normalize\").first().json.chat_id }}",
-        "text": "⚙️ Генерирую текстовую карточку...",
+        "text": "{{ ['⚙️','🔄','🧩','📋','🛠'][Math.floor(Date.now()/1000)%5] }} Генерирую текстовую карточку... Обычно занимает <b>20–40 секунд</b>.",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
