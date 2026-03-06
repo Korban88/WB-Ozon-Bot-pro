@@ -2606,7 +2606,7 @@
     {
       "parameters": {
         "resource": "file",
-        "fileId": "={{ $json.photo_file_id }}",
+        "fileId": "={{ $node[\"Session: Pick\"].json.photo_file_id || $json.photo_file_id }}",
         "additionalFields": {}
       },
       "id": "47bf29cd-b626-49fe-8098-2c4dd8cd0ddd",
@@ -3641,7 +3641,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// mode: runOnceForAllItems\nconst j = $input.first().json || {};\nconst pick = (...vals) => { for (const v of vals) { if (v !== undefined && v !== null && `${v}`.trim() !== '') return v; } return null; };\nconst norm = ($node['Normalize'] && $node['Normalize'].json) ? $node['Normalize'].json : {};\nconst sess = ($node['Session: Pick'] && $node['Session: Pick'].json) ? $node['Session: Pick'].json : {};\n\nconst chat_id = Number(pick(j.chat_id, sess.chat_id, norm.chat_id) || 0);\nconst title = (pick(j.title, sess.title) || 'товар').toString();\nconst category = (pick(j.category, sess.category) || 'категория').toString();\nconst marketplace = (pick(j.marketplace, sess.marketplace) || 'маркетплейс').toString();\nconst benefits = (pick(j.benefits, sess.benefits) || '').toString();\nconst render_mode = ((j.render_mode || 'TEXT') + '').trim().toUpperCase() === 'DRAW' ? 'DRAW' : 'TEXT';\n\nconst variants = [\n  {\n    style: 'Минимализм Premium',\n    palette: 'Белый #FFFFFF · Тёмно-синий #1A237E · Акцент золотой #FFD700',\n    background: 'Студийный белый с мягкими тенями',\n    layout: 'Товар по центру 70%, 3 буллета снизу в карточках, типографика Montserrat Bold',\n    typography: 'Заголовок: Montserrat Bold 72px, цвет #1A237E\\nПодписи: Medium 28px\\nАкценты: #FFD700',\n    composition: 'Центральная ось, симметрия, product hero, safe zone 8%',\n    image_prompt: `ultra-premium minimalist product card, ${title}, white studio background, soft shadows, dark navy blue typography, golden accent lines, Montserrat font style, clean symmetric composition, luxury e-commerce photography, 4k quality, no watermarks, professional lighting`\n  },\n  {\n    style: 'Контраст Dark',\n    palette: 'Графит #1C1C1E · Оранжевый #FF6B35 · Белый #FFFFFF',\n    background: 'Тёмный градиент #1C1C1E → #2D2D30',\n    layout: 'Диагональная композиция 30°, товар слева, плашки с преимуществами справа',\n    typography: 'Заголовок: SF Pro Display Bold 68px, белый\\nАкцент: оранжевый #FF6B35\\nПодписи: Regular 26px',\n    composition: 'Диагональ 30°, динамика, высокий контраст, энергичный ритм',\n    image_prompt: `high contrast dark background graphite gradient, ${title}, orange coral accent colors, diagonal composition, bold white typography, modern aggressive style, premium e-commerce product card, professional photography, 4k quality, no text watermarks`\n  },\n  {\n    style: 'Инфографика',\n    palette: 'Светло-серый #F5F5F7 · Красный #E03131 · Тёмный #1C1C1E',\n    background: 'Геометрический паттерн на светло-сером',\n    layout: 'Товар слева 50%, характеристики в иконках справа, строгая сетка 4 колонки',\n    typography: 'Заголовок: Bold 64px\\nХарактеристики: иконки 32px + текст 24px\\nСтрогое выравнивание по сетке',\n    composition: '2-колоночный грид, выравнивание по левому краю, структурированный info-блок',\n    image_prompt: `clean infographic product card, ${title}, light gray background geometric pattern, red accent color, specifications icons layout, structured grid design, two columns product and info, corporate professional style, e-commerce infographic, 4k quality, no watermarks`\n  },\n  {\n    style: 'Лайфстайл Органик',\n    palette: 'Тёплый беж #F5E6D3 · Глубокий зелёный #2D5016 · Крем #FFF8F0',\n    background: 'Контекстный интерьерный или природный фон',\n    layout: 'Товар крупно в контексте, выноски с преимуществами в баблах',\n    typography: 'Заголовок: Playfair Display Bold 66px\\nПодписи в баблах: Lato 26px\\nТёплые натуральные цвета',\n    composition: 'Правило третей, золотое сечение, контекст + продукт, живая эмоциональная подача',\n    image_prompt: `lifestyle product photography, ${title}, warm beige cream background, natural environment context, deep green organic accents, product in use scene, warm natural lighting, rule of thirds composition, organic aesthetic, high quality photography, 4k, no watermarks`\n  },\n  {\n    style: 'Премиум Dark Luxury',\n    palette: 'Чёрный #0A0A0A · Золотой #C9A84C · Белый #FFFFFF',\n    background: 'Тёмный бархатный градиент с бликами и отражениями',\n    layout: 'Товар по центру на тёмном фоне, золотые акценты симметрично, воздух и пространство',\n    typography: 'Заголовок: Cormorant Garamond Bold 70px\\nАкценты: золотой #C9A84C\\nПространство и воздух',\n    composition: 'Симметрия, центрирование, luxury whitespace, premium minimalism',\n    image_prompt: `ultra luxury dark product photography, ${title}, black velvet background, gold metallic accents, symmetric placement, premium brand visual, high-end fashion e-commerce aesthetic, elegant typography space, reflections and bokeh, cinematic lighting, 4k ultra quality, no watermarks`\n  }\n];\n\nreturn variants.map((v, i) => {\n  const idx = i + 1;\n  const total = 5;\n  const is_last_concept = idx === total;\n\n  const poll_url = 'https://image.pollinations.ai/p/' +\n    encodeURIComponent(v.image_prompt.slice(0, 400)) +\n    '?model=flux&width=1280&height=1280&seed=' + (10000 + idx) + '&nologo=true&enhance=true';\n\n  const prompt_text = [\n    `<b>КОНЦЕПТ ${idx}/${total} — «${v.style}»</b>`,\n    '<code>━━━━━━━━━━━━━━━━━━━━━━━━</code>',\n    `<b>Товар:</b> ${title}`,\n    `<b>Маркетплейс:</b> ${marketplace} · <b>Категория:</b> ${category}`,\n    '',\n    '<b>🎨 Цветовая палитра</b>',\n    v.palette,\n    '',\n    '<b>🔤 Типографика</b>',\n    ...v.typography.split('\\n').map(l => l.trim()).filter(Boolean),\n    '',\n    '<b>🧩 Композиция</b>',\n    v.composition,\n    '<b>Фон:</b> ' + v.background,\n    '<b>Компоновка:</b> ' + v.layout,\n    '',\n    '<b>📋 Контент-блоки карточки</b>',\n    '▸ Зона 1: главный визуал товара (hero shot)',\n    '▸ Зона 2: SEO-заголовок / оффер',\n    '▸ Зона 3: 3–5 буллетов с ключевыми выгодами',\n    '▸ Зона 4: USP-строка или призыв к действию',\n    '',\n    '<b>📐 Технические требования</b>',\n    '▸ Формат: 1:1 (1000×1000px) или 3:4 (700×900px)',\n    '▸ Safe zone: 8–10% от краёв',\n    '▸ Текст читается на мобильном с первого взгляда',\n    `▸ Паттерн топ-карточек ${marketplace} в категории «${category}»`,\n  ].join('\\n');\n\n  const caption = `Концепт ${idx}/${total} — ${v.style}`;\n\n  return {\n    json: {\n      ...j,\n      chat_id,\n      marketplace,\n      category,\n      title,\n      benefits,\n      concept_index: idx,\n      concept_total: total,\n      is_last_concept,\n      style: v.style,\n      palette: v.palette,\n      background: v.background,\n      layout_notes: v.layout,\n      prompt_text,\n      image_prompt: v.image_prompt,\n      caption,\n      photo_url: poll_url,\n      image_url: poll_url,\n      current_url: poll_url,\n      ctx_chat_id: chat_id,\n      ctx_concept_index: idx,\n      ctx_concept_total: total,\n      ctx_prompt_text: prompt_text,\n      ctx_caption: caption,\n      ctx_image_url: poll_url,\n      render_mode,\n    }\n  };\n});",
+        "jsCode": "// mode: runOnceForAllItems\nconst j = $input.first().json || {};\nconst pick = (...vals) => { for (const v of vals) { if (v !== undefined && v !== null && `${v}`.trim() !== '') return v; } return null; };\nconst norm = ($node['Normalize'] && $node['Normalize'].json) ? $node['Normalize'].json : {};\nconst sess = ($node['Session: Pick'] && $node['Session: Pick'].json) ? $node['Session: Pick'].json : {};\n\nconst chat_id = Number(pick(j.chat_id, sess.chat_id, norm.chat_id) || 0);\nconst title = (pick(j.title, sess.title) || 'товар').toString();\nconst category = (pick(j.category, sess.category) || 'категория').toString();\nconst marketplace = (pick(j.marketplace, sess.marketplace) || 'маркетплейс').toString();\nconst benefits = (pick(j.benefits, sess.benefits) || '').toString();\nconst render_mode = ((j.render_mode || 'TEXT') + '').trim().toUpperCase() === 'DRAW' ? 'DRAW' : 'TEXT';\n\nconst variants = [\n  {\n    style: 'Минимализм Premium',\n    palette: 'Белый #FFFFFF · Тёмно-синий #1A237E · Акцент золотой #FFD700',\n    background: 'Студийный белый с мягкими тенями',\n    layout: 'Товар по центру 70%, 3 буллета снизу в карточках, типографика Montserrat Bold',\n    typography: 'Заголовок: Montserrat Bold 72px, цвет #1A237E\\nПодписи: Medium 28px\\nАкценты: #FFD700',\n    composition: 'Центральная ось, симметрия, product hero, safe zone 8%',\n    image_prompt: `ultra-premium minimalist product card, ${title}, white studio background, soft shadows, dark navy blue typography, golden accent lines, Montserrat font style, clean symmetric composition, luxury e-commerce photography, 4k quality, no watermarks, professional lighting`\n  },\n  {\n    style: 'Контраст Dark',\n    palette: 'Графит #1C1C1E · Оранжевый #FF6B35 · Белый #FFFFFF',\n    background: 'Тёмный градиент #1C1C1E → #2D2D30',\n    layout: 'Диагональная композиция 30°, товар слева, плашки с преимуществами справа',\n    typography: 'Заголовок: SF Pro Display Bold 68px, белый\\nАкцент: оранжевый #FF6B35\\nПодписи: Regular 26px',\n    composition: 'Диагональ 30°, динамика, высокий контраст, энергичный ритм',\n    image_prompt: `high contrast dark background graphite gradient, ${title}, orange coral accent colors, diagonal composition, bold white typography, modern aggressive style, premium e-commerce product card, professional photography, 4k quality, no text watermarks`\n  },\n  {\n    style: 'Инфографика',\n    palette: 'Светло-серый #F5F5F7 · Красный #E03131 · Тёмный #1C1C1E',\n    background: 'Геометрический паттерн на светло-сером',\n    layout: 'Товар слева 50%, характеристики в иконках справа, строгая сетка 4 колонки',\n    typography: 'Заголовок: Bold 64px\\nХарактеристики: иконки 32px + текст 24px\\nСтрогое выравнивание по сетке',\n    composition: '2-колоночный грид, выравнивание по левому краю, структурированный info-блок',\n    image_prompt: `clean infographic product card, ${title}, light gray background geometric pattern, red accent color, specifications icons layout, structured grid design, two columns product and info, corporate professional style, e-commerce infographic, 4k quality, no watermarks`\n  },\n  {\n    style: 'Лайфстайл Органик',\n    palette: 'Тёплый беж #F5E6D3 · Глубокий зелёный #2D5016 · Крем #FFF8F0',\n    background: 'Контекстный интерьерный или природный фон',\n    layout: 'Товар крупно в контексте, выноски с преимуществами в баблах',\n    typography: 'Заголовок: Playfair Display Bold 66px\\nПодписи в баблах: Lato 26px\\nТёплые натуральные цвета',\n    composition: 'Правило третей, золотое сечение, контекст + продукт, живая эмоциональная подача',\n    image_prompt: `lifestyle product photography, ${title}, warm beige cream background, natural environment context, deep green organic accents, product in use scene, warm natural lighting, rule of thirds composition, organic aesthetic, high quality photography, 4k, no watermarks`\n  },\n  {\n    style: 'Премиум Dark Luxury',\n    palette: 'Чёрный #0A0A0A · Золотой #C9A84C · Белый #FFFFFF',\n    background: 'Тёмный бархатный градиент с бликами и отражениями',\n    layout: 'Товар по центру на тёмном фоне, золотые акценты симметрично, воздух и пространство',\n    typography: 'Заголовок: Cormorant Garamond Bold 70px\\nАкценты: золотой #C9A84C\\nПространство и воздух',\n    composition: 'Симметрия, центрирование, luxury whitespace, premium minimalism',\n    image_prompt: `ultra luxury dark product photography, ${title}, black velvet background, gold metallic accents, symmetric placement, premium brand visual, high-end fashion e-commerce aesthetic, elegant typography space, reflections and bokeh, cinematic lighting, 4k ultra quality, no watermarks`\n  }\n];\n\nreturn variants.map((v, i) => {\n  const idx = i + 1;\n  const total = 5;\n  const is_last_concept = idx === total;\n\n  const poll_url = 'https://image.pollinations.ai/p/' +\n    encodeURIComponent(v.image_prompt.slice(0, 400)) +\n    '?model=flux&width=768&height=768&seed=' + (10000 + idx) + '&nologo=true&enhance=true';\n\n  const prompt_text = [\n    `<b>КОНЦЕПТ ${idx}/${total} — «${v.style}»</b>`,\n    '<code>━━━━━━━━━━━━━━━━━━━━━━━━</code>',\n    `<b>Товар:</b> ${title}`,\n    `<b>Маркетплейс:</b> ${marketplace} · <b>Категория:</b> ${category}`,\n    '',\n    '<b>🎨 Палитра</b>',\n    v.palette,\n    '',\n    '<b>Типографика</b>',\n    ...v.typography.split('\\n').map(l => l.trim()).filter(Boolean),\n    '',\n    '<b>Композиция</b>',\n    v.composition,\n    '<b>Фон:</b> ' + v.background,\n    '<b>Компоновка:</b> ' + v.layout,\n    '',\n    '<b>Контент-блоки</b>',\n    '▸ Зона 1: главный визуал товара',\n    '▸ Зона 2: SEO-заголовок / оффер',\n    '▸ Зона 3: 3–5 буллетов с выгодами',\n    '▸ Зона 4: USP или призыв к действию',\n    '',\n    '<b>📐 Технические требования</b>',\n    '▸ Формат: 1:1 (1000×1000px) или 3:4 (700×900px)',\n    '▸ Safe zone: 8–10% от краёв',\n    '▸ Текст читается на мобильном с первого взгляда',\n    `▸ Паттерн топ-карточек ${marketplace} в категории «${category}»`,\n  ].join('\\n');\n\n  const caption = `Концепт ${idx}/${total} — ${v.style}`;\n\n  return {\n    json: {\n      ...j,\n      chat_id,\n      marketplace,\n      category,\n      title,\n      benefits,\n      concept_index: idx,\n      concept_total: total,\n      is_last_concept,\n      style: v.style,\n      palette: v.palette,\n      background: v.background,\n      layout_notes: v.layout,\n      prompt_text,\n      image_prompt: v.image_prompt,\n      caption,\n      photo_url: poll_url,\n      image_url: poll_url,\n      current_url: poll_url,\n      ctx_chat_id: chat_id,\n      ctx_concept_index: idx,\n      ctx_concept_total: total,\n      ctx_prompt_text: prompt_text,\n      ctx_caption: caption,\n      ctx_image_url: poll_url,\n      render_mode,\n    }\n  };\n});",
         "mode": "runOnceForAllItems"
       },
       "id": "c43a9966-8935-480d-b70c-910190caf21e",
@@ -3755,7 +3755,7 @@
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "✅ <b>Карточка готова!</b>\n\n🎨 Хочешь получить <b>5 дизайн-концептов</b> для обложки карточки?\n\nНажми кнопку — получишь ТЗ для дизайнера по каждому стилю.",
+        "text": "✅ <b>Карточка готова!</b>\n\nХочешь получить <b>5 дизайн-концептов</b> для обложки карточки?\nНажми кнопку — получишь ТЗ для дизайнера по каждому стилю.",
         "replyMarkup": "inlineKeyboard",
         "inlineKeyboard": {
           "rows": [
@@ -4214,7 +4214,7 @@
     {
       "parameters": {
         "chatId": "={{ $json.ctx_chat_id || $json.chat_id || $(\"Normalize\").first().json.chat_id }}",
-        "text": "📐 <b>5 текстовых ТЗ для дизайнера готовы!</b>\n\n🖼 Нажми кнопку — и я сгенерирую <b>5 реальных изображений</b> в каждом стиле.",
+        "text": "📐 <b>5 текстовых ТЗ готовы!</b>\n\nНажми кнопку — получишь <b>5 изображений</b> по каждому стилю.",
         "replyMarkup": "inlineKeyboard",
         "inlineKeyboard": {
           "rows": [
@@ -4726,6 +4726,35 @@
         }
       },
       "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $json.ctx_chat_id || $json.chat_id }}",
+        "binaryData": false,
+        "file": "={{ $json.photo_url || $json.image_url }}",
+        "additionalFields": {
+          "caption": "={{ $json.caption || '' }}",
+          "appendAttribution": false
+        }
+      },
+      "id": "concept-photo-url-node-001",
+      "name": "Send Concept Photo URL",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        7280,
+        1540
+      ],
+      "continueOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      },
+      "onError": "continueErrorOutput"
     }
   ],
   "pinData": {},
@@ -5705,11 +5734,29 @@
         ]
       ]
     },
+    "Send Concept Photo URL": {
+      "main": [
+        [
+          {
+            "node": "IF Last Concept",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Concept Fallback Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "IF Draw Flow Item": {
       "main": [
         [
           {
-            "node": "Prepare Image URLs",
+            "node": "Send Concept Photo URL",
             "type": "main",
             "index": 0
           }
