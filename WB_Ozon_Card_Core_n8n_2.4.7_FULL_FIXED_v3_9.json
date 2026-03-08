@@ -1,0 +1,5891 @@
+{
+  "name": "WB/Ozon Card Core n8n 2.4.7 FIX (v3.9 Together AI)",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "id": "a86ad424-5892-4b85-925b-3e7414f0e37a",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -752,
+        48
+      ],
+      "webhookId": "035e6ab7-5628-4231-9c68-5e3f05a2675d",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const u = $json || {};\n\nconst msg = u.message || u.edited_message || u.channel_post || u.edited_channel_post || null;\nconst cq = u.callback_query || null;\nconst isCallback = !!cq;\nconst sourceMsg = (cq && cq.message) ? cq.message : msg;\n\nconst telegramIdRaw =\n  (cq && cq.from && cq.from.id) ||\n  (msg && msg.from && msg.from.id) ||\n  null;\n\nconst chatIdRaw =\n  (sourceMsg && sourceMsg.chat && sourceMsg.chat.id) ||\n  null;\n\nconst telegram_id = (telegramIdRaw !== null && telegramIdRaw !== undefined) ? Number(telegramIdRaw) : null;\nconst chat_id = (chatIdRaw !== null && chatIdRaw !== undefined) ? Number(chatIdRaw) : null;\n\nconst update_id = (u.update_id !== undefined && u.update_id !== null) ? Number(u.update_id) : null;\n\nconst message_id =\n  (sourceMsg && sourceMsg.message_id !== undefined) ? Number(sourceMsg.message_id) :\n  null;\n\nconst rawText = isCallback\n  ? (cq.data || '')\n  : ((sourceMsg && (sourceMsg.text || sourceMsg.caption)) || '');\n\nconst text = String(rawText).trim();\nconst callback_data = isCallback ? String(cq.data || '') : '';\nconst callback_query_id = (isCallback && cq.id) ? String(cq.id) : '';\n\nconst photos = (sourceMsg && sourceMsg.photo) ? sourceMsg.photo : [];\n\nconst has_photo = Array.isArray(photos) && photos.length > 0;\nconst photo_file_id = has_photo ? String(photos[photos.length - 1].file_id || '') : '';\n\nreturn {\n  json: {\n    telegram_id,\n    chat_id,\n    text,\n    callback_data,\n    is_callback: isCallback,\n    has_photo,\n    photo_file_id,\n    callback_query_id,\n    update_id,\n    message_id,\n    update_type: isCallback ? 'callback' : (u.edited_message ? 'edited_message' : (u.channel_post || u.edited_channel_post ? 'channel_post' : 'message')),\n  }\n};",
+        "mode": "runOnceForEachItem"
+      },
+      "id": "145efc1a-43a6-4e07-9eb3-7c591ce790c5",
+      "name": "Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -512,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ $json.telegram_id }}"
+            }
+          ]
+        }
+      },
+      "id": "bfa1c442-14ee-416a-b13b-e691962f9ba6",
+      "name": "Session: Get",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        144,
+        272
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "93c7f7f3-75f5-4fb1-94d0-74dc932a2ce1",
+              "leftValue": "={{ ($json.id ?? \"\").toString() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1d9b25bd-ddad-4924-a40c-9c8bf6bc259f",
+      "name": "IF Session exists",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        352,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": false,
+            "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+            "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}",
+            "stage": "idle",
+            "marketplace": "",
+            "category": "",
+            "title": "",
+            "benefits": "",
+            "photo_file_id": ""
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "12cb838d-050d-4916-8353-9f1dcf910b78",
+      "name": "Session: Create",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        688,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const session = $input.first().json || {};\nconst n = $node[\"Normalize\"].json || {};\n\n// helper: берём новое значение только если оно реально заполнено\nconst pickNonEmpty = (a, b) => {\n  if (a === null || a === undefined) return b;\n  if (typeof a === 'string' && a.trim() === '') return b;\n  return a;\n};\n\nconst merged = {\n  ...session,\n\n  telegram_id: pickNonEmpty(n.telegram_id, session.telegram_id),\n  chat_id: pickNonEmpty(n.chat_id, session.chat_id),\n\n  text: (n.text ?? '').toString(),\n  callback_data: (n.callback_data ?? '').toString(),\n  is_callback: !!n.is_callback,\n\n  // Важно: НЕ затираем сохранённое фото пустотой\n  has_photo: (n.has_photo === true) ? true : (session.has_photo === true),\n\n  photo_file_id: pickNonEmpty(n.photo_file_id, session.photo_file_id),\n};\n\nreturn [{ json: merged }];"
+      },
+      "id": "f21ee3a8-801d-4310-883f-fdbe6535a7e2",
+      "name": "Session: Pick",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "5b6075a7-181d-467a-a10b-b52c2fedb5e2",
+              "leftValue": "={{ ($json.text || '').trim().toLowerCase() }}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "8a765b20-fdd2-47f0-b571-30a7e40378b5",
+              "leftValue": "={{ ($json.text || '').trim().toLowerCase() }}",
+              "rightValue": "start",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "33d69192-9f9d-4bbf-b002-c5a40e008b78",
+              "leftValue": "={{ ($json.text || '').trim().toLowerCase() }}",
+              "rightValue": "^(\\/?start|menu|меню)$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "9dfa416c-6528-447b-a4f3-7002ef912670",
+      "name": "IF Start",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1728,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": false,
+            "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}",
+            "stage": "idle",
+            "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+            "marketplace": "",
+            "category": "",
+            "title": "",
+            "benefits": "",
+            "photo_file_id": ""
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "657a4765-7002-4bd9-adb3-e58f9baa8f17",
+      "name": "Session: Reset",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1904,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "👋 <b>Привет! Я WB/Ozon Card PRO-bot</b>\n\n🚀 <i>Помогу быстро собрать продающую карточку товара</i> для WB/Ozon:\n• SEO-название под поиск\n• понятные буллеты и преимущества\n• описание без воды\n• ключевые слова\n• идеи для обложки и слайдов\n\n✨ В среднем это занимает 3–5 минут.",
+        "replyMarkup": "inlineKeyboard",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Сгенерировать карточку",
+                    "additionalFields": {
+                      "callback_data": "GEN"
+                    }
+                  },
+                  {
+                    "text": "Как это работает",
+                    "additionalFields": {
+                      "callback_data": "HELP"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "ae70e5e3-1452-4dbd-98f9-bc84b12703c1",
+      "name": "Send Menu",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2128,
+        48
+      ],
+      "webhookId": "99d1f0fb-83ed-4746-9494-281453869025",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "9e735f3d-bb6b-4b9b-bd70-2dfccfb4ae9c",
+              "leftValue": "={{ ($json.text || '').trim().toUpperCase() }}",
+              "rightValue": "HELP",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "^(как это работает|помощь)$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "e4078fea-41ba-4550-9b22-a4cf49fbc86e",
+      "name": "IF Help",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "<b>Как это работает</b>\n\n1) Выбираете маркетплейс и категорию\n2) Пишете название товара\n3) Пишете преимущества\n4) Отправляете 1 фото\n\nНа выходе: готовая карточка и идеи для дизайна.",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "008d00a4-c2d9-459d-93c9-d87a5405b137",
+      "name": "Send Help",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2128,
+        240
+      ],
+      "webhookId": "b7ae0c9b-0d76-42ce-90dc-ec88a79560ee",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "373f86f6-f79b-4795-8c95-2ee5146e2e34",
+              "leftValue": "={{ ($json.text || '').trim().toUpperCase() }}",
+              "rightValue": "GEN",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "^(сделать карточку|карточка)$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "6a7de3bc-cfea-49dd-8a35-a478b19cac58",
+      "name": "IF Generate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": false,
+            "stage": "select_marketplace",
+            "marketplace": "",
+            "category": "",
+            "title": "",
+            "benefits": "",
+            "photo_file_id": "",
+            "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+            "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ff7faa9b-7f05-4fbf-96f6-f352a0998aae",
+      "name": "Session: Stage select_marketplace",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        2304,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "<b>Шаг 1/5.</b> Выберите маркетплейс.",
+        "replyMarkup": "inlineKeyboard",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "WB",
+                    "additionalFields": {
+                      "callback_data": "MP_WB"
+                    }
+                  },
+                  {
+                    "text": "OZON",
+                    "additionalFields": {
+                      "callback_data": "MP_OZON"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "4684ec46-c321-4126-9f56-957795e60e49",
+      "name": "Send: Choose marketplace",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2608,
+        240
+      ],
+      "webhookId": "dffd34f7-6477-447c-8865-75b828e1b9d1",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "841f9430-aac1-4c82-9cab-0e81aeb0961a",
+              "leftValue": "={{ $json.stage }}",
+              "rightValue": "select_marketplace",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "c87e2beb-b9cf-4c01-b2db-14cc366a3a57",
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "^(MP_WB|MP_OZON|WILDBERRIES|OZON)$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "bae57c41-7085-4860-b128-2eea91384035",
+      "name": "IF Marketplace chosen",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1712,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "5aa1a18e-0f1e-47e0-961b-9b8099465264",
+              "leftValue": "={{ ($json.text || '').trim().toUpperCase() }}",
+              "rightValue": "^(MP_WB|WILDBERRIES)$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5e65338c-d735-40c6-b1df-644183e308d1",
+      "name": "IF MP_WB",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": false,
+            "stage": "select_category",
+            "marketplace": "WB",
+            "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+            "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "565e5819-b342-448f-bf9f-810d19af68bf",
+      "name": "Session: Set marketplace WB",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        2176,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "3f6caa83-f28f-4108-86f1-33b47cc4481a",
+              "leftValue": "={{ ($json.text || '').trim().toUpperCase() }}",
+              "rightValue": "^(MP_OZON|OZON)$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "17b4a65d-66f9-4025-9509-dd16570687c3",
+      "name": "IF MP_OZON",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        704
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": false,
+            "stage": "select_category",
+            "marketplace": "OZON",
+            "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+            "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "098534df-5cb0-452a-b5a1-5cb0e0d48652",
+      "name": "Session: Set marketplace OZON",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        2336,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "<b>Шаг 2/5.</b> Выберите категорию товара.",
+        "replyMarkup": "inlineKeyboard",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Электроника",
+                    "additionalFields": {
+                      "callback_data": "CAT_ELECTRONICS"
+                    }
+                  },
+                  {
+                    "text": "Детям",
+                    "additionalFields": {
+                      "callback_data": "CAT_KIDS"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Спорт",
+                    "additionalFields": {
+                      "callback_data": "CAT_SPORT"
+                    }
+                  },
+                  {
+                    "text": "Авто",
+                    "additionalFields": {
+                      "callback_data": "CAT_AUTO"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Дом и кухня",
+                    "additionalFields": {
+                      "callback_data": "CAT_HOME"
+                    }
+                  },
+                  {
+                    "text": "Красота",
+                    "additionalFields": {
+                      "callback_data": "CAT_BEAUTY"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Одежда и обувь",
+                    "additionalFields": {
+                      "callback_data": "CAT_APPAREL"
+                    }
+                  },
+                  {
+                    "text": "Товары для животных",
+                    "additionalFields": {
+                      "callback_data": "CAT_PETS"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Другое",
+                    "additionalFields": {
+                      "callback_data": "CAT_OTHER"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "3841c1e2-b34e-4ae9-848c-4b157672d10e",
+      "name": "Send: Choose category",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2608,
+        432
+      ],
+      "webhookId": "ad4ea9dc-5b97-4e6b-8120-aa231a7f928a",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "e2ae238c-eea8-4903-83d6-a1da9ee9d66c",
+              "leftValue": "={{ $json.stage }}",
+              "rightValue": "select_category",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "c80cea91-508d-45fd-adae-a5be36677e81",
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "^(CAT_|ЭЛЕКТРОНИКА|ДЕТЯМ|СПОРТ|АВТО|ДОМ И КУХНЯ|ОДЕЖДА|ОБУВЬ|КРАСОТА|ОДЕЖДА И ОБУВЬ|ТОВАРЫ ДЛЯ ЖИВОТНЫХ|ДРУГОЕ)",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9f7607ef-f7ad-415a-b70b-7f808671b24a",
+      "name": "IF Category chosen",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1552,
+        992
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const code = ($json.text || '').trim().toUpperCase();\n\nconst map = {\n  CAT_APPAREL: 'Одежда и обувь',\n  CAT_SHOES: 'Одежда и обувь',\n  CAT_CLOTHES: 'Одежда и обувь',\n  CAT_BEAUTY: 'Красота и уход',\n  CAT_HOME: 'Дом и кухня',\n  CAT_ELECTRONICS: 'Электроника',\n  CAT_KIDS: 'Детские товары',\n  CAT_SPORT: 'Спорт и отдых',\n  CAT_AUTO: 'Авто-товары',\n  CAT_PETS: 'Товары для животных',\n  CAT_OTHER: 'Другое',\n  'ОДЕЖДА': 'Одежда и обувь',\n  'ОБУВЬ': 'Одежда и обувь',\n  'ОДЕЖДА И ОБУВЬ': 'Одежда и обувь',\n  'КРАСОТА': 'Красота и уход',\n  'ДОМ И КУХНЯ': 'Дом и кухня',\n  'ЭЛЕКТРОНИКА': 'Электроника',\n  'ДЕТЯМ': 'Детские товары',\n  'СПОРТ': 'Спорт и отдых',\n  'АВТО': 'Авто-товары',\n  'ТОВАРЫ ДЛЯ ЖИВОТНЫХ': 'Товары для животных',\n  'ДРУГОЕ': 'Другое',\n};\n\nreturn [{\n  json: {\n    ...$json,\n    category_mapped: map[code] || 'Другое',\n  }\n}];"
+      },
+      "id": "38011d70-c799-44bf-8cac-91fdf595d63c",
+      "name": "Map category",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": false,
+            "stage": "ask_title",
+            "category": "={{ $json.category_mapped }}",
+            "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+            "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}",
+            "marketplace": "={{ $json.marketplace }}",
+            "title": "={{ $json.title }}",
+            "benefits": "={{ $json.benefits }}",
+            "photo_file_id": "={{ $json.photo_file_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "e1626a4e-c31e-4262-99e0-79ec66a3e95f",
+      "name": "Session: Set category",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        2176,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "<b>Шаг 3/5.</b> Напишите название товара.\n\n<i>Пример:</i> «Кроссовки мужские кожаные, белые».",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "97cd1955-7d9c-4bb1-ace6-dfc4d676150a",
+      "name": "Send: Ask title",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2608,
+        576
+      ],
+      "webhookId": "f025c160-58f8-42a9-b734-13a92814bcc5",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "6661b94a-a2d2-4a73-b5c4-80cfbb32fddf",
+              "leftValue": "={{ $json.stage }}",
+              "rightValue": "ask_title",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "8cc82fb4-d5ca-46b8-9ff5-80abbbb9b67c",
+              "leftValue": "={{ ($json.text || '').trim() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "8678c6c2-856f-42a6-b643-dfe406d7a295",
+      "name": "IF Title input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        1216
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ $json.telegram_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": false,
+            "stage": "ask_benefits",
+            "title": "={{ $json.text }}",
+            "telegram_id": "={{ $json.telegram_id }}",
+            "chat_id": "={{ $json.chat_id }}",
+            "marketplace": "={{ $json.marketplace }}",
+            "category": "={{ $json.category }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1276bc2f-6476-4a71-b853-5872f9ddceb4",
+      "name": "Session: Set title",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        1024
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "<b>Шаг 4/5.</b> Напишите любую информацию о товаре: преимущества, характеристики, материал, размер, комплектацию, цвет и т.д.\n<i>Можно одним текстом, через запятую или с новой строки.</i>",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "f54d12cf-16b6-4bd4-be1b-91c7e0fbf7e3",
+      "name": "Send: Ask benefits",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2128,
+        800
+      ],
+      "webhookId": "04aef38e-93c3-4bb3-a1cd-37a97ebfbd8a",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "9c8c399a-43fa-4795-9ae0-ad5c1a5e40b2",
+              "leftValue": "={{ $json.stage }}",
+              "rightValue": "ask_benefits",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "38da2852-0297-46c9-a38a-3581bdfc37ad",
+              "leftValue": "={{ ($json.text || '').trim() }}",
+              "rightValue": "is not empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "cb4fef0c-e2d0-4d46-a851-08e937a9a396",
+              "leftValue": "={{ String($json.is_callback) }}",
+              "rightValue": "false",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "03098112-ee92-4e13-ada6-3f4ac10348d2",
+      "name": "IF Benefits input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1536,
+        1296
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": false,
+            "stage": "ask_photo",
+            "benefits": "={{ $json.text }}",
+            "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+            "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "4702e0fb-5282-4913-8170-c7fd3232a244",
+      "name": "Session: Set benefits",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        1168
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "<b>Шаг 5/5.</b> Отправьте 1 фото товара.\n<i>Лучше без текста на изображении.</i>",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "148d193b-fe51-4d32-ad7f-e35fbc108843",
+      "name": "Send: Ask photo",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2128,
+        960
+      ],
+      "webhookId": "13804869-c48f-4807-bbc9-a8cb1fb254bd",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "3fe717cf-0ad9-446a-abc8-1812e889f7b8",
+              "leftValue": "={{ $json.stage }}",
+              "rightValue": "ask_photo",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "2fae8fa0-1c07-4e85-8652-1d071e9f006f",
+              "leftValue": "={{ $json.has_photo }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a83071e1-20df-4790-9698-54e78d973054",
+      "name": "IF Photo received",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1728,
+        1472
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": true,
+            "stage": "generating",
+            "photo_file_id": "={{ $json.photo_file_id }}",
+            "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+            "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "c144ea58-b97a-4dc4-b063-b1d886729151",
+      "name": "Session: Save photo",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        1312
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "none",
+        "nodeCredentialType": "openRouterApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.OPENROUTER_API_KEY}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "HTTP-Referer",
+              "value": "https://example.local/"
+            },
+            {
+              "name": "X-Title",
+              "value": "WB/Ozon PRO bot"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.openrouter_body || {}) }}",
+        "options": {}
+      },
+      "id": "bfd10892-4b3c-443a-b324-82e52d258ebf",
+      "name": "GEN: OpenRouter Strategy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        4048,
+        1264
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = $json;\nconst content = j?.choices?.[0]?.message?.content ?? j?.choices?.[0]?.text ?? '';\nconst raw_text = (typeof content === 'string' ? content : JSON.stringify(content)).trim();\n\nlet parsed = null;\ntry { parsed = JSON.parse(raw_text); } catch (e) {\n  const m = raw_text.match(/\\{[\\s\\S]*\\}/);\n  if (m) { try { parsed = JSON.parse(m[0]); } catch (_) {} }\n}\n\nconst fallback = {\n  card: { title: (j.title || 'Товар').toString(), short_description: 'Недостаточно данных для финальной карточки. Уточните параметры товара.', benefits: [], specs: [], keywords: [] },\n  marketing: { segments: [], usp_line: '', cover_headlines: [], slide_blocks: [] },\n  service: { notes: [], warnings: ['Не удалось собрать валидный ответ модели. Попробуйте другое фото или добавьте уточнения.'] }\n};\n\nif (!parsed || typeof parsed !== 'object') parsed = fallback;\nif (!parsed.card || typeof parsed.card !== 'object') parsed.card = fallback.card;\nif (!parsed.marketing || typeof parsed.marketing !== 'object') parsed.marketing = fallback.marketing;\nif (!parsed.service || typeof parsed.service !== 'object') parsed.service = fallback.service;\n\nparsed.card.benefits = Array.isArray(parsed.card.benefits) ? parsed.card.benefits : [];\nparsed.card.specs = Array.isArray(parsed.card.specs) ? parsed.card.specs : [];\nparsed.card.keywords = Array.isArray(parsed.card.keywords) ? parsed.card.keywords : [];\nparsed.marketing.segments = Array.isArray(parsed.marketing.segments) ? parsed.marketing.segments : [];\nparsed.marketing.cover_headlines = Array.isArray(parsed.marketing.cover_headlines) ? parsed.marketing.cover_headlines : [];\nparsed.marketing.slide_blocks = Array.isArray(parsed.marketing.slide_blocks) ? parsed.marketing.slide_blocks : [];\nparsed.service.notes = Array.isArray(parsed.service.notes) ? parsed.service.notes : [];\nparsed.service.warnings = Array.isArray(parsed.service.warnings) ? parsed.service.warnings : [];\n\nreturn { json: { ...j, final_json: parsed, card: parsed.card, marketing: parsed.marketing, service: parsed.service, raw_text } };",
+        "mode": "runOnceForEachItem"
+      },
+      "id": "eec46fcb-9dd8-4c6e-84ec-9e5d1c1f074a",
+      "name": "Parse Strategy",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4288,
+        1264
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "={{$json.part_text || $json.result_text_formatted || \"Не удалось собрать карточку. Попробуйте другое фото или уточните характеристики.\"}}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_web_page_preview": true,
+          "parse_mode": "HTML"
+        },
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Сгенерировать дизайн-концепт",
+                    "additionalFields": {
+                      "callback_data": "DESIGN_CONCEPT"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "050dd0c4-6764-4757-bd36-7428e18873af",
+      "name": "Send Result",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3680,
+        1520
+      ],
+      "webhookId": "6de3f6fb-f1ff-4d74-ae68-51758a418f48",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": true,
+            "stage": "done",
+            "photo_file_id": "={{ $json.photo_file_id || $node[\"Session: Pick\"].json.photo_file_id || \"\" }}",
+            "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+            "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}",
+            "marketplace": "={{ $json.marketplace || \"\" }}",
+            "category": "={{ $json.category || \"\" }}",
+            "title": "={{ $json.title || \"\" }}",
+            "benefits": "={{ $json.benefits || \"\" }}",
+            "updated_at": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "960e5aa0-320c-45a6-a921-00a12e4543d5",
+      "name": "Session: Done",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        3920,
+        1520
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "queryId": "={{ $json.callback_query_id }}",
+        "additionalFields": {
+          "show_alert": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2f9258b5-5dff-443d-a00a-56a8dbdc8925",
+      "name": "Answer Query a callback",
+      "webhookId": "47388190-b376-439a-8ec3-396937da717f",
+      "retryOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0bc7371c-608b-4276-b1c2-5682404cf3a2",
+              "leftValue": "={{$json.is_callback}}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -272,
+        48
+      ],
+      "id": "14dfb81f-8955-47ff-abf5-e9bfc6899492",
+      "name": "IF Is callback"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "03e56bb4-75d3-4774-b242-e47d8282e562",
+              "name": "telegram_id",
+              "value": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+              "type": "number"
+            },
+            {
+              "id": "f64e0a4d-09ee-4b01-bbc3-5b42dae29f41",
+              "name": "chat_id",
+              "value": "={{ Number($node[\"Normalize\"].json.chat_id) }}",
+              "type": "number"
+            },
+            {
+              "id": "202e4df5-583c-4ded-a5ca-25b391829aab",
+              "name": "text",
+              "value": "={{ $node[\"Normalize\"].json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "c634914f-13a3-4fc9-b063-34f017931dcd",
+              "name": "callback_data",
+              "value": "={{ $node[\"Normalize\"].json.callback_data }}",
+              "type": "string"
+            },
+            {
+              "id": "2dbe8bab-76fb-4844-b74b-8ddb5e48f275",
+              "name": "is_callback",
+              "value": "={{ !!$node[\"Normalize\"].json.is_callback }}",
+              "type": "boolean"
+            },
+            {
+              "id": "0ce9549f-a6fa-4b05-a96e-6b4cf164a092",
+              "name": "has_photo",
+              "value": "={{ !!$node[\"Normalize\"].json.has_photo }}",
+              "type": "boolean"
+            },
+            {
+              "id": "ea5c3edf-7714-477e-ac8b-7a165f9bbdc7",
+              "name": "photo_file_id",
+              "value": "={{ $node[\"Normalize\"].json.photo_file_id }}",
+              "type": "string"
+            },
+            {
+              "id": "47820027-d8d3-47c9-b6d2-07908ed58ada",
+              "name": "callback_query_id",
+              "value": "={{ $node[\"Normalize\"].json.callback_query_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b64c3fd1-ce55-48ef-bc67-b1736797079a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json.chat_id}}",
+        "text": "Выберите категорию кнопкой ниже.",
+        "replyMarkup": "inlineKeyboard",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Электроника",
+                    "additionalFields": {
+                      "callback_data": "CAT_ELECTRONICS"
+                    }
+                  },
+                  {
+                    "text": "Детям",
+                    "additionalFields": {
+                      "callback_data": "CAT_KIDS"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Спорт",
+                    "additionalFields": {
+                      "callback_data": "CAT_SPORT"
+                    }
+                  },
+                  {
+                    "text": "Авто",
+                    "additionalFields": {
+                      "callback_data": "CAT_AUTO"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Дом и кухня",
+                    "additionalFields": {
+                      "callback_data": "CAT_HOME"
+                    }
+                  },
+                  {
+                    "text": "Красота",
+                    "additionalFields": {
+                      "callback_data": "CAT_BEAUTY"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Одежда и обувь",
+                    "additionalFields": {
+                      "callback_data": "CAT_APPAREL"
+                    }
+                  },
+                  {
+                    "text": "Товары для животных",
+                    "additionalFields": {
+                      "callback_data": "CAT_PETS"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Другое",
+                    "additionalFields": {
+                      "callback_data": "CAT_OTHER"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        768
+      ],
+      "id": "e169c608-4a1e-42b9-8816-f611de49f272",
+      "name": "Send: Choose category (repeat)",
+      "webhookId": "6341f0f8-a24a-422d-b268-d2b131848790",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ae58c7cf-10c6-4ab0-ba97-d75a0b62a379",
+              "leftValue": "={{ $json.stage }}",
+              "rightValue": "__disabled__",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "7aac3c88-f056-456f-b587-03616926846e",
+              "leftValue": "={{ ($json.callback_data || '') }}",
+              "rightValue": "false",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "541f9bb8-ba82-4b23-8170-c352f92e0d30",
+              "leftValue": "={{ ($json.text || '').trim() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1632,
+        784
+      ],
+      "id": "e6828c4f-b669-448a-b0af-e1a58325013c",
+      "name": "IF Need category repeat"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "<b>Шаг 5/5.</b> Отправьте 1 фото товара.\n<i>Лучше без текста на изображении.</i>",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "c1f4af53-cf46-4c68-b33b-47b74e398955",
+      "name": "Send: Ask photo(repeat)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1936,
+        1744
+      ],
+      "webhookId": "13804869-c48f-4807-bbc9-a8cb1fb254bd",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "96a258fd-2466-4186-98c9-6104c4349c97",
+              "name": "prompt_user",
+              "value": "={{\"Маркетплейс: \" + $json.marketplace + \"\\n\" + \"Категория: \" + $json.category + \"\\n\" + \"Название товара (как ввёл пользователь): \" + $json.title + \"\\n\" + \"Преимущества (как ввёл пользователь): \" + $json.benefits + \"\\n\\n\" + \"Правила:\\n\" + \"1) Запрещено менять товар. Везде используй название из строки 'Название товара'.\\n\" + \"2) Изображение обязательно используй для уточнения: цвет/форма/комплектация/материал/назначение.\\n\" + \"3) Если по фото или тексту есть противоречие или не хватает ключевых данных (бренд, материал, размер, объём, комплектность) — сначала задай 3–5 коротких вопросов и остановись.\\n\" + \"4) Никаких примеров с другими товарами и никаких выдуманных характеристик.\"}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2112,
+        1216
+      ],
+      "id": "ba0f2a17-ebcd-414d-b67b-b5eac1bd8cc5",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.photo_file_id }}",
+        "additionalFields": {}
+      },
+      "id": "47bf29cd-b626-49fe-8098-2c4dd8cd0ddd",
+      "name": "TG: GetFile",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1584,
+        1616
+      ],
+      "webhookId": "f566af10-4bdb-4a6b-a737-c804df9b29a0",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "929d5d93-5a33-40a3-99b6-a08353a9756a",
+              "name": "image_base64",
+              "value": "={{ $binary[\"data\"].data }}",
+              "type": "string"
+            },
+            {
+              "id": "11799541-aef2-48cb-b587-c2931f3f7593",
+              "name": "image_mime",
+              "value": "={{ $binary[\"data\"].mimeType || \"image/jpeg\" }}",
+              "type": "string"
+            },
+            {
+              "id": "224be5e7-6a44-4346-81f6-5eb1838f4d2b",
+              "name": "=debug_binary_keys",
+              "value": "={{ Object.keys($binary || {}) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "5ded12f7-1ea6-480b-83ce-d4126bdc7224",
+      "name": "Set: image_base64",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2848,
+        1696
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2432,
+        1696
+      ],
+      "id": "8af2f9a9-8bef-428a-b2f6-cfc81fff59ed",
+      "name": "Merge",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\n\nconst bin = item.binary?.data;\nif (!bin || !bin.data) {\n  throw new Error('Нет binary.data.data после TG:GetFile');\n}\n\nreturn [{\n  json: {\n    ...item.json,\n    image_base64: bin.data,\n    image_mime: bin.mimeType || 'image/jpeg',\n  },\n  binary: item.binary,\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        1696
+      ],
+      "id": "8dc85d7c-3466-4d7f-8ee9-66e23c0b06b4",
+      "name": "Code in JavaScript",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "destinationKey": "image_base64",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        2352,
+        1456
+      ],
+      "id": "980e4a73-56a8-4997-a26c-de0719d60e82",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j = $json;\nconst normalized = j.normalized || {};\nconst b64 = (j.image_base64_clean || '').toString().trim();\n\nconst inputData = {\n  marketplace: (j.marketplace || '').toString().trim(),\n  category: (j.category || '').toString().trim(),\n  title: (j.title || '').toString().trim(),\n  benefits: (j.benefits || '').toString().trim(),\n  clarifications_answers: (j.clarifications_answers || '').toString().trim(),\n  facts: Array.isArray(normalized.facts) ? normalized.facts : [],\n  unknowns: Array.isArray(normalized.unknowns) ? normalized.unknowns : [],\n};\n\nconst system = `\nТы senior e-commerce copywriter и market-analyst для WB/Ozon. Ты хорошо знаешь, как выглядят описания топовых товаров на WB и Ozon в данной категории.\nВерни строго JSON структуры:\n{\n  \"card\": {\"title\":\"\",\"short_description\":\"\",\"benefits\":[],\"specs\":[{\"key\":\"\",\"value\":\"\"}],\"keywords\":[]},\n  \"marketing\": {\"segments\":[{\"name\":\"\",\"pain\":\"\",\"promise\":\"\"}],\"usp_line\":\"\",\"cover_headlines\":[],\"slide_blocks\":[]},\n  \"service\": {\"notes\":[],\"warnings\":[]}\n}\n\nПравила:\n- short_description: 200-300 слов в стиле описаний топовых конкурентов на маркетплейсе. Упомяни сферу применения, целевую аудиторию, ключевые преимущества, сценарии использования, эффект для покупателя. Стиль живой, убедительный, без канцелярщины и шаблонных фраз.\n- specs: включай ТОЛЬКО характеристики, которые явно подтверждены фото или входными данными. Если значение неизвестно — не включай этот параметр вообще. Никаких значений \"не указано\" или \"неизвестно\" в specs.\n- keywords: ровно 15-25 поисковых фраз из 2-4 слов, которые реально вводят покупатели на WB/Ozon при поиске этого товара. Именно фразы, не одиночные слова.\n- Строго опирайся на входные данные и фото товара.\n- Проведи рыночное позиционирование по категории и маркетплейсу, но без выдуманных техпараметров.\n- Русский язык, деловой и убедительный стиль.\n- Никаких эмодзи.\n- Для cover_headlines дай 5-7 вариантов, для slide_blocks 8-10 блоков с продающей логикой.\n`;\n\nconst body = {\n  model: $env.OPENROUTER_TEXT_MODEL || 'openai/gpt-4o-mini',\n  temperature: 0.35,\n  response_format: { type: 'json_object' },\n  messages: [\n    { role: 'system', content: system.trim() },\n    {\n      role: 'user',\n      content: `Входные данные:\\n${JSON.stringify(inputData, null, 2)}`,\n    },\n  ],\n};\n\nreturn { json: { ...j, openrouter_body: body } };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3792,
+        1264
+      ],
+      "id": "31f7613d-f005-481b-a989-690be1a0f95b",
+      "name": "Build Strategy Body"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const b64 = (($json.image_base64 || \"\") + \"\").toString();\n\n// убираем пробелы/переносы/табы и любой мусор\nconst clean = b64.replace(/[^A-Za-z0-9+/=]/g, \"\");\n\nif (!clean) throw new Error(\"image_base64 пустой после очистки\");\nif (clean.length < 1000) throw new Error(\"image_base64 слишком короткий, похоже не картинка\");\n\n// ограничение по размеру (если надо — просто увеличишь)\nconst maxLen = 2_500_000;\nif (clean.length > maxLen) {\n  throw new Error(`Слишком большая картинка: base64=${clean.length} символов`);\n}\n\nreturn {\n  json: {\n    ...$json,\n    image_base64_clean: clean,\n    image_base64_len: clean.length,\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2800,
+        1264
+      ],
+      "id": "14661499-8b67-4c2f-b3e5-4e9e1402f527",
+      "name": "Sanitize base64"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "94800134-7bfc-4cbb-b030-2aada1e06952",
+              "leftValue": "={{$json.need_clarifications}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        4544,
+        1264
+      ],
+      "id": "af27c308-c51c-4233-a828-11d526a2f24b",
+      "name": "IF Need Clarifications"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            },
+            {
+              "keyName": "chat_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": true,
+            "stage": "clarifications",
+            "clarifications_questions": "={{$json.text}}",
+            "updated_at": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "clarifications_questions",
+              "displayName": "clarifications_questions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3712,
+        1104
+      ],
+      "id": "dcdd4f84-c7fe-4ee3-817b-b54a4e72594d",
+      "name": "Session: Set stage = clarifications"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node[\"Normalize\"].json.chat_id}}",
+        "text": "={{ $json.text || \"\" }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        4176,
+        1104
+      ],
+      "id": "607aeabe-f2cb-45e7-99ad-a5247d5f9bd3",
+      "name": "Send Clarifications",
+      "webhookId": "cf97638a-902b-47bd-ac7d-db91f24e5079",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4e53b95f-a031-491f-9fce-35e87b589b93",
+              "leftValue": "={{ $json.stage }}",
+              "rightValue": "clarifications",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1040,
+        256
+      ],
+      "id": "b6b99233-d05b-4c2b-ae90-10fdeddf8264",
+      "name": "IF stage == clarifications"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            },
+            {
+              "keyName": "chat_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "has_photo": true,
+            "clarifications_answers": "={{ $node[\"Normalize\"].json.text }}",
+            "stage": "generate",
+            "updated_at": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "clarifications_questions",
+              "displayName": "clarifications_questions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "clarifications_answers",
+              "displayName": "clarifications_answers",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1360,
+        112
+      ],
+      "id": "2fe30f25-6cb5-4ad1-b81d-021c810a9614",
+      "name": "Session: Save clarifications answers"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a51da54b-2d3f-40c8-a300-a564aa0fc4e1",
+              "leftValue": "={{ ($json.photo_file_id || '').trim() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1168,
+        1728
+      ],
+      "id": "1f7d04d4-2971-42a1-85b1-eb2cc15fe92e",
+      "name": "IF has saved photo"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "50e3d470-a03e-48bd-9b21-1f352164069a",
+              "name": "telegram_id",
+              "value": "={{ $node[\"Session: Pick\"].json.telegram_id }}",
+              "type": "string"
+            },
+            {
+              "id": "216813e9-ffb4-4b4a-a778-460f64044412",
+              "name": "chat_id",
+              "value": "={{ $node[\"Session: Pick\"].json.chat_id }}",
+              "type": "string"
+            },
+            {
+              "id": "177bb03e-8e54-40f0-9e6a-3893b53c0cea",
+              "name": "marketplace",
+              "value": "={{ $node[\"Session: Pick\"].json.marketplace }}",
+              "type": "string"
+            },
+            {
+              "id": "4c394b55-540d-4bef-959a-0fe5f02f9917",
+              "name": "category",
+              "value": "={{ $node[\"Session: Pick\"].json.category }}",
+              "type": "string"
+            },
+            {
+              "id": "7102bb66-c12a-45d4-8032-45009a226a7a",
+              "name": "title",
+              "value": "={{ $node[\"Session: Pick\"].json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "11bd1219-4b52-419a-87de-36e9184c3d53",
+              "name": "benefits",
+              "value": "={{ $node[\"Session: Pick\"].json.benefits }}",
+              "type": "string"
+            },
+            {
+              "id": "6fd6891f-cd8f-44ae-b606-ba8d683cad50",
+              "name": "clarifications_questions",
+              "value": "={{ $node[\"Session: Pick\"].json.clarifications_questions }}",
+              "type": "string"
+            },
+            {
+              "id": "985fbfdd-7627-4f2a-8f5f-30e3238ee703",
+              "name": "clarifications_answers",
+              "value": "={{ $node[\"Session: Pick\"].json.clarifications_answers }}",
+              "type": "string"
+            },
+            {
+              "id": "1851d195-a2b4-471a-b05d-279c72459851",
+              "name": "photo_file_id",
+              "value": "={{ $node[\"Session: Pick\"].json.photo_file_id }}",
+              "type": "string"
+            },
+            {
+              "id": "928ceb11-a6b0-4952-bad9-546e392a3bf8",
+              "name": "image_base64",
+              "value": "={{ $json.image_base64 }}",
+              "type": "string"
+            },
+            {
+              "id": "fed16936-4c92-4243-ada3-364064a2a4e9",
+              "name": "stage",
+              "value": "={{ $node[\"Session: Pick\"].json.stage }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2288,
+        1312
+      ],
+      "id": "69826247-7001-4d81-aac5-95d33f65401e",
+      "name": "Compose item"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j = $json;\nconst raw = (j.benefits || \"\").toString();\n\nfunction norm(s) { return (s || \"\").toString().trim(); }\n\nconst lines = raw.split(/\\r?\\n/).map(l => l.trim()).filter(Boolean);\n\n// 1) пары key/value: \"ключ: значение\"\nconst specs = [];\nconst used = new Set();\n\nfor (let i = 0; i < lines.length; i++) {\n  const line = lines[i];\n\n  const m = line.match(/^(.{2,50}?)[\\:\\-]\\s*(.+)$/i);\n  if (m) {\n    specs.push({ key: norm(m[1]), value: norm(m[2]), unit: \"\", source: \"user\", confidence: 0.9 });\n    used.add(i);\n    continue;\n  }\n\n  // 2) \"ключ\" затем \"значение\" на следующей строке\n  if (i < lines.length - 1) {\n    const next = lines[i + 1];\n    const looksKey = line.length <= 50 && !/[0-9]/.test(line);\n    const looksValue = next.length <= 60;\n    if (looksKey && looksValue) {\n      specs.push({ key: norm(line), value: norm(next), unit: \"\", source: \"user\", confidence: 0.8 });\n      used.add(i); used.add(i + 1);\n      i++;\n    }\n  }\n}\n\nconst leftover_lines = lines.filter((_, idx) => !used.has(idx));\nconst leftover_text = leftover_lines.join(\"\\n\");\n\nreturn {\n  json: {\n    ...j,\n    parsed_deterministic: {\n      specs,\n      leftover_text,\n      leftover_len: leftover_text.length\n    }\n  }\n};"
+      },
+      "id": "ecaa252f-ad67-447b-817c-5d0102d9b886",
+      "name": "Parse Benefits (Deterministic)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2544,
+        1264
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j = $json;\nconst marketplace = (j.marketplace || '').toString().trim();\nconst category = (j.category || '').toString().trim();\nconst title = (j.title || '').toString().trim();\nconst benefits = (j.benefits || '').toString().trim();\nconst clarifications_answers = (j.clarifications_answers || '').toString().trim();\nconst imageBase64 = (j.image_base64_clean || '').toString().trim();\n\nconst system = `\nТы анализируешь карточку товара для WB/Ozon. Возвращай только факты из входных данных и фото.\nНельзя выдумывать характеристики, материалы, объёмы, мощность, комплектацию и любые числовые параметры.\nЕсли данных не хватает для безопасной генерации карточки, ставь need_clarifications=true и задай до 5 коротких вопросов.\nВерни строго JSON-объект.\n`;\n\nconst userData = {\n  marketplace, category, title, benefits, clarifications_answers,\n  image_present: !!imageBase64\n};\n\nconst prompt = `Верни JSON структуры:\n{\n  \"need_clarifications\": boolean,\n  \"clarifications_questions\": string[],\n  \"facts\": string[],\n  \"unknowns\": string[]\n}\n\nДанные:\n${JSON.stringify(userData, null, 2)}`;\n\nconst body = {\n  model: $env.OPENROUTER_TEXT_MODEL || 'openai/gpt-4o-mini',\n  temperature: 0.2,\n  response_format: { type: 'json_object' },\n  messages: [\n    { role: 'system', content: system.trim() },\n    {\n      role: 'user',\n      content: [\n        { type: 'text', text: prompt },\n        ...(imageBase64 ? [{ type: 'image_url', image_url: { url: `data:image/jpeg;base64,${imageBase64}` } }] : []),\n      ],\n    },\n  ],\n};\n\nreturn { json: { ...j, openrouter_body: body } };"
+      },
+      "id": "61a47940-d960-4e89-98d4-e642c8a49544",
+      "name": "Build Normalize Body",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3040,
+        1264
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "none",
+        "nodeCredentialType": "openRouterApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.OPENROUTER_API_KEY}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "HTTP-Referer",
+              "value": "https://example.local/"
+            },
+            {
+              "name": "X-Title",
+              "value": "WB/Ozon PRO bot"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.openrouter_body || {}) }}",
+        "options": {}
+      },
+      "id": "abbbe811-37d8-452a-8a67-6b08776ef970",
+      "name": "GEN: OpenRouter Normalize",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        3296,
+        1264
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j = $json;\nconst content = j?.choices?.[0]?.message?.content ?? '';\nconst raw = (typeof content === 'string' ? content : JSON.stringify(content)).trim();\n\nconst safe = { need_clarifications: true, clarifications_questions: ['Уточни ключевые параметры товара: размер, материал, комплектацию и важные функции.'], facts: [], unknowns: ['Недостаточно данных для точной карточки.'] };\n\nlet parsed = null;\ntry { parsed = JSON.parse(raw); } catch (e) {\n  const m = raw.match(/\\{[\\s\\S]*\\}/);\n  if (m) { try { parsed = JSON.parse(m[0]); } catch (_) {} }\n}\nif (!parsed || typeof parsed !== 'object') parsed = safe;\n\nconst normalized = {\n  need_clarifications: !!parsed.need_clarifications,\n  clarifications_questions: Array.isArray(parsed.clarifications_questions) ? parsed.clarifications_questions.map(x => String(x).trim()).filter(Boolean) : [],\n  facts: Array.isArray(parsed.facts) ? parsed.facts.map(x => String(x).trim()).filter(Boolean) : [],\n  unknowns: Array.isArray(parsed.unknowns) ? parsed.unknowns.map(x => String(x).trim()).filter(Boolean) : [],\n};\nif (!normalized.clarifications_questions.length && normalized.need_clarifications) {\n  normalized.clarifications_questions = safe.clarifications_questions;\n}\n\nreturn { json: { ...j, normalized, clarifications_questions: normalized.clarifications_questions } };"
+      },
+      "id": "17668eaa-de79-4e87-a987-64d028f78e19",
+      "name": "Parse Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3552,
+        1264
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = $json;\n\nlet qs =\n  j.clarifications_questions ??\n  j.strategy?.clarifications_questions ??\n  [];\n\nlet listText = \"\";\n\nif (Array.isArray(qs)) {\n  listText = qs\n    .map((q, i) => `${i + 1}. ${String(q).trim()}`)\n    .join(\"\\n\");\n} else {\n  listText = String(qs || \"\").trim();\n}\n\n// если модель/предыдущие шаги уже добавили заголовок/инструкцию — чистим\nlistText = listText\n  .replace(/^\\s*Уточняющие вопросы:\\s*/gi, \"\")\n  .replace(/\\n\\s*Уточняющие вопросы:\\s*/gi, \"\\n\")\n  .replace(/\\n?\\s*Ответь одним сообщением[\\s\\S]*$/i, \"\")\n  .trim();\n\nconst text = (\n  \"Уточняющие вопросы:\\n\" +\n  (listText || \"Уточни, пожалуйста, ключевые характеристики товара (размер/материал/комплектацию/важные функции).\") +\n  \"\\n\\nОтветь одним сообщением, можно списком.\"\n).trim();\n\nreturn { json: { ...j, text } };",
+        "mode": "runOnceForEachItem"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3920,
+        1104
+      ],
+      "id": "f15f7c41-017d-4c72-acf9-801aea85468c",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($json.text || '').trim().toLowerCase() }}",
+              "rightValue": "^(/start|start|menu|меню|назад|на шаг назад|как это работает)$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d93c0314-5fdb-4257-8a50-e39607e3b198",
+      "name": "IF Clarification text is command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        176
+      ]
+    },
+    {
+      "id": "e6321313-f013-4efa-b733-39851abac331",
+      "name": "Format Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4480,
+        1264
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "javaScript",
+        "jsCode": "const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst j = $json || {};\nconst card = j.card || {};\nconst marketing = j.marketing || {};\nconst service = j.service || {};\nconst normalized = j.normalized || {};\n\nconst uniq = (arr=[]) => [...new Set(arr.map(x=>String(x||'').trim()).filter(Boolean))];\n\nlet keywords = Array.isArray(card.keywords) ? card.keywords : [];\nkeywords = uniq(keywords).filter(k => k.length > 3);\n\nconst cover = uniq(Array.isArray(marketing.cover_headlines) ? marketing.cover_headlines : []).slice(0,7);\nconst rawSlides = Array.isArray(marketing.slide_blocks) ? marketing.slide_blocks : [];\nconst slides = uniq(rawSlides.map((s) => {\n  if (typeof s === 'string') return s;\n  if (s && typeof s === 'object') {\n    const title = String(s.title || s.name || '').trim();\n    const text = String(s.text || s.description || s.copy || '').trim();\n    const bullets = Array.isArray(s.bullets) ? s.bullets.map((b)=>String(b||'').trim()).filter(Boolean) : [];\n    const base = [title, text].filter(Boolean).join(': ');\n    if (bullets.length) return [base || 'Блок', ...bullets.map((b)=>`• ${b}`)].join(' | ');\n    return base || '';\n  }\n  return String(s || '').trim();\n})).slice(0,10);\nconst benefits = uniq(Array.isArray(card.benefits) ? card.benefits : []).slice(0,7);\nconst sourceFacts = [j.title, j.benefits, j.clarifications_answers, ...(Array.isArray(normalized.facts) ? normalized.facts : [])].join(' ').toLowerCase();\nconst rawSpecs = Array.isArray(card.specs) ? card.specs : [];\nconst specs = rawSpecs.filter((s) => {\n  const key = String((s && s.key) || '').trim().toLowerCase();\n  const val = String((s && s.value) || '').trim().toLowerCase();\n  if (!key || !val) return false;\n  const badVals = ['не указано', 'неизвестно', 'unknown', 'нет данных', 'не определено', 'н/д', '-', '—'];\n  if (badVals.some(b => val === b || val.startsWith(b))) return false;\n  return true;\n});\n\nconst lines = [];\nlines.push('🏷 <b>SEO-название</b>');\nlines.push(esc(card.title || j.title || 'не указано'));\n\nlines.push('');\nlines.push('✅ <b>Преимущества</b>');\nif (benefits.length) for (const b of benefits) lines.push(`• ${esc(b)}`);\nelse lines.push('• не указано');\n\nlines.push('');\nlines.push('📝 <b>Описание</b>');\nlines.push(esc(card.short_description || 'не указано'));\n\nlines.push('');\nlines.push('📋 <b>Характеристики</b>');\nif (specs.length) {\n  for (const s of specs.slice(0,12)) lines.push(`• ${esc(s?.key || 'Параметр')}: ${esc(s?.value || '')}`);\n} else lines.push('• —');\n\nlines.push('');\nlines.push('🔍 <b>Ключевые слова</b>');\nlines.push(esc(keywords.slice(0,30).join(', ')));\n\nlines.push('');\nlines.push('🎨 <b>Идеи для обложки и слайдов</b>');\nlines.push('<i>Обложка: варианты заголовков</i>');\nif (cover.length) for (const h of cover) lines.push(`• ${esc(h)}`);\nelse lines.push('• Акцент на главной выгоде и понятном результате для покупателя.');\n\nlines.push('');\nlines.push('<i>План слайдов (текст + визуал)</i>');\nif (slides.length) for (const s of slides) lines.push(`• ${esc(s)}`);\nelse {\n  const fallbackSlides = [\n    'Слайд 1: оффер и ключевая выгода; визуал — товар крупным планом на чистом фоне.',\n    'Слайд 2: 3 главных преимущества; визуал — иконки и короткие подписи.',\n    'Слайд 3: сценарий использования; визуал — контекст применения.',\n    'Слайд 4: характеристики; визуал — структурированная таблица.',\n    'Слайд 5: комплектация/детали; визуал — выноски на фото.',\n    'Слайд 6: сравнение с альтернативами; визуал — нейтральные колонки.',\n    'Слайд 7: качество и материалы; визуал — фактура/крупные фрагменты.',\n    'Слайд 8: финальный CTA; визуал — товар + короткий призыв.'\n  ];\n  for (const s of fallbackSlides) lines.push(`• ${esc(s)}`);\n}\n\nconst warnings = uniq([\n  ...(Array.isArray(service.warnings) ? service.warnings : []),\n  ...(Array.isArray(normalized.unknowns) ? normalized.unknowns : []),\n]);\nif (warnings.length) {\n  lines.push('');\n  lines.push('<b>Что важно уточнить</b>');\n  for (const w of warnings.slice(0,10)) lines.push(`• ${esc(w)}`);\n}\n\nconst text = lines.join('\\n').trim() || 'Не удалось собрать карточку. Попробуйте другое фото или добавьте уточнения.';\nconst limit = 3900;\nconst chunks = [];\nlet remaining = text;\nwhile (remaining.length > limit) {\n  let cut = remaining.lastIndexOf('\\n', limit);\n  if (cut < 1200) cut = limit;\n  chunks.push(remaining.slice(0, cut).trim());\n  remaining = remaining.slice(cut).trim();\n}\nif (remaining) chunks.push(remaining);\nreturn { json: { ...j, result_text_formatted: text, parts: chunks.length ? chunks : [text] } };"
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = $json; const parts = Array.isArray(j.parts) && j.parts.length ? j.parts : [j.result_text_formatted || 'Не удалось подготовить результат.']; return parts.map((p,i)=>({json:{...j, part_text: parts.length>1 ? `Часть ${i+1}/${parts.length}\\n\\n${p}` : p, part_index:i+1, parts_total:parts.length, is_last_part:i===parts.length-1 }}));"
+      },
+      "id": "637c25d0-30fe-49d1-9423-7ef395b7e505",
+      "name": "Split Result Parts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1850,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "на шаг назад",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "назад",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "назад",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "ec159faa-2632-4210-8d01-80c5726f332b",
+      "name": "IF Back Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        980,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j=$json; const stage=(j.stage||'idle').toString(); const map={select_marketplace:{to:'idle',msg:'Возврат в меню.'},select_category:{to:'select_marketplace',msg:'Шаг 1/5. Выберите маркетплейс.'},ask_title:{to:'select_category',msg:'Шаг 2/5. Выберите категорию товара.'},ask_benefits:{to:'ask_title',msg:'Шаг 3/5. Введите название товара.'},ask_photo:{to:'ask_benefits',msg:'Шаг 4/5. Напишите преимущества товара.'},clarifications:{to:'ask_photo',msg:'Шаг 5/5. Отправьте 1 фото товара.'},generating:{to:'ask_photo',msg:'Шаг 5/5. Отправьте 1 фото товара.'},idle:{to:'idle',msg:'Вы уже в меню.'}}; const x=map[stage]||map.idle; return {json:{...j, back_stage:x.to, back_text:x.msg}};",
+        "mode": "runOnceForEachItem"
+      },
+      "id": "3453e62b-de09-4fba-9ee6-307ae3b528a3",
+      "name": "Back Router",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "TFcwFzgJtkQO3gc6",
+          "mode": "list",
+          "cachedResultName": "bot_sessions",
+          "cachedResultUrl": "/projects/fQ7UrgKW9UfaIHy2/datatables/TFcwFzgJtkQO3gc6"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": "={{ Number($node[\"Normalize\"].json.telegram_id) }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
+            "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}",
+            "stage": "={{ $json.back_stage }}",
+            "updated_at": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stage",
+              "displayName": "stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "marketplace",
+              "displayName": "marketplace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "photo_file_id",
+              "displayName": "photo_file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "has_photo",
+              "displayName": "has_photo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "18d1c83f-5f8d-4dc3-ba6e-3eddd0e3e5d5",
+      "name": "Session: Step back",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "={{ $json.back_text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "ad2e7266-fcc9-4408-a623-a5cfbdb1a3b5",
+      "name": "Send Back Info",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1640,
+        160
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "DESIGN_CONCEPT",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "создать дизайн-концепт",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "DRAW_DESIGN_5_PAID",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "GENERATE_VISUALS_5",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "f743d650-58ce-43f2-9983-fe76f9f6d16a",
+      "name": "IF Design Concept",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1450,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = $input.first().json || {};\nconst pick = (...vals) => { for (const v of vals) { if (v !== undefined && v !== null && `${v}`.trim() !== '') return v; } return null; };\nconst norm = ($node['Normalize'] && $node['Normalize'].json) ? $node['Normalize'].json : {};\nconst sess = ($node['Session: Pick'] && $node['Session: Pick'].json) ? $node['Session: Pick'].json : {};\nconst chatRaw = pick(j.chat_id, sess.chat_id, norm.chat_id);\nconst chat_id = (chatRaw === null) ? null : Number(chatRaw);\nconst title = (pick(j.title, sess.title) || 'товар').toString();\nconst category = (pick(j.category, sess.category) || 'категория').toString();\nconst marketplace = (pick(j.marketplace, sess.marketplace) || 'маркетплейс').toString();\nconst benefits = (pick(j.benefits, sess.benefits) || 'не указано').toString();\nconst render_mode = ((j.render_mode || 'TEXT') + '').trim().toUpperCase() === 'DRAW' ? 'DRAW' : 'TEXT';\n\nconst compHints = {\n  'Электроника': ['чистый светлый фон', 'контрастные иконки', 'подсветка контура'],\n  'Одежда': ['мягкий градиент', 'лайфстайл фон', 'акцент на фактуре'],\n  'Дом': ['уютный интерьер', 'натуральные цвета', 'минималистичные плашки'],\n};\nconst hintKey = Object.keys(compHints).find(k => category.toLowerCase().includes(k.toLowerCase()));\nconst marketHint = marketplace.toUpperCase().includes('OZON') ? 'структурные инфоблоки и контрастные плашки' : 'крупный товар и выгоды в буллетах';\nconst catHints = hintKey ? compHints[hintKey].join(', ') : 'градиентный фон, чистая типографика, плашки с выгодами';\nconst core = `Товар: ${title}. Категория: ${category}. Маркетплейс: ${marketplace}. Преимущества: ${benefits}. Паттерны конкурентов: ${marketHint}; ${catHints}.`;\n\nconst variants = [\n  { style: 'Минимализм', palette: 'белый + синий акцент', hexColors: ['#FFFFFF','#1565C0','#0D47A1','#F5F5F5','#212121'], background: 'чистый студийный белый фон', layout: 'товар крупно по центру, 3 коротких буллета снизу', font: 'Inter или Helvetica Neue, жирный заголовок 72px, тонкие подписи 28px', mood: 'чистота, воздух, доверие', promptEn: 'minimalist product card white background blue accent professional ecommerce', styleEn: 'Minimalism', bg: '4A90E2', fg: 'FFFFFF' },\n  { style: 'Контраст', palette: 'графит + ярко-оранжевый акцент', hexColors: ['#1A1A1A','#FF6D00','#FFFFFF','#FF8F00','#424242'], background: 'тёмный почти чёрный фон', layout: 'диагональная динамичная композиция, текст-плашки справа по вертикали', font: 'Bebas Neue или Impact, крупный 96px Uppercase, подписи 22px Semibold', mood: 'энергия, сила, уверенность', promptEn: 'dark contrast product card black orange bold diagonal ecommerce', styleEn: 'Contrast', bg: '1C1C1C', fg: 'FF6B35' },\n  { style: 'Инфографика', palette: 'светло-серый + красный + тёмно-синий', hexColors: ['#F5F5F5','#C62828','#1A237E','#37474F','#FFFFFF'], background: 'геометрический фон с тонкой сеткой', layout: 'товар слева 40%, правая часть — 4 блока характеристик с иконками', font: 'Roboto Condensed, заголовки блоков 32px Bold, данные 20px Regular', mood: 'техничность, точность, информативность', promptEn: 'infographic product card light grey red navy data specs icons ecommerce', styleEn: 'Infographic', bg: 'E8E8E8', fg: 'C0392B' },\n  { style: 'Лайфстайл', palette: 'тёплый беж + натуральный зелёный', hexColors: ['#FFF8E7','#2E7D32','#795548','#F5F5DC','#212121'], background: 'живой контекстный фон — интерьер или природа', layout: 'товар крупно с тенью, выгоды в выносках-облачках', font: 'Montserrat Light + Bold mix, заголовок 64px, атмосферные подписи 26px', mood: 'тепло, жизнь, эмоция, польза', promptEn: 'lifestyle product card warm beige green natural cozy ecommerce', styleEn: 'Lifestyle', bg: 'F5E6C8', fg: '2E7D32' },\n  { style: 'Премиум', palette: 'глубокий синий (navy) + золото + белый', hexColors: ['#0D1B2A','#C9A84C','#E8D5A3','#1A2F4A','#FFFFFF'], background: 'тёмный градиент с едва заметной текстурой', layout: 'товар в центре, симметричные золотые декоративные элементы', font: 'Playfair Display или Cormorant Garamond, заголовок 80px Italic, подписи 28px Regular', mood: 'роскошь, статус, эксклюзивность', promptEn: 'premium luxury product card navy gold dark gradient exclusive ecommerce', styleEn: 'Premium', bg: '0A1628', fg: 'C9A84C' },\n];\n\nreturn variants.map((v, i) => {\n  const concept_index = i + 1;\n  const prompt_text = `${core} Концепт ${concept_index}/5. Стиль: ${v.style}. Палитра: ${v.palette}. Фон: ${v.background}. Композиция: ${v.layout}. Сделай продающий key visual для карточки товара, без логотипов и водяных знаков, с зонами под заголовок и буллеты.`;\n  const titleAscii = title.split('').filter(c => c.charCodeAt(0) < 128).join('').replace(/\\s+/g, ' ').trim().slice(0, 22) || 'product';\n  const seed = (concept_index * 31 + Math.floor(Date.now() / 60000)) % 999983;\n  const photo_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(v.promptEn + ' ' + titleAscii)}?model=turbo&width=512&height=512&seed=${seed}&nologo=true`;\n  const caption = `Концепт ${concept_index}/5 — ${v.style}`;\n\n  return {\n    json: {\n      ...j,\n      chat_id,\n      marketplace,\n      category,\n      title,\n      benefits,\n      concept_index,\n      concept_total: 5,\n      is_last_concept: concept_index === 5,\n      style: v.style,\n      palette: v.palette,\n      hexColors: v.hexColors,\n      background: v.background,\n      layout_notes: v.layout,\n      font: v.font,\n      mood: v.mood,\n      prompt_text,\n      caption,\n      photo_url,\n      image_url: photo_url,\n      ctx_chat_id: chat_id,\n      ctx_concept_index: concept_index,\n      ctx_concept_total: 5,\n      is_last_concept: concept_index === 5,\n      ctx_prompt_text: prompt_text,\n      ctx_caption: caption,\n      ctx_image_url: photo_url,\n      styleEn: v.styleEn,\n      bg: v.bg,\n      fg: v.fg,\n      render_mode,\n    },\n  };\n});",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "c43a9966-8935-480d-b70c-910190caf21e",
+      "name": "Build Design Concepts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$json.photo_url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "concept_image"
+            }
+          },
+          "timeout": 180000,
+          "followRedirect": true
+        }
+      },
+      "id": "4e067e3d-92c9-4353-abd1-b1430d299066",
+      "name": "Download Design Concept Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1910,
+        520
+      ],
+      "continueOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "<b>Готово.</b> Отправил 5 визуальных вариантов дизайна.",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "772aca0c-dc2c-49cd-a6a5-50547a70c097",
+      "name": "Send Design Done",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2140,
+        520
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ !!$json.is_last_part }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3278aec7-522f-4281-a397-546fdf00ec93",
+      "name": "IF Last Part",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3880,
+        1520
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "Готово. Хотите 5 дизайн-концептов для обложки и слайдов?",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Сгенерировать дизайн-концепт",
+                    "additionalFields": {
+                      "callback_data": "DESIGN_CONCEPT"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "acfa45ff-acca-4322-812b-e012d18403e1",
+      "name": "Send Design CTA",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        4300,
+        1520
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ !!$json.is_last_concept }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d353e1a8-1dd9-4d4c-a0da-c18c7eb1842a",
+      "name": "IF Last Concept",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2050,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "Меню:",
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Старт"
+                  },
+                  {
+                    "text": "Меню"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Назад"
+                  },
+                  {
+                    "text": "Как это работает"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "9b224fe6-8227-433e-9feb-b021b2d25e34",
+      "name": "Send Persistent Nav",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2360,
+        40
+      ],
+      "webhookId": "99d1f0fb-83ed-4746-9494-281453869025",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ (($env.DESIGN_FEATURE_ENABLED || 'true').toString().toLowerCase()) }}",
+              "rightValue": "false",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "26462a1b-6cc8-41a6-bcc1-91e072b6bd10",
+      "name": "IF Design Feature Enabled",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2780,
+        3340
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "text": "Функция временно недоступна.",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "57431ada-304a-410c-929e-8d039f73d104",
+      "name": "Send Design Disabled",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3000,
+        3480
+      ],
+      "webhookId": "99d1f0fb-83ed-4746-9494-281453869025",
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "🧠 Генерирую 5 подробных дизайн-концептов (текст)...",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "7846ad9c-f01f-4c2f-97bd-c33f7111b0f2",
+      "name": "Send Design Progress",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1500,
+        520
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ !!$binary.concept_image }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "369b8b0a-c707-4071-a2c3-2da03b2fff8f",
+      "name": "IF Concept Image Downloaded",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2060,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Build Design Concepts').item.json.ctx_chat_id || $('Build Design Concepts').item.json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id }}",
+        "binaryData": true,
+        "binaryProperty": "concept_image",
+        "additionalFields": {
+          "caption": "={{ $('Build Design Concepts').item.json.caption || '' }}",
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "72d731b7-5e1f-4888-9328-ac9fca5b276b",
+      "name": "Send Design Concept Photo Binary",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "continueOnFail": true,
+      "onError": "continueErrorOutput",
+      "position": [
+        2280,
+        560
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json.ctx_chat_id || $json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id}}",
+        "text": "={{$json.fallback_text}}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "ad1913d1-eb42-45ec-b914-671adb623246",
+      "name": "Send Concept Text Fallback",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2280,
+        720
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j = $json || {};\nconst pick = (...v) => { for (const x of v) { if (x !== undefined && x !== null && `${x}` !== '') return x; } return null; };\nconst chatRaw = pick(j.ctx_chat_id, j.chat_id);\nconst chat_id = chatRaw === null ? null : Number(chatRaw);\nconst concept_index = Number(pick(j.ctx_concept_index, j.concept_index, 1));\nconst prompt_text = (pick(j.ctx_prompt_text, j.prompt_text) || `Концепт ${concept_index}/5`).toString();\nconst caption = (pick(j.ctx_caption, j.caption) || `Концепт ${concept_index}/5`).toString();\nconst main = (pick(j.ctx_image_url, j.photo_url, j.image_url) || '').toString();\nconst seed = encodeURIComponent(`${Date.now()}-${concept_index}-${chat_id ?? 'u'}`);\nconst altPoll = `https://image.pollinations.ai/p/${encodeURIComponent(prompt_text.slice(0, 320))}?model=flux&width=1024&height=1024&seed=${seed}`;\nconst altPicsum = `https://picsum.photos/seed/${seed}/1024/1024`;\nconst urls = [main, altPoll, altPicsum].filter(Boolean);\n\nreturn {\n  json: {\n    ...j,\n    chat_id,\n    concept_index,\n    prompt_text,\n    caption,\n    urls,\n    try_index: Number(j.try_index || 0),\n    current_url: urls[0] || '',\n    provider: 'primary',\n    download_errors: Array.isArray(j.download_errors) ? j.download_errors : [],\n    ctx_chat_id: chat_id,\n    ctx_concept_index: concept_index,\n    ctx_concept_total: Number(pick(j.ctx_concept_total, j.concept_total, 5)),\n    ctx_prompt_text: prompt_text,\n    ctx_caption: caption,\n    ctx_image_url: main,\n  },\n};"
+      },
+      "id": "7528ffd8-3bd1-4926-9a76-aab6a323f58c",
+      "name": "Prepare Image URLs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ Number($json.try_index || 0) }}",
+              "rightValue": "={{ (Array.isArray($json.urls) ? $json.urls.length : 0) - 1 }}",
+              "operator": {
+                "type": "number",
+                "operation": "smaller"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3196cce2-5412-4324-bf53-03edd931a321",
+      "name": "IF Has Next URL",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2280,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j = $json || {};\nconst idx = Number(j.try_index || 0) + 1;\nconst urls = Array.isArray(j.urls) ? j.urls : [];\nconst providers = ['primary', 'fallback_pollinations', 'fallback_picsum'];\nconst err = (j.error && (j.error.message || j.error.description || JSON.stringify(j.error))) || '';\nconst download_errors = [...(Array.isArray(j.download_errors) ? j.download_errors : [])];\nif (err) download_errors.push(err.slice(0, 300));\nreturn { json: { ...j, try_index: idx, current_url: urls[idx] || '', provider: providers[idx] || `fallback_${idx}`, download_errors } };"
+      },
+      "id": "94b8a7d8-a795-40eb-8f1b-454d79a4610f",
+      "name": "Next URL Try",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2500,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j = $json || {};\nlet up = {}; try { up = $('Build Design Concepts').item.json || {}; } catch(e) {}\nconst pick = (...v) => { for (const x of v) { if (x !== undefined && x !== null && `${x}` !== '') return x; } return null; };\nconst chatRaw = pick(up.ctx_chat_id, up.chat_id, j.ctx_chat_id, j.chat_id);\nconst chat_id = chatRaw === null ? null : Number(chatRaw);\nconst idx = Number(pick(up.concept_index, up.ctx_concept_index, j.ctx_concept_index, j.concept_index, 1));\nconst total = Number(pick(up.concept_total, up.ctx_concept_total, j.ctx_concept_total, j.concept_total, 5));\nconst style = (pick(up.style, j.style, 'Концепт') || 'Концепт').toString().trim();\nconst palette = (pick(up.palette, j.palette, 'не указано')).toString();\nconst background = (pick(up.background, j.background, 'не указано')).toString();\nconst layout = (pick(up.layout_notes, up.layout, j.layout_notes, j.layout, 'не указано')).toString();\nconst font = (pick(up.font, j.font, 'Современный гротеск, Bold / Medium / Regular')).toString();\nconst mood = (pick(up.mood, j.mood, '')).toString();\nconst title = (pick(up.title, j.title, 'товар') || 'товар').toString();\nconst category = (pick(up.category, j.category, 'категория') || 'категория').toString();\nconst marketplace = (pick(up.marketplace, j.marketplace, 'маркетплейс') || 'маркетплейс').toString();\nconst render_mode = ((up.render_mode || j.render_mode || 'TEXT') + '').trim().toUpperCase();\nconst hexColors = Array.isArray(up.hexColors) ? up.hexColors : (Array.isArray(j.hexColors) ? j.hexColors : []);\nconst bg = up.bg || j.bg || '4A90E2';\nconst fg = up.fg || j.fg || 'FFFFFF';\nconst styleEn = (up.styleEn || j.styleEn || style).replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\\s+/g, '+') || 'Concept';\n\nlet fallback_text;\nlet fallback_photo_url = null;\n\nif (render_mode === 'DRAW') {\n  // Build placehold.co image URL as reliable fallback\n  const hex1 = hexColors[0] ? hexColors[0].replace('#', '%23') : '';\n  const hex2 = hexColors[1] ? hexColors[1].replace('#', '%23') : '';\n  const hexLine = [hex1, hex2].filter(Boolean).join('+');\n  const textParam = hexLine\n    ? `Concept+${idx}%0A${styleEn}%0A${hexLine}`\n    : `Concept+${idx}%0A${styleEn}`;\n  fallback_photo_url = `https://placehold.co/512x512/${bg}/${fg}.png?text=${textParam}`;\n  fallback_text = `🎨 <b>Концепт ${idx}/${total} — ${style}</b>`;\n} else {\n  const hexBlock = hexColors.length > 0\n    ? ['', '<b>🎨 Цветовые коды (HEX)</b>', ...hexColors.map((h, n) => `• Цвет ${n+1}: <code>${h}</code>`)]\n    : [];\n  const lines = [\n    `<b>Концепт ${idx}/${total} — ${style}</b>`,\n    '',\n    '<b>🎯 Цель</b>',\n    `Создать продающий key visual для «${title}» (${marketplace}, ${category}).`,\n    '',\n    '<b>🎨 Палитра</b>',\n    `• ${palette}`,\n    ...hexBlock,\n    '',\n    '<b>🔤 Типографика</b>',\n    `• ${font}`,\n    '',\n    '<b>🧩 Композиция</b>',\n    `• ${layout}`,\n    `• Фон: ${background}.`,\n    '• Safe zones: не менее 8% от краёв.',\n    ...(mood ? ['', '<b>💡 Настроение</b>', `• ${mood}`] : []),\n    '',\n    '<b>🧱 Инфоблоки</b>',\n    '• 3–5 плашек с выгодами и 1 зона под CTA.',\n    '',\n    '<b>📐 Тех.требования</b>',\n    '• Формат 1:1, от 1000×1000 px.',\n    '• Чёткий главный объект, без лишнего шума.',\n  ];\n  fallback_text = lines.join('\\n').slice(0, 3800);\n}\nreturn { json: { ...j, chat_id, render_mode, concept_index: idx, concept_total: total, fallback_text, fallback_photo_url } };"
+      },
+      "id": "022ef161-426e-462b-9178-b0d61e5fa1dd",
+      "name": "Build Concept Fallback Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2460,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j=$json||{}; return { json: { ...j } };"
+      },
+      "id": "34029924-0628-4960-abba-e4d0d1ac96e2",
+      "name": "Design Context Keeper",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1900,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "4dd73f7c-3ea8-4db5-a78e-8a0665844c49",
+      "name": "Merge Design Download Context",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2100,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "DRAW_DESIGN_5_PAID",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
+              "rightValue": "GENERATE_VISUALS_5",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "4706a4ca-1de0-4b96-b188-68f0ecf8f2be",
+      "name": "IF Draw Design Paid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id || $(\"Normalize\").first().json.chat_id }}",
+        "text": "✨ Рисую 5 вариантов дизайна... Это может занять до 1–2 минут.",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "9f4d5004-0402-41ac-8574-0218e25dddb0",
+      "name": "Send Draw Progress",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1780,
+        420
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.ctx_chat_id || $json.chat_id || $(\"Normalize\").first().json.chat_id }}",
+        "text": "Готово ✅\n5 текстовых ТЗ сформированы. Нажмите кнопку ниже, чтобы получить 5 визуальных концептов.",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Сгенерировать 5 визуальных концептов",
+                    "additionalFields": {
+                      "callback_data": "GENERATE_VISUALS_5"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "158263ee-66f7-4ff3-809b-59f301a44c50",
+      "name": "Send Design Paywall CTA",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2560,
+        340
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id || $(\"Normalize\").first().json.chat_id }}",
+        "text": "={{ (['⚙️','🔄','🧩','📋','🛠'][Math.floor(Date.now()/1000)%5]) + ' Генерирую текстовую карточку... Обычно занимает 20–40 секунд.' }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "95f2f040-466b-44b1-a0d3-3646475391cb",
+      "name": "Send Card Progress",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3160,
+        1260
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($json.render_mode || '').toString().toUpperCase() }}",
+              "rightValue": "DRAW",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "30bd6a18-9ea3-4ce6-af2d-3a26b16b138f",
+      "name": "IF Render Mode",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2280,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($json.render_mode || '').toString().toUpperCase() }}",
+              "rightValue": "DRAW",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7a0f0877-966a-4583-a7c6-801f55fe5482",
+      "name": "IF Draw Flow Item",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1860,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c4a54115-72cf-48e4-a9f8-6b560ba76b36",
+              "name": "render_mode",
+              "value": "TEXT",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "eb4e3cb5-44dd-4d43-a8a3-b4566e294db4",
+      "name": "Set Render Mode TEXT",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "72d37b6c-3ad5-4060-916f-6a424f594165",
+              "name": "render_mode",
+              "value": "DRAW",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5d2e0075-9dcd-4d6f-8cd2-347105af7c6c",
+      "name": "Set Render Mode DRAW",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $json.ctx_chat_id || $json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id }}",
+        "binaryData": false,
+        "file": "={{ $json.photo_url || $json.image_url }}",
+        "additionalFields": {
+          "caption": "={{ $json.caption || '' }}",
+          "parse_mode": "HTML",
+          "appendAttribution": false
+        }
+      },
+      "id": "send-concept-photo-url-001",
+      "name": "Send Concept Photo URL",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "continueOnFail": true,
+      "onError": "continueErrorOutput",
+      "position": [
+        2050,
+        420
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const prev = $('Build Concept Fallback Text').item.json || {}; return { json: { is_last_concept: !!prev.is_last_concept, concept_index: Number(prev.concept_index || 0), concept_total: Number(prev.concept_total || 5), chat_id: prev.chat_id || null, render_mode: (prev.render_mode || 'TEXT').toString().toUpperCase() } };"
+      },
+      "id": "restore-concept-text-001",
+      "name": "Restore Concept Context TEXT",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2490,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const prev = $('Build Design Concepts').item.json || {}; return { json: { is_last_concept: !!prev.is_last_concept, concept_index: Number(prev.concept_index || 0), concept_total: Number(prev.concept_total || 5), chat_id: prev.chat_id || null, render_mode: 'DRAW' } };"
+      },
+      "id": "restore-concept-draw-001",
+      "name": "Restore Concept Context DRAW",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2490,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const prev = $('Split Result Parts').item.json || {}; return { json: { is_last_part: !!prev.is_last_part, part_index: Number(prev.part_index || 0), parts_total: Number(prev.parts_total || 1), chat_id: prev.chat_id || null } };"
+      },
+      "id": "restore-last-part-001",
+      "name": "Restore Last Part Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3780,
+        1520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($json.render_mode || '').toString().toUpperCase() }}",
+              "rightValue": "DRAW",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-draw-fallback-001",
+      "name": "IF DRAW Fallback",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2080,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $json.chat_id || $json.ctx_chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id }}",
+        "binaryData": false,
+        "file": "={{ $json.fallback_photo_url }}",
+        "additionalFields": {
+          "caption": "={{ $json.fallback_text || '' }}",
+          "parse_mode": "HTML",
+          "appendAttribution": false
+        }
+      },
+      "id": "send-concept-fallback-photo-001",
+      "name": "Send Concept Fallback Photo",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "continueOnFail": true,
+      "onError": "continueErrorOutput",
+      "position": [
+        2280,
+        620
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "id": "8f2c491d-0b32-48ba-8cdf-2293ab4f8231",
+      "name": "GEN: Together AI Image",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1775,
+        410
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// GEN: Together AI Image\n// Вызывает Together AI (FLUX.1-schnell-Free) для каждого из 5 концептов.\n// Требует: переменная окружения TOGETHER_API_KEY в n8n Settings → Variables.\n// Если ключ не задан или запрос упал — оставляет оригинальный photo_url (pollinations fallback).\n// Меняет только: photo_url / image_url / ctx_image_url в каждом item.\n\nconst API_KEY = (typeof $env !== 'undefined' ? ($env.TOGETHER_API_KEY || '') : '').toString().trim();\nconst MODEL   = 'black-forest-labs/FLUX.1-schnell-Free';\n\nconst items = $input.all();\nconst out   = [];\n\nfor (const item of items) {\n  const j = item.json;\n  let togetherUrl = '';\n  let genError    = '';\n\n  // Используем promptEn, уже сформированный в Build Design Concepts\n  const styleEn  = String(j.styleEn   || j.style  || 'minimalist');\n  const promptEn = String(j.promptEn  || '');\n  const title    = String(j.title     || 'product').slice(0, 80);\n  const category = String(j.category  || 'product').slice(0, 60);\n  const market   = String(j.marketplace || '').toUpperCase().includes('OZON') ? 'Ozon' : 'Wildberries';\n  const hexArr   = Array.isArray(j.hexColors) ? j.hexColors : [];\n  const hexStr   = hexArr.slice(0, 2).join(' ');\n\n  const prompt = [\n    promptEn || (styleEn + ' product card for ' + title),\n    category,\n    market,\n    hexStr ? ('dominant colors ' + hexStr) : '',\n    'ecommerce marketplace product card',\n    'clean infographic layout zones, professional commercial photography',\n    'high quality photorealistic, sharp focus',\n    'no text, no watermark, no logo',\n  ].filter(Boolean).join(', ').slice(0, 1500);\n\n  if (API_KEY) {\n    try {\n      const resp = await $helpers.httpRequest({\n        method: 'POST',\n        url:    'https://api.together.xyz/v1/images/generations',\n        headers: {\n          'Authorization': 'Bearer ' + API_KEY,\n          'Content-Type':  'application/json',\n        },\n        body: JSON.stringify({\n          model:           MODEL,\n          prompt:          prompt,\n          width:           1024,\n          height:          1024,\n          steps:           4,\n          n:               1,\n          response_format: 'url',\n        }),\n      });\n\n      const url = resp && resp.data && resp.data[0] && resp.data[0].url ? resp.data[0].url : '';\n      if (url) {\n        togetherUrl = url;\n      } else {\n        genError = 'Together AI: no URL in response — ' + JSON.stringify(resp || {}).slice(0, 200);\n      }\n    } catch (e) {\n      genError = String((e && e.message) ? e.message : e).slice(0, 300);\n    }\n  } else {\n    genError = 'TOGETHER_API_KEY не задан в переменных окружения n8n';\n  }\n\n  // Together AI URL или pollinations fallback из Build Design Concepts\n  const photo_url = togetherUrl || j.photo_url || '';\n\n  out.push({\n    json: {\n      ...j,\n      photo_url,\n      image_url:      photo_url,\n      ctx_image_url:  photo_url,\n      together_url:   togetherUrl,\n      together_error: genError,\n      gen_provider:   togetherUrl ? 'together_ai' : 'pollinations_fallback',\n    },\n  });\n}\n\nreturn out;\n"
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize": {
+      "main": [
+        [
+          {
+            "node": "IF Is callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Get": {
+      "main": [
+        [
+          {
+            "node": "IF Session exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Session exists": {
+      "main": [
+        [
+          {
+            "node": "Session: Pick",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Session: Create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Create": {
+      "main": [
+        [
+          {
+            "node": "Session: Pick",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Pick": {
+      "main": [
+        [
+          {
+            "node": "IF stage == clarifications",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Start": {
+      "main": [
+        [
+          {
+            "node": "Session: Reset",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Help",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Reset": {
+      "main": [
+        [
+          {
+            "node": "Send Menu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Help": {
+      "main": [
+        [
+          {
+            "node": "Send Help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Generate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Generate": {
+      "main": [
+        [
+          {
+            "node": "Session: Stage select_marketplace",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Design Concept",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Stage select_marketplace": {
+      "main": [
+        [
+          {
+            "node": "Send: Choose marketplace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Marketplace chosen": {
+      "main": [
+        [
+          {
+            "node": "IF MP_WB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Category chosen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF MP_WB": {
+      "main": [
+        [
+          {
+            "node": "Session: Set marketplace WB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF MP_OZON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Set marketplace WB": {
+      "main": [
+        [
+          {
+            "node": "Send: Choose category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF MP_OZON": {
+      "main": [
+        [
+          {
+            "node": "Session: Set marketplace OZON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Set marketplace OZON": {
+      "main": [
+        [
+          {
+            "node": "Send: Choose category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Category chosen": {
+      "main": [
+        [
+          {
+            "node": "Map category",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Title input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map category": {
+      "main": [
+        [
+          {
+            "node": "Session: Set category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Set category": {
+      "main": [
+        [
+          {
+            "node": "Send: Ask title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Title input": {
+      "main": [
+        [
+          {
+            "node": "Session: Set title",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Benefits input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Set title": {
+      "main": [
+        [
+          {
+            "node": "Send: Ask benefits",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Benefits input": {
+      "main": [
+        [
+          {
+            "node": "Session: Set benefits",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Photo received",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Set benefits": {
+      "main": [
+        [
+          {
+            "node": "Send: Ask photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Photo received": {
+      "main": [
+        [
+          {
+            "node": "Session: Save photo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send: Ask photo(repeat)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Save photo": {
+      "main": [
+        [
+          {
+            "node": "Send Card Progress",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF has saved photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Result": {
+      "main": [
+        [
+          {
+            "node": "Restore Last Part Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore Last Part Context": {
+      "main": [
+        [
+          {
+            "node": "IF Last Part",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer Query a callback": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Is callback": {
+      "main": [
+        [
+          {
+            "node": "Answer Query a callback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Session: Get",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Session: Get",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Need category repeat": {
+      "main": [
+        [
+          {
+            "node": "Send: Choose category (repeat)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Category chosen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG: GetFile": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Compose item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitize base64": {
+      "main": [
+        [
+          {
+            "node": "Build Normalize Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Need Clarifications": {
+      "main": [
+        [
+          {
+            "node": "Session: Set stage = clarifications",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split Result Parts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Set stage = clarifications": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF stage == clarifications": {
+      "main": [
+        [
+          {
+            "node": "IF Clarification text is command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Back Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Save clarifications answers": {
+      "main": [
+        [
+          {
+            "node": "IF has saved photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF has saved photo": {
+      "main": [
+        [
+          {
+            "node": "TG: GetFile",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send: Ask photo(repeat)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose item": {
+      "main": [
+        [
+          {
+            "node": "Parse Benefits (Deterministic)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Strategy Body": {
+      "main": [
+        [
+          {
+            "node": "GEN: OpenRouter Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GEN: OpenRouter Strategy": {
+      "main": [
+        [
+          {
+            "node": "Parse Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Strategy": {
+      "main": [
+        [
+          {
+            "node": "Format Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Benefits (Deterministic)": {
+      "main": [
+        [
+          {
+            "node": "Sanitize base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Normalize Body": {
+      "main": [
+        [
+          {
+            "node": "GEN: OpenRouter Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GEN: OpenRouter Normalize": {
+      "main": [
+        [
+          {
+            "node": "Parse Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Normalize": {
+      "main": [
+        [
+          {
+            "node": "Build Strategy Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Send Clarifications",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Clarification text is command": {
+      "main": [
+        [
+          {
+            "node": "IF Back Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Session: Save clarifications answers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Result": {
+      "main": [
+        [
+          {
+            "node": "IF Need Clarifications",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Result Parts": {
+      "main": [
+        [
+          {
+            "node": "Send Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Back Command": {
+      "main": [
+        [
+          {
+            "node": "Back Router",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Back Router": {
+      "main": [
+        [
+          {
+            "node": "Session: Step back",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session: Step back": {
+      "main": [
+        [
+          {
+            "node": "Send Back Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Design Concept": {
+      "main": [
+        [
+          {
+            "node": "IF Design Feature Enabled",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Marketplace chosen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Design Concepts": {
+      "main": [
+        [
+          {
+            "node": "GEN: Together AI Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Last Part": {
+      "main": [
+        [
+          {
+            "node": "Session: Done",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Session: Done": {
+      "main": [
+        []
+      ]
+    },
+    "IF Last Concept": {
+      "main": [
+        [
+          {
+            "node": "IF Render Mode",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Send Menu": {
+      "main": [
+        []
+      ]
+    },
+    "IF Design Feature Enabled": {
+      "main": [
+        [
+          {
+            "node": "IF Draw Design Paid",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Design Disabled",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Design Progress": {
+      "main": [
+        []
+      ]
+    },
+    "Download Design Concept Image": {
+      "main": [
+        [
+          {
+            "node": "Send Design Concept Photo Binary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Concept Fallback Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Concept Image Downloaded": {
+      "main": [
+        [
+          {
+            "node": "Send Design Concept Photo Binary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Has Next URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Design Concept Photo Binary": {
+      "main": [
+        [
+          {
+            "node": "Restore Concept Context DRAW",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Restore Concept Context DRAW",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Concept Photo URL": {
+      "main": [
+        [
+          {
+            "node": "Restore Concept Context DRAW",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Concept Fallback Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore Concept Context DRAW": {
+      "main": [
+        [
+          {
+            "node": "IF Last Concept",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Image URLs": {
+      "main": [
+        [
+          {
+            "node": "Design Context Keeper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Has Next URL": {
+      "main": [
+        [
+          {
+            "node": "Next URL Try",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Concept Fallback Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Next URL Try": {
+      "main": [
+        [
+          {
+            "node": "Design Context Keeper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Concept Text Fallback": {
+      "main": [
+        [
+          {
+            "node": "Restore Concept Context TEXT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore Concept Context TEXT": {
+      "main": [
+        [
+          {
+            "node": "IF Last Concept",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Concept Fallback Text": {
+      "main": [
+        [
+          {
+            "node": "IF DRAW Fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Design Context Keeper": {
+      "main": [
+        [
+          {
+            "node": "Download Design Concept Image",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Design Download Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Design Download Context": {
+      "main": [
+        [
+          {
+            "node": "IF Concept Image Downloaded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Card Progress": {
+      "main": [
+        []
+      ]
+    },
+    "IF Draw Design Paid": {
+      "main": [
+        [
+          {
+            "node": "Send Draw Progress",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Set Render Mode DRAW",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Design Progress",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Set Render Mode TEXT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Render Mode": {
+      "main": [
+        [
+          {
+            "node": "Send Design Done",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Design Paywall CTA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Draw Flow Item": {
+      "main": [
+        [
+          {
+            "node": "Send Concept Photo URL",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Concept Fallback Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Persistent Nav": {
+      "main": [
+        []
+      ]
+    },
+    "Set Render Mode DRAW": {
+      "main": [
+        [
+          {
+            "node": "Build Design Concepts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Render Mode TEXT": {
+      "main": [
+        [
+          {
+            "node": "Build Design Concepts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF DRAW Fallback": {
+      "main": [
+        [
+          {
+            "node": "Send Concept Fallback Photo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Concept Text Fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Concept Fallback Photo": {
+      "main": [
+        [
+          {
+            "node": "Restore Concept Context TEXT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "GEN: Together AI Image": {
+      "main": [
+        [
+          {
+            "node": "IF Draw Flow Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "22c94459-241c-4c89-8bff-79df7c6e3952",
+  "meta": {
+    "instanceId": "9478674093ceaa7d16f37b30c7b4f804980652ef9d149fdcda9432fdf80d85f6"
+  },
+  "id": "p1lJ2V_DzFYaCFT3FkkRi",
+  "tags": []
+}
