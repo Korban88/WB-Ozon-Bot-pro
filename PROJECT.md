@@ -16,9 +16,9 @@ n8n workflow-based Telegram bot that generates WB/Ozon marketplace product card 
 
 | File | Version | Nodes | Description |
 |------|---------|-------|-------------|
-| `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_2.json` | v4.2 | 107 | **Current active version** — fix: Send Concept Photo URL wrong parameter name (`photo`→`fileId`) |
+| `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_3.json` | v4.3 | 108 | **Current active version** — fix: download image in n8n + send as binary (Telegram can't access pollinations URLs) |
 
-**Always use v4_2 as the active version. All previous versions are in `archive/`.**
+**Always use v4_3 as the active version. All previous versions are in `archive/`.**
 
 ---
 
@@ -74,11 +74,17 @@ IF Last Concept (TRUE = concept 5/5):
 - **TRUE** → DRAW path (images)
 - **FALSE** → TEXT path (text concepts)
 
-### Send Concept Photo URL *(added in v3.9, fixed in v4.2)*
+### Download Concept Image *(added in v4.3)*
+- **Type**: n8n-nodes-base.httpRequest, typeVersion 4
+- **Method**: GET, **URL**: `$json.current_url`
+- **responseFormat**: file → stores as binary `data`
+- **onError**: continueErrorOutput (failed concepts are skipped, others continue)
+
+### Send Concept Photo URL *(updated in v4.3)*
 - **Type**: n8n-nodes-base.telegram, typeVersion 1.2
-- **Operation**: sendPhoto (by URL — no binary download)
-- **fileId**: `$json.current_url || $json.ctx_image_url || $json.photo_url` ← **`fileId`, NOT `photo`** (TypeVersion 1.2 uses `fileId` for URL-based sendPhoto)
-- **binaryData**: false
+- **Operation**: sendPhoto, **binaryData**: true, **binaryPropertyName**: data
+- **caption**: `$json.caption || ''`, **parse_mode**: HTML
+- **Note**: Telegram cannot reliably fetch external URLs (pollinations.ai, Together AI CDN) — binary upload is mandatory
 - **caption**: `$json.caption` (e.g., "Концепт 5/5 — Премиум Dark Luxury")
 - **chatId**: `$json.ctx_chat_id || $json.chat_id || $('Normalize').first().json.chat_id`
 
@@ -99,18 +105,26 @@ IF Last Concept (TRUE = concept 5/5):
 
 1. **Telegram credential**: replace all `__REPLACE_TELEGRAM_CREDENTIAL__` with your bot credential after import
 2. **Together AI API key**: add in n8n Settings → Variables → `TOGETHER_API_KEY`
-3. **Import file**: always import `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_2.json`
+3. **Import file**: always import `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_3.json`
 
 ---
 
 ## Changelog
 
-### v4.2 (current)
+### v4.3 (current)
 
-**Fix: Send Concept Photo URL — root cause of "there is no photo in the request"**
-- Root cause: n8n Telegram node TypeVersion 1.2 `sendPhoto` (without binary) reads parameter `fileId`, NOT `photo`. The node had `photo: "={{$json.current_url...}}"` which was silently ignored → Telegram received no photo parameter.
-- Fix: renamed `photo` → `fileId` in `Send Concept Photo URL` parameters. Added explicit `binaryData: false`.
-- This was the actual root cause of the error across all previous versions (v4.0, v4.1).
+**Fix: "there is no photo in the request" — definitive fix via binary upload**
+- Root cause: Telegram's servers cannot reliably access pollinations.ai and Together AI CDN URLs (blocked, redirect issues, rate limiting) — returns "there is no photo" even when URL is set.
+- Fix: added **`Download Concept Image`** HTTP Request node (GET → binary) between `Ensure Photo URL` and `Send Concept Photo URL`. n8n downloads the image itself, then sends it to Telegram as binary data.
+- `Send Concept Photo URL` switched to `binaryData: true`, `binaryPropertyName: data`.
+- If one concept image fails to download: `onError: continueErrorOutput` — that concept is skipped, others continue.
+- Flow: `Ensure Photo URL → Download Concept Image → Send Concept Photo URL`
+- 108 nodes total.
+
+### v4.2
+
+**Fix: Send Concept Photo URL wrong parameter name**
+- Renamed `photo` → `fileId` (turned out not to be the root cause — Telegram couldn't access the URL regardless).
 
 ### v4.1
 
@@ -189,10 +203,11 @@ IF Last Concept (TRUE = concept 5/5):
 
 ```
 WB-Ozon-Bot-pro/
-├── WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_2.json  ← CURRENT (import this)
+├── WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_3.json  ← CURRENT (import this)
 ├── project.md              ← THIS FILE — project knowledge base
 ├── make_v4_0.mjs           ← script: creates v4_0 from v3_9
-├── patch_v4_1.mjs          ← script: creates v4_1 from v4_0 (photo URL fix + better prompts)
-├── patch_v4_2.mjs          ← script: creates v4_2 from v4_1 (photo→fileId param fix)
-└── archive/                ← all previous versions (v3.1–v4.1) + old scripts
+├── patch_v4_1.mjs          ← script: creates v4_1 (photo URL fix + better prompts)
+├── patch_v4_2.mjs          ← script: creates v4_2 (photo→fileId param rename)
+├── patch_v4_3.mjs          ← script: creates v4_3 (binary download + send fix)
+└── archive/                ← all previous versions (v3.1–v4.2) + old scripts
 ```
