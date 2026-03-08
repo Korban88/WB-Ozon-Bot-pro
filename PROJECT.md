@@ -16,9 +16,9 @@ n8n workflow-based Telegram bot that generates WB/Ozon marketplace product card 
 
 | File | Version | Nodes | Description |
 |------|---------|-------|-------------|
-| `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_0.json` | v4.0 | 106 | **Current active version** — fix: OpenRouter Normalize 500 error when sending images |
+| `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_1.json` | v4.1 | 107 | **Current active version** — fix: Send Concept Photo URL + product-specific image prompts |
 
-**Always use v4_0 as the active version. All previous versions are in `archive/`.**
+**Always use v4_1 as the active version. All previous versions are in `archive/`.**
 
 ---
 
@@ -98,13 +98,28 @@ IF Last Concept (TRUE = concept 5/5):
 
 1. **Telegram credential**: replace all `__REPLACE_TELEGRAM_CREDENTIAL__` with your bot credential after import
 2. **Together AI API key**: add in n8n Settings → Variables → `TOGETHER_API_KEY`
-3. **Import file**: always import `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_0.json`
+3. **Import file**: always import `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_1.json`
 
 ---
 
 ## Changelog
 
-### v4.0 (current)
+### v4.1 (current)
+
+**Fix: Send Concept Photo URL — "Bad request: there is no photo in the request"**
+- Root cause 1: `Prepare Image URLs` built the fallback pollinations URL using `prompt_text` (which contains HTML tags), causing pollinations to receive garbled input. Fixed: now uses `image_prompt` (clean English) for URL construction.
+- Root cause 2: No guarantee that `current_url` was non-empty when reaching Telegram node.
+- Fix 1: `Prepare Image URLs` — uses `image_prompt` (stripping HTML as last resort) for fallback URL.
+- Fix 2: Added **`Ensure Photo URL`** Code node between `Prepare Image URLs` and `Send Concept Photo URL` — always guarantees a valid HTTP URL in `current_url` before Telegram call (107 nodes total).
+- Rewired: `Prepare Image URLs → Ensure Photo URL → Send Concept Photo URL`
+
+**Feature: Product-specific image prompts**
+- `Build Design Concepts` now uses `facts` array from OpenRouter analysis to make `image_prompt` product-specific.
+- Each of the 5 concepts generates a unique, detailed English prompt including: product title, category, product facts, concept design system (colors, typography, composition, layout), marketplace label.
+- Uses `user_product_b64` field pass-through (ready for future img2img integration).
+- `image_prompt` is now ~200–300 chars of clean English per concept, tailored to the product.
+
+### v4.0
 
 **Fix: GEN: OpenRouter Normalize — 500 Internal Server Error on image upload**
 - Root cause: `Build Normalize Body` node sent `response_format: { type: 'json_object' }` together with a vision request (base64 `image_url`). This combination is unsupported by most OpenRouter models and causes a 500 error.
@@ -143,9 +158,11 @@ IF Last Concept (TRUE = concept 5/5):
 
 | Problem | Root Cause | Fix |
 |---------|-----------|-----|
-| Colored placeholder images (placehold.co) | `Build Concept Fallback Text` → `IF DRAW Fallback` → `Send Concept Fallback Photo` sent placehold.co URL when download failed | Added GEN node, changed to URL-based send |
-| Button "Generate Visuals" not appearing after text concepts | `IF Last Concept` condition not matching (Telegram response format issue) | Made condition robust with OR + item pairing |
-| After button click: text concepts appear again instead of images | `Merge Design Download Context` node fails silently in retry loop, all 3 URLs exhaust → text fallback | Replaced download chain with direct URL-based sendPhoto |
+| OpenRouter 500 on image upload | `Build Normalize Body` sent `response_format:json_object` + vision simultaneously — incompatible | Omit `response_format` when image present; truncate base64 to ~500 KB |
+| Send Concept Photo URL — "no photo in request" | `Prepare Image URLs` fallback URL built from HTML `prompt_text`; no URL guarantee | Use `image_prompt` for fallback URL; added `Ensure Photo URL` node |
+| Colored placeholder images (placehold.co) | Old download chain sent placehold.co URL when download failed | Added GEN node, switched to URL-based sendPhoto |
+| Button "Generate Visuals" not appearing after text concepts | `IF Last Concept` condition not matching | Condition made robust with OR + item pairing |
+| After button click: text concepts appear instead of images | Download-retry chain silently failing | Replaced with direct URL-based sendPhoto |
 
 ---
 
@@ -164,8 +181,9 @@ IF Last Concept (TRUE = concept 5/5):
 
 ```
 WB-Ozon-Bot-pro/
-├── WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_0.json  ← CURRENT (import this)
+├── WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_1.json  ← CURRENT (import this)
 ├── project.md              ← THIS FILE — project knowledge base
-├── make_v4_0.mjs           ← script: creates v4_0 from v3_9 + applies OpenRouter fix
-└── archive/                ← all previous versions (v3.1–v3.9) + old scripts
+├── make_v4_0.mjs           ← script: creates v4_0 from v3_9
+├── patch_v4_1.mjs          ← script: creates v4_1 from v4_0 (photo URL fix + better prompts)
+└── archive/                ← all previous versions (v3.1–v4.0) + old scripts
 ```
