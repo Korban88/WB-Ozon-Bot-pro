@@ -16,10 +16,9 @@ n8n workflow-based Telegram bot that generates WB/Ozon marketplace product card 
 
 | File | Version | Nodes | Description |
 |------|---------|-------|-------------|
-| `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v3_8.json` | v3.8 | 104 | Base version with `image_prompt` field and pollinations fallback |
-| `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v3_9.json` | v3.9 | 106 | **Current active version** — Together AI integration + fixed button + URL-based photo send |
+| `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_0.json` | v4.0 | 106 | **Current active version** — fix: OpenRouter Normalize 500 error when sending images |
 
-**Always use v3_9 as the active version.**
+**Always use v4_0 as the active version. All previous versions are in `archive/`.**
 
 ---
 
@@ -99,13 +98,21 @@ IF Last Concept (TRUE = concept 5/5):
 
 1. **Telegram credential**: replace all `__REPLACE_TELEGRAM_CREDENTIAL__` with your bot credential after import
 2. **Together AI API key**: add in n8n Settings → Variables → `TOGETHER_API_KEY`
-3. **Import file**: always import `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v3_9.json`
+3. **Import file**: always import `WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_0.json`
 
 ---
 
 ## Changelog
 
-### v3.9 (current)
+### v4.0 (current)
+
+**Fix: GEN: OpenRouter Normalize — 500 Internal Server Error on image upload**
+- Root cause: `Build Normalize Body` node sent `response_format: { type: 'json_object' }` together with a vision request (base64 `image_url`). This combination is unsupported by most OpenRouter models and causes a 500 error.
+- Fix 1: `response_format` is now omitted when an image is present. The prompt still explicitly requests a JSON object, so the model returns JSON correctly.
+- Fix 2: base64 image truncated to max ~500 KB to prevent request-too-large errors from Telegram high-res photos.
+- Base: v3.9 (106 nodes, all other nodes unchanged)
+
+### v3.9
 
 **Commit: GEN node (Together AI)**
 - Added `GEN: Together AI Image` node between `Build Design Concepts` and `IF Draw Flow Item`
@@ -157,13 +164,8 @@ IF Last Concept (TRUE = concept 5/5):
 
 ```
 WB-Ozon-Bot-pro/
-├── WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v3_8.json  ← base version
-├── WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v3_9.json  ← CURRENT (import this)
-├── create_v39.mjs          ← script: creates v3_9 from v3_8 (adds GEN node)
-├── patch_button_v39.mjs    ← script: fixes IF Last Concept condition
-├── patch_draw_url.mjs      ← script: fixes DRAW path to use URL-based photo send
-├── restore_v38_v39.mjs     ← script: restores v3_8 and v3_9 from backup
-├── check_src.mjs           ← script: verifies v3_8 and v3_9 node contents
-├── PROJECT.md              ← THIS FILE — project knowledge base
-└── [other debug scripts]
+├── WB_Ozon_Card_Core_n8n_2.4.7_FULL_FIXED_v4_0.json  ← CURRENT (import this)
+├── project.md              ← THIS FILE — project knowledge base
+├── make_v4_0.mjs           ← script: creates v4_0 from v3_9 + applies OpenRouter fix
+└── archive/                ← all previous versions (v3.1–v3.9) + old scripts
 ```
