@@ -1,5 +1,5 @@
 {
-  "name": "WB/Ozon Card Core n8n 2.4.7 FIX (v.2)",
+  "name": "WB/Ozon Card Core n8n 2.4.7 FIXED v3.8",
   "nodes": [
     {
       "parameters": {
@@ -14,8 +14,8 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -752,
-        48
+        0,
+        0
       ],
       "webhookId": "035e6ab7-5628-4231-9c68-5e3f05a2675d",
       "credentials": {
@@ -35,8 +35,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -512,
-        48
+        260,
+        0
       ]
     },
     {
@@ -63,8 +63,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        144,
-        272
+        1040,
+        0
       ],
       "alwaysOutputData": true
     },
@@ -98,8 +98,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        352,
-        288
+        1300,
+        0
       ]
     },
     {
@@ -237,8 +237,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        688,
-        176
+        1560,
+        -110
       ]
     },
     {
@@ -250,8 +250,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        752,
-        448
+        1560,
+        110
       ]
     },
     {
@@ -264,26 +264,6 @@
             "version": 1
           },
           "conditions": [
-            {
-              "id": "5b6075a7-181d-467a-a10b-b52c2fedb5e2",
-              "leftValue": "={{ ($json.text || '').trim().toLowerCase() }}",
-              "rightValue": "/start",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            },
-            {
-              "id": "8a765b20-fdd2-47f0-b571-30a7e40378b5",
-              "leftValue": "={{ ($json.text || '').trim().toLowerCase() }}",
-              "rightValue": "start",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            },
             {
               "id": "33d69192-9f9d-4bbf-b002-c5a40e008b78",
               "leftValue": "={{ ($json.text || '').trim().toLowerCase() }}",
@@ -303,8 +283,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1728,
-        160
+        2080,
+        -660
       ]
     },
     {
@@ -338,13 +318,15 @@
             "benefits": "",
             "photo_file_id": ""
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "telegram_id"
+          ],
           "schema": [
             {
               "id": "telegram_id",
               "displayName": "telegram_id",
               "required": false,
-              "defaultMatch": false,
+              "defaultMatch": true,
               "display": true,
               "type": "number",
               "readOnly": false,
@@ -451,14 +433,14 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        1904,
-        48
+        2340,
+        -660
       ]
     },
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "👋 <b>Привет! Я WB/Ozon Card PRO-bot</b>\n\n🚀 <i>Помогу быстро собрать продающую карточку товара</i> для WB/Ozon:\n• SEO-название под поиск\n• понятные буллеты и преимущества\n• описание без воды\n• ключевые слова\n• идеи для обложки и слайдов\n\n✨ В среднем это занимает 3–5 минут.",
+        "text": "🚀 <b>WB / Ozon Card PRO</b>\n<code>━━━━━━━━━━━━━━━━━━━━━━━━</code>\n\nГенерирую <b>продающие карточки товара</b> под маркетплейсы за <b>3–5 минут.</b>\n\n<b>Что ты получишь:</b>\n▸ SEO-название под поисковые запросы\n▸ Продающие буллеты и описание без воды\n▸ Характеристики и ключевые слова\n▸ 5 вариантов заголовков для обложки\n▸ 10 идей для слайдов карточки\n▸ 5 визуальных дизайн-концептов\n\n<i>Выбери действие 👇</i>",
         "replyMarkup": "inlineKeyboard",
         "additionalFields": {
           "appendAttribution": false,
@@ -492,8 +474,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2128,
-        48
+        2860,
+        -660
       ],
       "webhookId": "99d1f0fb-83ed-4746-9494-281453869025",
       "credentials": {
@@ -541,17 +523,40 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1920,
-        272
+        2340,
+        -440
       ]
     },
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "<b>Как это работает</b>\n\n1) Выбираете маркетплейс и категорию\n2) Пишете название товара\n3) Пишете преимущества\n4) Отправляете 1 фото\n\nНа выходе: готовая карточка и идеи для дизайна.",
+        "text": "📖 <b>Как это работает</b>\n<code>━━━━━━━━━━━━━━━━━━━━━━━━</code>\n\n<b>1.</b> Выбираешь маркетплейс — WB или Ozon\n<b>2.</b> Указываешь категорию товара\n<b>3.</b> Вводишь название товара\n<b>4.</b> Описываешь преимущества и характеристики\n<b>5.</b> Отправляешь фото товара\n\nДалее бот анализирует данные, при необходимости задаёт уточняющие вопросы и формирует готовую карточку.\n\n<b>На выходе:</b>\n▸ SEO-название · описание · буллеты\n▸ Характеристики и ключевые слова\n▸ 5 текстовых ТЗ для дизайна обложки\n▸ 5 готовых визуальных концептов\n\n<i>В среднем занимает 3–5 минут.</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
+        },
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🚀 Сгенерировать карточку",
+                    "additionalFields": {
+                      "callback_data": "GEN"
+                    }
+                  },
+                  {
+                    "text": "◀ В меню",
+                    "additionalFields": {
+                      "callback_data": "start"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
       "id": "008d00a4-c2d9-459d-93c9-d87a5405b137",
@@ -559,8 +564,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2128,
-        240
+        2860,
+        -440
       ],
       "webhookId": "b7ae0c9b-0d76-42ce-90dc-ec88a79560ee",
       "credentials": {
@@ -608,8 +613,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1920,
-        416
+        2340,
+        -220
       ]
     },
     {
@@ -643,13 +648,15 @@
             "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
             "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "telegram_id"
+          ],
           "schema": [
             {
               "id": "telegram_id",
               "displayName": "telegram_id",
               "required": false,
-              "defaultMatch": false,
+              "defaultMatch": true,
               "display": true,
               "type": "number",
               "readOnly": false,
@@ -756,14 +763,14 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        2304,
-        320
+        2600,
+        -220
       ]
     },
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "<b>Шаг 1/5.</b> Выберите маркетплейс.",
+        "text": "🏪 <b>Шаг 1 / 5 — Маркетплейс</b>\n<code>━━━━━━━━━━━━━━━━━━━━━━━━</code>\n\nНа какой площадке будет продаваться товар?",
         "replyMarkup": "inlineKeyboard",
         "additionalFields": {
           "appendAttribution": false,
@@ -797,8 +804,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2608,
-        240
+        3120,
+        -220
       ],
       "webhookId": "dffd34f7-6477-447c-8865-75b828e1b9d1",
       "credentials": {
@@ -847,8 +854,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1712,
-        624
+        2080,
+        880
       ]
     },
     {
@@ -880,8 +887,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1920,
-        560
+        2340,
+        770
       ]
     },
     {
@@ -911,13 +918,15 @@
             "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
             "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "telegram_id"
+          ],
           "schema": [
             {
               "id": "telegram_id",
               "displayName": "telegram_id",
               "required": false,
-              "defaultMatch": false,
+              "defaultMatch": true,
               "display": true,
               "type": "number",
               "readOnly": false,
@@ -1024,8 +1033,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        2176,
-        464
+        2600,
+        770
       ]
     },
     {
@@ -1057,8 +1066,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1920,
-        704
+        2340,
+        990
       ]
     },
     {
@@ -1088,13 +1097,15 @@
             "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
             "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "telegram_id"
+          ],
           "schema": [
             {
               "id": "telegram_id",
               "displayName": "telegram_id",
               "required": false,
-              "defaultMatch": false,
+              "defaultMatch": true,
               "display": true,
               "type": "number",
               "readOnly": false,
@@ -1201,14 +1212,14 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        2336,
-        560
+        2600,
+        990
       ]
     },
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "<b>Шаг 2/5.</b> Выберите категорию товара.",
+        "text": "🗂 <b>Шаг 2 / 5 — Категория</b>\n<code>━━━━━━━━━━━━━━━━━━━━━━━━</code>\n\nВыбери категорию товара:",
         "replyMarkup": "inlineKeyboard",
         "additionalFields": {
           "appendAttribution": false,
@@ -1262,9 +1273,9 @@
                     }
                   },
                   {
-                    "text": "Красота",
+                    "text": "Одежда",
                     "additionalFields": {
-                      "callback_data": "CAT_BEAUTY"
+                      "callback_data": "CAT_CLOTHES"
                     }
                   }
                 ]
@@ -1274,27 +1285,15 @@
               "row": {
                 "buttons": [
                   {
-                    "text": "Одежда и обувь",
+                    "text": "Обувь",
                     "additionalFields": {
-                      "callback_data": "CAT_APPAREL"
+                      "callback_data": "CAT_SHOES"
                     }
                   },
                   {
-                    "text": "Товары для животных",
+                    "text": "Красота",
                     "additionalFields": {
-                      "callback_data": "CAT_PETS"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Другое",
-                    "additionalFields": {
-                      "callback_data": "CAT_OTHER"
+                      "callback_data": "CAT_BEAUTY"
                     }
                   }
                 ]
@@ -1308,8 +1307,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2608,
-        432
+        3120,
+        880
       ],
       "webhookId": "ad4ea9dc-5b97-4e6b-8120-aa231a7f928a",
       "credentials": {
@@ -1342,7 +1341,7 @@
             {
               "id": "c80cea91-508d-45fd-adae-a5be36677e81",
               "leftValue": "={{ ($json.text || \"\").trim().toUpperCase() }}",
-              "rightValue": "^(CAT_|ЭЛЕКТРОНИКА|ДЕТЯМ|СПОРТ|АВТО|ДОМ И КУХНЯ|ОДЕЖДА|ОБУВЬ|КРАСОТА|ОДЕЖДА И ОБУВЬ|ТОВАРЫ ДЛЯ ЖИВОТНЫХ|ДРУГОЕ)",
+              "rightValue": "^(CAT_|ЭЛЕКТРОНИКА|ДЕТЯМ|СПОРТ|АВТО|ДОМ И КУХНЯ|ОДЕЖДА|ОБУВЬ|КРАСОТА)",
               "operator": {
                 "type": "string",
                 "operation": "regex"
@@ -1358,21 +1357,21 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1552,
-        992
+        2080,
+        1100
       ]
     },
     {
       "parameters": {
-        "jsCode": "const code = ($json.text || '').trim().toUpperCase();\n\nconst map = {\n  CAT_APPAREL: 'Одежда и обувь',\n  CAT_SHOES: 'Одежда и обувь',\n  CAT_CLOTHES: 'Одежда и обувь',\n  CAT_BEAUTY: 'Красота и уход',\n  CAT_HOME: 'Дом и кухня',\n  CAT_ELECTRONICS: 'Электроника',\n  CAT_KIDS: 'Детские товары',\n  CAT_SPORT: 'Спорт и отдых',\n  CAT_AUTO: 'Авто-товары',\n  CAT_PETS: 'Товары для животных',\n  CAT_OTHER: 'Другое',\n  'ОДЕЖДА': 'Одежда и обувь',\n  'ОБУВЬ': 'Одежда и обувь',\n  'ОДЕЖДА И ОБУВЬ': 'Одежда и обувь',\n  'КРАСОТА': 'Красота и уход',\n  'ДОМ И КУХНЯ': 'Дом и кухня',\n  'ЭЛЕКТРОНИКА': 'Электроника',\n  'ДЕТЯМ': 'Детские товары',\n  'СПОРТ': 'Спорт и отдых',\n  'АВТО': 'Авто-товары',\n  'ТОВАРЫ ДЛЯ ЖИВОТНЫХ': 'Товары для животных',\n  'ДРУГОЕ': 'Другое',\n};\n\nreturn [{\n  json: {\n    ...$json,\n    category_mapped: map[code] || 'Другое',\n  }\n}];"
+        "jsCode": "const code = ($json.text || '').trim().toUpperCase();\n\nconst map = {\n  CAT_APPAREL: 'Одежда',\n  CAT_CLOTHES: 'Одежда',\n  CAT_SHOES: 'Обувь',\n  CAT_BEAUTY: 'Красота и уход',\n  CAT_HOME: 'Дом и кухня',\n  CAT_ELECTRONICS: 'Электроника',\n  CAT_KIDS: 'Детские товары',\n  CAT_SPORT: 'Спорт и отдых',\n  CAT_AUTO: 'Авто-товары',\n  'ОДЕЖДА': 'Одежда',\n  'ОБУВЬ': 'Обувь',\n  'КРАСОТА': 'Красота и уход',\n  'ДОМ И КУХНЯ': 'Дом и кухня',\n  'ЭЛЕКТРОНИКА': 'Электроника',\n  'ДЕТЯМ': 'Детские товары',\n  'СПОРТ': 'Спорт и отдых',\n  'АВТО': 'Авто-товары',\n};\n\nreturn [{\n  json: {\n    ...$json,\n    category_mapped: map[code] || 'Другое',\n  }\n}];"
       },
       "id": "38011d70-c799-44bf-8cac-91fdf595d63c",
       "name": "Map category",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1920,
-        880
+        2340,
+        1100
       ]
     },
     {
@@ -1406,13 +1405,15 @@
             "benefits": "={{ $json.benefits }}",
             "photo_file_id": "={{ $json.photo_file_id }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "telegram_id"
+          ],
           "schema": [
             {
               "id": "telegram_id",
               "displayName": "telegram_id",
               "required": false,
-              "defaultMatch": false,
+              "defaultMatch": true,
               "display": true,
               "type": "number",
               "readOnly": false,
@@ -1519,14 +1520,14 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        2176,
-        640
+        2600,
+        1100
       ]
     },
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "<b>Шаг 3/5.</b> Напишите название товара.\n\n<i>Пример:</i> «Кроссовки мужские кожаные, белые».",
+        "text": "✏️ <b>Шаг 3 / 5 — Название товара</b>\n<code>━━━━━━━━━━━━━━━━━━━━━━━━</code>\n\nНапиши название товара так, как оно будет в карточке.\n\n<i>Пример: «Кроссовки мужские кожаные белые, размер 40–46»</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -1537,8 +1538,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2608,
-        576
+        3120,
+        1100
       ],
       "webhookId": "f025c160-58f8-42a9-b734-13a92814bcc5",
       "credentials": {
@@ -1588,8 +1589,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1184,
-        1216
+        2080,
+        1320
       ]
     },
     {
@@ -1621,13 +1622,15 @@
             "marketplace": "={{ $json.marketplace }}",
             "category": "={{ $json.category }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "telegram_id"
+          ],
           "schema": [
             {
               "id": "telegram_id",
               "displayName": "telegram_id",
               "required": false,
-              "defaultMatch": false,
+              "defaultMatch": true,
               "display": true,
               "type": "number",
               "readOnly": false,
@@ -1734,14 +1737,14 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        1920,
-        1024
+        2340,
+        1320
       ]
     },
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "<b>Шаг 4/5.</b> Напишите любую информацию о товаре: преимущества, характеристики, материал, размер, комплектацию, цвет и т.д.\n<i>Можно одним текстом, через запятую или с новой строки.</i>",
+        "text": "📋 <b>Шаг 4 / 5 — Описание товара</b>\n<code>━━━━━━━━━━━━━━━━━━━━━━━━</code>\n\nОпиши товар: материал, размер, комплектацию, особенности, цвет.\n\n<i>Можно одним текстом, списком или через запятую — бот разберётся.</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -1752,8 +1755,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2128,
-        800
+        2860,
+        1320
       ],
       "webhookId": "04aef38e-93c3-4bb3-a1cd-37a97ebfbd8a",
       "credentials": {
@@ -1813,8 +1816,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1536,
-        1296
+        2080,
+        1540
       ]
     },
     {
@@ -1844,13 +1847,15 @@
             "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
             "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "telegram_id"
+          ],
           "schema": [
             {
               "id": "telegram_id",
               "displayName": "telegram_id",
               "required": false,
-              "defaultMatch": false,
+              "defaultMatch": true,
               "display": true,
               "type": "number",
               "readOnly": false,
@@ -1957,14 +1962,14 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        1920,
-        1168
+        2340,
+        1540
       ]
     },
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "<b>Шаг 5/5.</b> Отправьте 1 фото товара.\n<i>Лучше без текста на изображении.</i>",
+        "text": "📸 <b>Шаг 5 / 5 — Фото товара</b>\n<code>━━━━━━━━━━━━━━━━━━━━━━━━</code>\n\nОтправь одно фото товара.\n\n<i>Лучше всего: чистый светлый фон, без надписей, хорошее освещение.</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -1975,8 +1980,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2128,
-        960
+        2860,
+        1540
       ],
       "webhookId": "13804869-c48f-4807-bbc9-a8cb1fb254bd",
       "credentials": {
@@ -2026,8 +2031,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1728,
-        1472
+        2080,
+        1760
       ]
     },
     {
@@ -2057,13 +2062,15 @@
             "telegram_id": "={{ Number($node[\"Normalize\"].json.telegram_id) }}",
             "chat_id": "={{ Number($node[\"Normalize\"].json.chat_id) }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "telegram_id"
+          ],
           "schema": [
             {
               "id": "telegram_id",
               "displayName": "telegram_id",
               "required": false,
-              "defaultMatch": false,
+              "defaultMatch": true,
               "display": true,
               "type": "number",
               "readOnly": false,
@@ -2170,8 +2177,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        1920,
-        1312
+        2340,
+        1760
       ]
     },
     {
@@ -2185,7 +2192,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{$env.OPENROUTER_API_KEY}}"
+              "value": "={{ 'Bearer ' + $env.OPENROUTER_API_KEY }}"
             },
             {
               "name": "Content-Type",
@@ -2211,8 +2218,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        4048,
-        1264
+        4420,
+        1760
       ]
     },
     {
@@ -2225,8 +2232,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4288,
-        1264
+        4680,
+        1760
       ]
     },
     {
@@ -2261,8 +2268,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3680,
-        1520
+        5460,
+        1540
       ],
       "webhookId": "6de3f6fb-f1ff-4d74-ae68-51758a418f48",
       "credentials": {
@@ -2304,13 +2311,15 @@
             "benefits": "={{ $json.benefits || \"\" }}",
             "updated_at": "={{ $now }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "telegram_id"
+          ],
           "schema": [
             {
               "id": "telegram_id",
               "displayName": "telegram_id",
               "required": false,
-              "defaultMatch": false,
+              "defaultMatch": true,
               "display": true,
               "type": "number",
               "readOnly": false,
@@ -2417,8 +2426,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        3920,
-        1520
+        5720,
+        1760
       ]
     },
     {
@@ -2432,8 +2441,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        0,
-        0
+        780,
+        -220
       ],
       "id": "2f9258b5-5dff-443d-a00a-56a8dbdc8925",
       "name": "Answer Query a callback",
@@ -2475,8 +2484,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -272,
-        48
+        520,
+        -220
       ],
       "id": "14dfb81f-8955-47ff-abf5-e9bfc6899492",
       "name": "IF Is callback"
@@ -2540,184 +2549,16 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        208,
-        0
+        1040,
+        -220
       ],
       "id": "b64c3fd1-ce55-48ef-bc67-b1736797079a",
       "name": "Edit Fields"
     },
     {
       "parameters": {
-        "chatId": "={{$json.chat_id}}",
-        "text": "Выберите категорию кнопкой ниже.",
-        "replyMarkup": "inlineKeyboard",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "HTML"
-        },
-        "inlineKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Электроника",
-                    "additionalFields": {
-                      "callback_data": "CAT_ELECTRONICS"
-                    }
-                  },
-                  {
-                    "text": "Детям",
-                    "additionalFields": {
-                      "callback_data": "CAT_KIDS"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Спорт",
-                    "additionalFields": {
-                      "callback_data": "CAT_SPORT"
-                    }
-                  },
-                  {
-                    "text": "Авто",
-                    "additionalFields": {
-                      "callback_data": "CAT_AUTO"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Дом и кухня",
-                    "additionalFields": {
-                      "callback_data": "CAT_HOME"
-                    }
-                  },
-                  {
-                    "text": "Красота",
-                    "additionalFields": {
-                      "callback_data": "CAT_BEAUTY"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Одежда и обувь",
-                    "additionalFields": {
-                      "callback_data": "CAT_APPAREL"
-                    }
-                  },
-                  {
-                    "text": "Товары для животных",
-                    "additionalFields": {
-                      "callback_data": "CAT_PETS"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Другое",
-                    "additionalFields": {
-                      "callback_data": "CAT_OTHER"
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        1344,
-        768
-      ],
-      "id": "e169c608-4a1e-42b9-8816-f611de49f272",
-      "name": "Send: Choose category (repeat)",
-      "webhookId": "6341f0f8-a24a-422d-b268-d2b131848790",
-      "credentials": {
-        "telegramApi": {
-          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
-          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "ae58c7cf-10c6-4ab0-ba97-d75a0b62a379",
-              "leftValue": "={{ $json.stage }}",
-              "rightValue": "__disabled__",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            },
-            {
-              "id": "7aac3c88-f056-456f-b587-03616926846e",
-              "leftValue": "={{ ($json.callback_data || '') }}",
-              "rightValue": "false",
-              "operator": {
-                "type": "string",
-                "operation": "empty",
-                "singleValue": true
-              }
-            },
-            {
-              "id": "541f9bb8-ba82-4b23-8170-c352f92e0d30",
-              "leftValue": "={{ ($json.text || '').trim() }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "notEmpty",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        1632,
-        784
-      ],
-      "id": "e6828c4f-b669-448a-b0af-e1a58325013c",
-      "name": "IF Need category repeat"
-    },
-    {
-      "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "<b>Шаг 5/5.</b> Отправьте 1 фото товара.\n<i>Лучше без текста на изображении.</i>",
+        "text": "📸 <b>Шаг 5 / 5 — Фото товара</b>\n<code>━━━━━━━━━━━━━━━━━━━━━━━━</code>\n\nПожалуйста, отправь фото товара — именно изображение, не текст.\n\n<i>Подойдёт любое фото на чистом фоне.</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -2728,8 +2569,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1936,
-        1744
+        2340,
+        1980
       ],
       "webhookId": "13804869-c48f-4807-bbc9-a8cb1fb254bd",
       "credentials": {
@@ -2756,8 +2597,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2112,
-        1216
+        780,
+        0
       ],
       "id": "ba0f2a17-ebcd-414d-b67b-b5eac1bd8cc5",
       "name": "Edit Fields1"
@@ -2765,7 +2606,7 @@
     {
       "parameters": {
         "resource": "file",
-        "fileId": "={{ $json.photo_file_id }}",
+        "fileId": "={{ $node[\"Session: Pick\"].json.photo_file_id }}",
         "additionalFields": {}
       },
       "id": "47bf29cd-b626-49fe-8098-2c4dd8cd0ddd",
@@ -2773,8 +2614,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1584,
-        1616
+        2860,
+        1870
       ],
       "webhookId": "f566af10-4bdb-4a6b-a737-c804df9b29a0",
       "credentials": {
@@ -2786,73 +2627,6 @@
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "929d5d93-5a33-40a3-99b6-a08353a9756a",
-              "name": "image_base64",
-              "value": "={{ $binary[\"data\"].data }}",
-              "type": "string"
-            },
-            {
-              "id": "11799541-aef2-48cb-b587-c2931f3f7593",
-              "name": "image_mime",
-              "value": "={{ $binary[\"data\"].mimeType || \"image/jpeg\" }}",
-              "type": "string"
-            },
-            {
-              "id": "224be5e7-6a44-4346-81f6-5eb1838f4d2b",
-              "name": "=debug_binary_keys",
-              "value": "={{ Object.keys($binary || {}) }}",
-              "type": "string"
-            }
-          ]
-        },
-        "includeOtherFields": true,
-        "options": {}
-      },
-      "id": "5ded12f7-1ea6-480b-83ce-d4126bdc7224",
-      "name": "Set: image_base64",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        2848,
-        1696
-      ],
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "mode": "combine",
-        "combineBy": "combineByPosition",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        2432,
-        1696
-      ],
-      "id": "8af2f9a9-8bef-428a-b2f6-cfc81fff59ed",
-      "name": "Merge",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "jsCode": "const item = $input.first();\n\nconst bin = item.binary?.data;\nif (!bin || !bin.data) {\n  throw new Error('Нет binary.data.data после TG:GetFile');\n}\n\nreturn [{\n  json: {\n    ...item.json,\n    image_base64: bin.data,\n    image_mime: bin.mimeType || 'image/jpeg',\n  },\n  binary: item.binary,\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2640,
-        1696
-      ],
-      "id": "8dc85d7c-3466-4d7f-8ee9-66e23c0b06b4",
-      "name": "Code in JavaScript",
-      "disabled": true
-    },
-    {
-      "parameters": {
         "operation": "binaryToPropery",
         "destinationKey": "image_base64",
         "options": {}
@@ -2860,8 +2634,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1.1,
       "position": [
-        2352,
-        1456
+        3120,
+        1870
       ],
       "id": "980e4a73-56a8-4997-a26c-de0719d60e82",
       "name": "Extract from File"
@@ -2869,13 +2643,13 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j = $json;\nconst normalized = j.normalized || {};\nconst b64 = (j.image_base64_clean || '').toString().trim();\n\nconst inputData = {\n  marketplace: (j.marketplace || '').toString().trim(),\n  category: (j.category || '').toString().trim(),\n  title: (j.title || '').toString().trim(),\n  benefits: (j.benefits || '').toString().trim(),\n  clarifications_answers: (j.clarifications_answers || '').toString().trim(),\n  facts: Array.isArray(normalized.facts) ? normalized.facts : [],\n  unknowns: Array.isArray(normalized.unknowns) ? normalized.unknowns : [],\n};\n\nconst system = `\nТы senior e-commerce copywriter и market-analyst для WB/Ozon. Ты хорошо знаешь, как выглядят описания топовых товаров на WB и Ozon в данной категории.\nВерни строго JSON структуры:\n{\n  \"card\": {\"title\":\"\",\"short_description\":\"\",\"benefits\":[],\"specs\":[{\"key\":\"\",\"value\":\"\"}],\"keywords\":[]},\n  \"marketing\": {\"segments\":[{\"name\":\"\",\"pain\":\"\",\"promise\":\"\"}],\"usp_line\":\"\",\"cover_headlines\":[],\"slide_blocks\":[]},\n  \"service\": {\"notes\":[],\"warnings\":[]}\n}\n\nПравила:\n- short_description: 200-300 слов в стиле описаний топовых конкурентов на маркетплейсе. Упомяни сферу применения, целевую аудиторию, ключевые преимущества, сценарии использования, эффект для покупателя. Стиль живой, убедительный, без канцелярщины и шаблонных фраз.\n- specs: включай ТОЛЬКО характеристики, которые явно подтверждены фото или входными данными. Если значение неизвестно — не включай этот параметр вообще. Никаких значений \"не указано\" или \"неизвестно\" в specs.\n- keywords: ровно 15-25 поисковых фраз из 2-4 слов, которые реально вводят покупатели на WB/Ozon при поиске этого товара. Именно фразы, не одиночные слова.\n- Строго опирайся на входные данные и фото товара.\n- Проведи рыночное позиционирование по категории и маркетплейсу, но без выдуманных техпараметров.\n- Русский язык, деловой и убедительный стиль.\n- Никаких эмодзи.\n- Для cover_headlines дай 5-7 вариантов, для slide_blocks 8-10 блоков с продающей логикой.\n`;\n\nconst body = {\n  model: $env.OPENROUTER_TEXT_MODEL || 'openai/gpt-4o-mini',\n  temperature: 0.35,\n  response_format: { type: 'json_object' },\n  messages: [\n    { role: 'system', content: system.trim() },\n    {\n      role: 'user',\n      content: `Входные данные:\\n${JSON.stringify(inputData, null, 2)}`,\n    },\n  ],\n};\n\nreturn { json: { ...j, openrouter_body: body } };"
+        "jsCode": "const j = $json;\nconst normalized = j.normalized || {};\nconst b64 = (j.image_base64_clean || '').toString().trim();\n\nconst inputData = {\n  marketplace: (j.marketplace || '').toString().trim(),\n  category: (j.category || '').toString().trim(),\n  title: (j.title || '').toString().trim(),\n  benefits: (j.benefits || '').toString().trim(),\n  clarifications_answers: (j.clarifications_answers || '').toString().trim(),\n  facts: Array.isArray(normalized.facts) ? normalized.facts : [],\n  unknowns: Array.isArray(normalized.unknowns) ? normalized.unknowns : [],\n};\n\nconst system = `\nТы — топовый e-commerce копирайтер и продуктовый маркетолог для WB и Ozon.\n\nСТРОГИЕ ПРАВИЛА:\n1. Используй ТОЛЬКО факты из входных данных и фото. Никогда не придумывай: мощность, вес, объём, размеры, материал, цвет — если они не упомянуты пользователем или не видны на фото.\n2. Если параметр неизвестен — вставь его в specs с value \"не указано\" и добавь в service.warnings.\n3. keywords — это РЕАЛЬНЫЕ поисковые фразы из 2–4 слов, которые покупатели вводят на WB/Ozon. Пример: \"электрический чайник нержавеющий\", \"беспроводные наушники ANC\". Не разбивай на отдельные слова. Минимум 10 фраз, максимум 20.\n4. short_description — живой, продающий текст с 1–2 эмодзи. Не сухой список, а эмоциональный pitch 2–3 предложения.\n5. benefits — короткие буллеты с эмодзи в начале. До 6 штук.\n6. specs — только реально известные характеристики. Если не знаешь — \"не указано\".\n7. cover_headlines — 5 конкретных заголовков для обложки с эмодзи, упор на главную выгоду.\n8. slide_blocks — 8–10 блоков. Каждый: { title, text, bullets[] }. Разные углы: выгода, использование, сравнение, качество, CTA.\n\nВерни ТОЛЬКО JSON без markdown-обёрток:\n{\n  \"card\": {\n    \"title\": \"SEO-название товара с ключевым словом в начале\",\n    \"short_description\": \"Продающее описание 2–3 предложения с эмодзи\",\n    \"benefits\": [\"✅ Преимущество 1\", \"⚡ Преимущество 2\"],\n    \"specs\": [{\"key\": \"Параметр\", \"value\": \"значение или 'не указано'\"}],\n    \"keywords\": [\"поисковая фраза 1\", \"поисковая фраза 2\"]\n  },\n  \"marketing\": {\n    \"segments\": [{\"name\": \"\", \"pain\": \"\", \"promise\": \"\"}],\n    \"usp_line\": \"Короткая USP-строка\",\n    \"cover_headlines\": [\"🔥 Заголовок для обложки 1\"],\n    \"slide_blocks\": [{\"title\": \"Заголовок слайда\", \"text\": \"Текст\", \"bullets\": [\"пункт\"]}]\n  },\n  \"service\": {\n    \"notes\": [],\n    \"warnings\": [\"Что нужно уточнить у продавца\"]\n  }\n}\n`.trim();\n\nconst body = {\n  model: $env.OPENROUTER_TEXT_MODEL || 'openai/gpt-4o-mini',\n  temperature: 0.4,\n  response_format: { type: 'json_object' },\n  messages: [\n    { role: 'system', content: system },\n    {\n      role: 'user',\n      content: [\n        { type: 'text', text: `Входные данные:\\n${JSON.stringify(inputData, null, 2)}` },\n        ...(b64 ? [{ type: 'image_url', image_url: { url: `data:image/jpeg;base64,${b64}` } }] : []),\n      ],\n    },\n  ],\n};\n\nreturn { json: { ...j, openrouter_body: body } };"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3792,
-        1264
+        4160,
+        1760
       ],
       "id": "31f7613d-f005-481b-a989-690be1a0f95b",
       "name": "Build Strategy Body"
@@ -2883,16 +2657,17 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const b64 = (($json.image_base64 || \"\") + \"\").toString();\n\n// убираем пробелы/переносы/табы и любой мусор\nconst clean = b64.replace(/[^A-Za-z0-9+/=]/g, \"\");\n\nif (!clean) throw new Error(\"image_base64 пустой после очистки\");\nif (clean.length < 1000) throw new Error(\"image_base64 слишком короткий, похоже не картинка\");\n\n// ограничение по размеру (если надо — просто увеличишь)\nconst maxLen = 2_500_000;\nif (clean.length > maxLen) {\n  throw new Error(`Слишком большая картинка: base64=${clean.length} символов`);\n}\n\nreturn {\n  json: {\n    ...$json,\n    image_base64_clean: clean,\n    image_base64_len: clean.length,\n  }\n};"
+        "jsCode": "// mode: runOnceForEachItem\nconst j = $json;\nconst b64 = ((j.image_base64 || '') + '').toString();\nconst clean = b64.replace(/[^A-Za-z0-9+/=]/g, '');\n\nif (!clean) {\n  return { json: { ...j, image_base64_clean: '', image_base64_len: 0,\n    _sanitize_error: 'Не удалось прочитать изображение. Пожалуйста, отправьте другое фото.' } };\n}\nif (clean.length < 1000) {\n  return { json: { ...j, image_base64_clean: '', image_base64_len: 0,\n    _sanitize_error: 'Изображение слишком маленькое или повреждено. Пожалуйста, отправьте другое фото.' } };\n}\nconst maxLen = 2_500_000;\nif (clean.length > maxLen) {\n  return { json: { ...j, image_base64_clean: '', image_base64_len: 0,\n    _sanitize_error: 'Фото слишком большое. Пожалуйста, выберите фото меньшего размера (до 5 МБ) и отправьте снова.' } };\n}\nreturn { json: { ...j, image_base64_clean: clean, image_base64_len: clean.length, _sanitize_error: '' } };"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2800,
-        1264
+        3380,
+        1870
       ],
       "id": "14661499-8b67-4c2f-b3e5-4e9e1402f527",
-      "name": "Sanitize base64"
+      "name": "Sanitize base64",
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -2921,8 +2696,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        4544,
-        1264
+        3900,
+        1760
       ],
       "id": "af27c308-c51c-4233-a828-11d526a2f24b",
       "name": "IF Need Clarifications"
@@ -2955,7 +2730,7 @@
           "value": {
             "has_photo": true,
             "stage": "clarifications",
-            "clarifications_questions": "={{$json.text}}",
+            "clarifications_questions": "={{ (() => { const qs = ($json.normalized && Array.isArray($json.normalized.clarifications_questions)) ? $json.normalized.clarifications_questions : (Array.isArray($json.clarifications_questions) ? $json.clarifications_questions : []); return qs.join('\\n'); })() }}",
             "updated_at": "={{ $now }}"
           },
           "matchingColumns": [],
@@ -3079,8 +2854,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        3712,
-        1104
+        2600,
+        660
       ],
       "id": "dcdd4f84-c7fe-4ee3-817b-b54a4e72594d",
       "name": "Session: Set stage = clarifications"
@@ -3097,8 +2872,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        4176,
-        1104
+        2600,
+        440
       ],
       "id": "607aeabe-f2cb-45e7-99ad-a5247d5f9bd3",
       "name": "Send Clarifications",
@@ -3138,8 +2913,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1040,
-        256
+        2080,
+        440
       ],
       "id": "b6b99233-d05b-4c2b-ae90-10fdeddf8264",
       "name": "IF stage == clarifications"
@@ -3171,7 +2946,7 @@
           "value": {
             "has_photo": true,
             "clarifications_answers": "={{ $node[\"Normalize\"].json.text }}",
-            "stage": "generate",
+            "stage": "generating",
             "updated_at": "={{ $now }}"
           },
           "matchingColumns": [],
@@ -3305,8 +3080,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        1360,
-        112
+        2340,
+        440
       ],
       "id": "2fe30f25-6cb5-4ad1-b81d-021c810a9614",
       "name": "Session: Save clarifications answers"
@@ -3323,7 +3098,7 @@
           "conditions": [
             {
               "id": "a51da54b-2d3f-40c8-a300-a564aa0fc4e1",
-              "leftValue": "={{ ($json.photo_file_id || '').trim() }}",
+              "leftValue": "={{ ($node[\"Session: Pick\"].json.photo_file_id || '').toString().trim() }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
@@ -3339,8 +3114,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1168,
-        1728
+        2600,
+        1760
       ],
       "id": "1f7d04d4-2971-42a1-85b1-eb2cc15fe92e",
       "name": "IF has saved photo"
@@ -3394,7 +3169,7 @@
             {
               "id": "985fbfdd-7627-4f2a-8f5f-30e3238ee703",
               "name": "clarifications_answers",
-              "value": "={{ $node[\"Session: Pick\"].json.clarifications_answers }}",
+              "value": "={{ ($node[\"Session: Pick\"].json.stage === 'clarifications' && ($node[\"Normalize\"].json.text || '').trim()) ? $node[\"Normalize\"].json.text : ($node[\"Session: Pick\"].json.clarifications_answers || '') }}",
               "type": "string"
             },
             {
@@ -3422,8 +3197,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2288,
-        1312
+        3900,
+        1540
       ],
       "id": "69826247-7001-4d81-aac5-95d33f65401e",
       "name": "Compose item"
@@ -3438,8 +3213,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2544,
-        1264
+        3640,
+        1540
       ]
     },
     {
@@ -3452,8 +3227,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3040,
-        1264
+        3120,
+        1760
       ]
     },
     {
@@ -3467,7 +3242,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{$env.OPENROUTER_API_KEY}}"
+              "value": "={{ 'Bearer ' + $env.OPENROUTER_API_KEY }}"
             },
             {
               "name": "Content-Type",
@@ -3493,8 +3268,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        3296,
-        1264
+        3380,
+        1760
       ]
     },
     {
@@ -3507,8 +3282,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3552,
-        1264
+        3640,
+        1760
       ]
     },
     {
@@ -3519,8 +3294,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3920,
-        1104
+        1040,
+        220
       ],
       "id": "f15f7c41-017d-4c72-acf9-801aea85468c",
       "name": "Code in JavaScript1"
@@ -3553,8 +3328,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1280,
-        176
+        1820,
+        440
       ]
     },
     {
@@ -3563,13 +3338,13 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4480,
-        1264
+        4940,
+        1760
       ],
       "parameters": {
         "mode": "runOnceForEachItem",
         "language": "javaScript",
-        "jsCode": "const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst j = $json || {};\nconst card = j.card || {};\nconst marketing = j.marketing || {};\nconst service = j.service || {};\nconst normalized = j.normalized || {};\n\nconst uniq = (arr=[]) => [...new Set(arr.map(x=>String(x||'').trim()).filter(Boolean))];\n\nlet keywords = Array.isArray(card.keywords) ? card.keywords : [];\nkeywords = uniq(keywords).filter(k => k.length > 3);\n\nconst cover = uniq(Array.isArray(marketing.cover_headlines) ? marketing.cover_headlines : []).slice(0,7);\nconst rawSlides = Array.isArray(marketing.slide_blocks) ? marketing.slide_blocks : [];\nconst slides = uniq(rawSlides.map((s) => {\n  if (typeof s === 'string') return s;\n  if (s && typeof s === 'object') {\n    const title = String(s.title || s.name || '').trim();\n    const text = String(s.text || s.description || s.copy || '').trim();\n    const bullets = Array.isArray(s.bullets) ? s.bullets.map((b)=>String(b||'').trim()).filter(Boolean) : [];\n    const base = [title, text].filter(Boolean).join(': ');\n    if (bullets.length) return [base || 'Блок', ...bullets.map((b)=>`• ${b}`)].join(' | ');\n    return base || '';\n  }\n  return String(s || '').trim();\n})).slice(0,10);\nconst benefits = uniq(Array.isArray(card.benefits) ? card.benefits : []).slice(0,7);\nconst sourceFacts = [j.title, j.benefits, j.clarifications_answers, ...(Array.isArray(normalized.facts) ? normalized.facts : [])].join(' ').toLowerCase();\nconst rawSpecs = Array.isArray(card.specs) ? card.specs : [];\nconst specs = rawSpecs.filter((s) => {\n  const key = String((s && s.key) || '').trim().toLowerCase();\n  const val = String((s && s.value) || '').trim().toLowerCase();\n  if (!key || !val) return false;\n  const badVals = ['не указано', 'неизвестно', 'unknown', 'нет данных', 'не определено', 'н/д', '-', '—'];\n  if (badVals.some(b => val === b || val.startsWith(b))) return false;\n  return true;\n});\n\nconst lines = [];\nlines.push('🏷 <b>SEO-название</b>');\nlines.push(esc(card.title || j.title || 'не указано'));\n\nlines.push('');\nlines.push('✅ <b>Преимущества</b>');\nif (benefits.length) for (const b of benefits) lines.push(`• ${esc(b)}`);\nelse lines.push('• не указано');\n\nlines.push('');\nlines.push('📝 <b>Описание</b>');\nlines.push(esc(card.short_description || 'не указано'));\n\nlines.push('');\nlines.push('📋 <b>Характеристики</b>');\nif (specs.length) {\n  for (const s of specs.slice(0,12)) lines.push(`• ${esc(s?.key || 'Параметр')}: ${esc(s?.value || '')}`);\n} else lines.push('• —');\n\nlines.push('');\nlines.push('🔍 <b>Ключевые слова</b>');\nlines.push(esc(keywords.slice(0,30).join(', ')));\n\nlines.push('');\nlines.push('🎨 <b>Идеи для обложки и слайдов</b>');\nlines.push('<i>Обложка: варианты заголовков</i>');\nif (cover.length) for (const h of cover) lines.push(`• ${esc(h)}`);\nelse lines.push('• Акцент на главной выгоде и понятном результате для покупателя.');\n\nlines.push('');\nlines.push('<i>План слайдов (текст + визуал)</i>');\nif (slides.length) for (const s of slides) lines.push(`• ${esc(s)}`);\nelse {\n  const fallbackSlides = [\n    'Слайд 1: оффер и ключевая выгода; визуал — товар крупным планом на чистом фоне.',\n    'Слайд 2: 3 главных преимущества; визуал — иконки и короткие подписи.',\n    'Слайд 3: сценарий использования; визуал — контекст применения.',\n    'Слайд 4: характеристики; визуал — структурированная таблица.',\n    'Слайд 5: комплектация/детали; визуал — выноски на фото.',\n    'Слайд 6: сравнение с альтернативами; визуал — нейтральные колонки.',\n    'Слайд 7: качество и материалы; визуал — фактура/крупные фрагменты.',\n    'Слайд 8: финальный CTA; визуал — товар + короткий призыв.'\n  ];\n  for (const s of fallbackSlides) lines.push(`• ${esc(s)}`);\n}\n\nconst warnings = uniq([\n  ...(Array.isArray(service.warnings) ? service.warnings : []),\n  ...(Array.isArray(normalized.unknowns) ? normalized.unknowns : []),\n]);\nif (warnings.length) {\n  lines.push('');\n  lines.push('<b>Что важно уточнить</b>');\n  for (const w of warnings.slice(0,10)) lines.push(`• ${esc(w)}`);\n}\n\nconst text = lines.join('\\n').trim() || 'Не удалось собрать карточку. Попробуйте другое фото или добавьте уточнения.';\nconst limit = 3900;\nconst chunks = [];\nlet remaining = text;\nwhile (remaining.length > limit) {\n  let cut = remaining.lastIndexOf('\\n', limit);\n  if (cut < 1200) cut = limit;\n  chunks.push(remaining.slice(0, cut).trim());\n  remaining = remaining.slice(cut).trim();\n}\nif (remaining) chunks.push(remaining);\nreturn { json: { ...j, result_text_formatted: text, parts: chunks.length ? chunks : [text] } };"
+        "jsCode": "const esc = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');\nconst j = $json || {};\nconst card = j.card || {};\nconst marketing = j.marketing || {};\nconst service = j.service || {};\nconst normalized = j.normalized || {};\nconst uniq = (arr=[]) => [...new Set(arr.map(x=>String(x||'').trim()).filter(Boolean))];\n\n// ── Keywords: use LLM keywords ONLY — no word splitting\nlet keywords = uniq(Array.isArray(card.keywords) ? card.keywords : []);\n// Only gentle fallback if absolutely nothing provided — keep phrases, not single words\nif (keywords.length === 0) {\n  const kRaw = [j.title, j.category].filter(Boolean).join(' / ');\n  if (kRaw) keywords = [kRaw];\n}\n\n// ── Cover headlines\nconst cover = uniq(Array.isArray(marketing.cover_headlines) ? marketing.cover_headlines : []).slice(0,5);\n\n// ── Slide blocks\nconst rawSlides = Array.isArray(marketing.slide_blocks) ? marketing.slide_blocks : [];\nconst slides = rawSlides.map((s) => {\n  if (typeof s === 'string') return s.trim();\n  if (s && typeof s === 'object') {\n    const ttl = String(s.title || s.name || '').trim();\n    const txt = String(s.text || s.description || s.copy || '').trim();\n    const buls = Array.isArray(s.bullets) ? s.bullets.map(b=>String(b||'').trim()).filter(Boolean) : [];\n    const base = [ttl, txt].filter(Boolean).join(': ');\n    if (buls.length) return base ? base + '\\n  ' + buls.map(b=>'▸ '+b).join('\\n  ') : buls.map(b=>'▸ '+b).join('\\n  ');\n    return base;\n  }\n  return String(s||'').trim();\n}).filter(Boolean).slice(0,10);\n\n// ── Benefits\nconst benefits = uniq(Array.isArray(card.benefits) ? card.benefits : []).slice(0,6);\n\n// ── Specs: show all from LLM (including \"не указано\") — do NOT over-filter\nconst rawSpecs = Array.isArray(card.specs) ? card.specs : [];\nconst specs = rawSpecs.filter(s => {\n  const key = String((s&&s.key)||'').trim();\n  const val = String((s&&s.value)||'').trim();\n  return (key.length > 0) && (val.length > 0);\n}).slice(0,12);\n\n// ── Warnings\nconst warnings = uniq([\n  ...(Array.isArray(service.warnings) ? service.warnings : []),\n  ...(Array.isArray(normalized.unknowns) ? normalized.unknowns : []),\n]).slice(0,8);\n\n// ── Build output\nconst lines = [];\n\nlines.push('🏷 <b>SEO-название для поиска</b>');\nlines.push(esc(card.title || j.title || 'не указано'));\n\nlines.push('');\nlines.push('✨ <b>Преимущества товара</b>');\nif (benefits.length) {\n  for (const b of benefits) lines.push(esc(b));\n} else lines.push('• не указано');\n\nlines.push('');\nlines.push('📝 <b>Описание для покупателя</b>');\nlines.push(esc(card.short_description || 'не указано'));\n\nif (specs.length) {\n  lines.push('');\n  lines.push('📦 <b>Характеристики</b>');\n  for (const s of specs) {\n    lines.push(`• <b>${esc(s.key)}:</b> ${esc(s.value)}`);\n  }\n}\n\nif (keywords.length) {\n  lines.push('');\n  lines.push('🔍 <b>Ключевые слова для поиска</b>');\n  lines.push('<i>' + esc(keywords.join(', ')) + '</i>');\n}\n\nif (cover.length || slides.length) {\n  lines.push('');\n  lines.push('🎨 <b>Идеи для карточки на маркетплейсе</b>');\n  if (cover.length) {\n    lines.push('');\n    lines.push('<i>📸 Варианты заголовка обложки</i>');\n    for (const h of cover) lines.push(`• ${esc(h)}`);\n  }\n  if (slides.length) {\n    lines.push('');\n    lines.push('<i>🖼 Слайды карточки</i>');\n    for (let i=0; i<slides.length; i++) {\n      lines.push(`${i+1}. ${esc(slides[i])}`);\n    }\n  }\n}\n\nif (warnings.length) {\n  lines.push('');\n  lines.push('⚠️ <b>Важно уточнить</b>');\n  for (const w of warnings) lines.push(`• ${esc(w)}`);\n}\n\nconst text = lines.join('\\n').trim() || 'Не удалось собрать карточку. Добавьте описание или загрузите другое фото.';\n\n// Split into chunks of 3900 chars\nconst limit = 3900;\nconst chunks = [];\nlet remaining = text;\nwhile (remaining.length > limit) {\n  let cut = remaining.lastIndexOf('\\n', limit);\n  if (cut < 1000) cut = limit;\n  chunks.push(remaining.slice(0, cut).trim());\n  remaining = remaining.slice(cut).trim();\n}\nif (remaining) chunks.push(remaining);\n\nreturn { json: { ...j, result_text_formatted: text, parts: chunks.length ? chunks : [text] } };"
       }
     },
     {
@@ -3581,8 +3356,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1850,
-        240
+        5200,
+        1760
       ]
     },
     {
@@ -3610,14 +3385,6 @@
                 "type": "string",
                 "operation": "equals"
               }
-            },
-            {
-              "leftValue": "={{ ($json.text || \"\").trim().toLowerCase() }}",
-              "rightValue": "назад",
-              "operator": {
-                "type": "string",
-                "operation": "equals"
-              }
             }
           ],
           "combinator": "or"
@@ -3629,13 +3396,13 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        980,
-        160
+        1820,
+        0
       ]
     },
     {
       "parameters": {
-        "jsCode": "const j=$json; const stage=(j.stage||'idle').toString(); const map={select_marketplace:{to:'idle',msg:'Возврат в меню.'},select_category:{to:'select_marketplace',msg:'Шаг 1/5. Выберите маркетплейс.'},ask_title:{to:'select_category',msg:'Шаг 2/5. Выберите категорию товара.'},ask_benefits:{to:'ask_title',msg:'Шаг 3/5. Введите название товара.'},ask_photo:{to:'ask_benefits',msg:'Шаг 4/5. Напишите преимущества товара.'},clarifications:{to:'ask_photo',msg:'Шаг 5/5. Отправьте 1 фото товара.'},generating:{to:'ask_photo',msg:'Шаг 5/5. Отправьте 1 фото товара.'},idle:{to:'idle',msg:'Вы уже в меню.'}}; const x=map[stage]||map.idle; return {json:{...j, back_stage:x.to, back_text:x.msg}};",
+        "jsCode": "const j=$json; const stage=(j.stage||'idle').toString(); const map={select_marketplace:{to:'idle',msg:'Возврат в меню.'},select_category:{to:'select_marketplace',msg:'Шаг 1/5. Выберите маркетплейс.'},ask_title:{to:'select_category',msg:'Шаг 2/5. Выберите категорию товара.'},ask_benefits:{to:'ask_title',msg:'Шаг 3/5. Введите название товара.'},ask_photo:{to:'ask_benefits',msg:'Шаг 4/5. Напишите преимущества товара.'},clarifications:{to:'ask_photo',msg:'Шаг 5/5. Отправьте 1 фото товара.'},generating:{to:'ask_photo',msg:'Шаг 5/5. Отправьте 1 фото товара.'},generate:{to:'ask_photo',msg:'Шаг 5/5. Отправьте 1 фото товара.'},idle:{to:'idle',msg:'Вы уже в меню.'}}; const x=map[stage]||map.idle; return {json:{...j, back_stage:x.to, back_text:x.msg}};",
         "mode": "runOnceForEachItem"
       },
       "id": "3453e62b-de09-4fba-9ee6-307ae3b528a3",
@@ -3643,8 +3410,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1200,
-        160
+        2080,
+        0
       ]
     },
     {
@@ -3673,13 +3440,15 @@
             "stage": "={{ $json.back_stage }}",
             "updated_at": "={{ $now }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "telegram_id"
+          ],
           "schema": [
             {
               "id": "telegram_id",
               "displayName": "telegram_id",
               "required": false,
-              "defaultMatch": false,
+              "defaultMatch": true,
               "display": true,
               "type": "number",
               "readOnly": false,
@@ -3786,8 +3555,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        1420,
-        160
+        2340,
+        220
       ]
     },
     {
@@ -3804,8 +3573,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1640,
-        160
+        2600,
+        220
       ],
       "credentials": {
         "telegramApi": {
@@ -3866,13 +3635,13 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1450,
-        520
+        6240,
+        880
       ]
     },
     {
       "parameters": {
-        "jsCode": "const j = $input.first().json || {};\nconst pick = (...vals) => { for (const v of vals) { if (v !== undefined && v !== null && `${v}`.trim() !== '') return v; } return null; };\nconst norm = ($node['Normalize'] && $node['Normalize'].json) ? $node['Normalize'].json : {};\nconst sess = ($node['Session: Pick'] && $node['Session: Pick'].json) ? $node['Session: Pick'].json : {};\nconst chatRaw = pick(j.chat_id, sess.chat_id, norm.chat_id);\nconst chat_id = (chatRaw === null) ? null : Number(chatRaw);\nconst title = (pick(j.title, sess.title) || 'товар').toString();\nconst category = (pick(j.category, sess.category) || 'категория').toString();\nconst marketplace = (pick(j.marketplace, sess.marketplace) || 'маркетплейс').toString();\nconst benefits = (pick(j.benefits, sess.benefits) || 'не указано').toString();\nconst render_mode = ((j.render_mode || 'TEXT') + '').trim().toUpperCase() === 'DRAW' ? 'DRAW' : 'TEXT';\n\nconst compHints = {\n  'Электроника': ['чистый светлый фон', 'контрастные иконки', 'подсветка контура'],\n  'Одежда': ['мягкий градиент', 'лайфстайл фон', 'акцент на фактуре'],\n  'Дом': ['уютный интерьер', 'натуральные цвета', 'минималистичные плашки'],\n};\nconst hintKey = Object.keys(compHints).find(k => category.toLowerCase().includes(k.toLowerCase()));\nconst marketHint = marketplace.toUpperCase().includes('OZON') ? 'структурные инфоблоки и контрастные плашки' : 'крупный товар и выгоды в буллетах';\nconst catHints = hintKey ? compHints[hintKey].join(', ') : 'градиентный фон, чистая типографика, плашки с выгодами';\nconst core = `Товар: ${title}. Категория: ${category}. Маркетплейс: ${marketplace}. Преимущества: ${benefits}. Паттерны конкурентов: ${marketHint}; ${catHints}.`;\n\nconst variants = [\n  { style: 'Минимализм', palette: 'белый + синий акцент', hexColors: ['#FFFFFF','#1565C0','#0D47A1','#F5F5F5','#212121'], background: 'чистый студийный белый фон', layout: 'товар крупно по центру, 3 коротких буллета снизу', font: 'Inter или Helvetica Neue, жирный заголовок 72px, тонкие подписи 28px', mood: 'чистота, воздух, доверие', promptEn: 'minimalist product card white background blue accent professional ecommerce', styleEn: 'Minimalism', bg: '4A90E2', fg: 'FFFFFF' },\n  { style: 'Контраст', palette: 'графит + ярко-оранжевый акцент', hexColors: ['#1A1A1A','#FF6D00','#FFFFFF','#FF8F00','#424242'], background: 'тёмный почти чёрный фон', layout: 'диагональная динамичная композиция, текст-плашки справа по вертикали', font: 'Bebas Neue или Impact, крупный 96px Uppercase, подписи 22px Semibold', mood: 'энергия, сила, уверенность', promptEn: 'dark contrast product card black orange bold diagonal ecommerce', styleEn: 'Contrast', bg: '1C1C1C', fg: 'FF6B35' },\n  { style: 'Инфографика', palette: 'светло-серый + красный + тёмно-синий', hexColors: ['#F5F5F5','#C62828','#1A237E','#37474F','#FFFFFF'], background: 'геометрический фон с тонкой сеткой', layout: 'товар слева 40%, правая часть — 4 блока характеристик с иконками', font: 'Roboto Condensed, заголовки блоков 32px Bold, данные 20px Regular', mood: 'техничность, точность, информативность', promptEn: 'infographic product card light grey red navy data specs icons ecommerce', styleEn: 'Infographic', bg: 'E8E8E8', fg: 'C0392B' },\n  { style: 'Лайфстайл', palette: 'тёплый беж + натуральный зелёный', hexColors: ['#FFF8E7','#2E7D32','#795548','#F5F5DC','#212121'], background: 'живой контекстный фон — интерьер или природа', layout: 'товар крупно с тенью, выгоды в выносках-облачках', font: 'Montserrat Light + Bold mix, заголовок 64px, атмосферные подписи 26px', mood: 'тепло, жизнь, эмоция, польза', promptEn: 'lifestyle product card warm beige green natural cozy ecommerce', styleEn: 'Lifestyle', bg: 'F5E6C8', fg: '2E7D32' },\n  { style: 'Премиум', palette: 'глубокий синий (navy) + золото + белый', hexColors: ['#0D1B2A','#C9A84C','#E8D5A3','#1A2F4A','#FFFFFF'], background: 'тёмный градиент с едва заметной текстурой', layout: 'товар в центре, симметричные золотые декоративные элементы', font: 'Playfair Display или Cormorant Garamond, заголовок 80px Italic, подписи 28px Regular', mood: 'роскошь, статус, эксклюзивность', promptEn: 'premium luxury product card navy gold dark gradient exclusive ecommerce', styleEn: 'Premium', bg: '0A1628', fg: 'C9A84C' },\n];\n\nreturn variants.map((v, i) => {\n  const concept_index = i + 1;\n  const prompt_text = `${core} Концепт ${concept_index}/5. Стиль: ${v.style}. Палитра: ${v.palette}. Фон: ${v.background}. Композиция: ${v.layout}. Сделай продающий key visual для карточки товара, без логотипов и водяных знаков, с зонами под заголовок и буллеты.`;\n  const titleAscii = title.split('').filter(c => c.charCodeAt(0) < 128).join('').replace(/\\s+/g, ' ').trim().slice(0, 22) || 'product';\n  const seed = (concept_index * 31 + Math.floor(Date.now() / 60000)) % 999983;\n  const photo_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(v.promptEn + ' ' + titleAscii)}?model=turbo&width=512&height=512&seed=${seed}&nologo=true`;\n  const caption = `Концепт ${concept_index}/5 — ${v.style}`;\n\n  return {\n    json: {\n      ...j,\n      chat_id,\n      marketplace,\n      category,\n      title,\n      benefits,\n      concept_index,\n      concept_total: 5,\n      is_last_concept: concept_index === 5,\n      style: v.style,\n      palette: v.palette,\n      hexColors: v.hexColors,\n      background: v.background,\n      layout_notes: v.layout,\n      font: v.font,\n      mood: v.mood,\n      prompt_text,\n      caption,\n      photo_url,\n      image_url: photo_url,\n      ctx_chat_id: chat_id,\n      ctx_concept_index: concept_index,\n      ctx_concept_total: 5,\n      is_last_concept: concept_index === 5,\n      ctx_prompt_text: prompt_text,\n      ctx_caption: caption,\n      ctx_image_url: photo_url,\n      styleEn: v.styleEn,\n      bg: v.bg,\n      fg: v.fg,\n      render_mode,\n    },\n  };\n});",
+        "jsCode": "// mode: runOnceForAllItems\nconst j = $input.first().json || {};\nconst pick = (...vals) => { for (const v of vals) { if (v !== undefined && v !== null && `${v}`.trim() !== '') return v; } return null; };\nconst norm = ($node['Normalize'] && $node['Normalize'].json) ? $node['Normalize'].json : {};\nconst sess = ($node['Session: Pick'] && $node['Session: Pick'].json) ? $node['Session: Pick'].json : {};\n\nconst chat_id = Number(pick(j.chat_id, sess.chat_id, norm.chat_id) || 0);\nconst title = (pick(j.title, sess.title) || 'товар').toString();\nconst category = (pick(j.category, sess.category) || 'категория').toString();\nconst marketplace = (pick(j.marketplace, sess.marketplace) || 'маркетплейс').toString();\nconst benefits = (pick(j.benefits, sess.benefits) || '').toString();\nconst render_mode = ((j.render_mode || 'TEXT') + '').trim().toUpperCase() === 'DRAW' ? 'DRAW' : 'TEXT';\n\nconst variants = [\n  {\n    style: 'Минимализм Premium',\n    palette: 'Белый #FFFFFF · Тёмно-синий #1A237E · Акцент золотой #FFD700',\n    background: 'Студийный белый с мягкими тенями',\n    layout: 'Товар по центру 70%, 3 буллета снизу в карточках, типографика Montserrat Bold',\n    typography: 'Заголовок: Montserrat Bold 72px, цвет #1A237E\\nПодписи: Medium 28px\\nАкценты: #FFD700',\n    composition: 'Центральная ось, симметрия, product hero, safe zone 8%',\n    image_prompt: `ultra-premium minimalist product card, ${title}, white studio background, soft shadows, dark navy blue typography, golden accent lines, Montserrat font style, clean symmetric composition, luxury e-commerce photography, 4k quality, no watermarks, professional lighting`\n  },\n  {\n    style: 'Контраст Dark',\n    palette: 'Графит #1C1C1E · Оранжевый #FF6B35 · Белый #FFFFFF',\n    background: 'Тёмный градиент #1C1C1E → #2D2D30',\n    layout: 'Диагональная композиция 30°, товар слева, плашки с преимуществами справа',\n    typography: 'Заголовок: SF Pro Display Bold 68px, белый\\nАкцент: оранжевый #FF6B35\\nПодписи: Regular 26px',\n    composition: 'Диагональ 30°, динамика, высокий контраст, энергичный ритм',\n    image_prompt: `high contrast dark background graphite gradient, ${title}, orange coral accent colors, diagonal composition, bold white typography, modern aggressive style, premium e-commerce product card, professional photography, 4k quality, no text watermarks`\n  },\n  {\n    style: 'Инфографика',\n    palette: 'Светло-серый #F5F5F7 · Красный #E03131 · Тёмный #1C1C1E',\n    background: 'Геометрический паттерн на светло-сером',\n    layout: 'Товар слева 50%, характеристики в иконках справа, строгая сетка 4 колонки',\n    typography: 'Заголовок: Bold 64px\\nХарактеристики: иконки 32px + текст 24px\\nСтрогое выравнивание по сетке',\n    composition: '2-колоночный грид, выравнивание по левому краю, структурированный info-блок',\n    image_prompt: `clean infographic product card, ${title}, light gray background geometric pattern, red accent color, specifications icons layout, structured grid design, two columns product and info, corporate professional style, e-commerce infographic, 4k quality, no watermarks`\n  },\n  {\n    style: 'Лайфстайл Органик',\n    palette: 'Тёплый беж #F5E6D3 · Глубокий зелёный #2D5016 · Крем #FFF8F0',\n    background: 'Контекстный интерьерный или природный фон',\n    layout: 'Товар крупно в контексте, выноски с преимуществами в баблах',\n    typography: 'Заголовок: Playfair Display Bold 66px\\nПодписи в баблах: Lato 26px\\nТёплые натуральные цвета',\n    composition: 'Правило третей, золотое сечение, контекст + продукт, живая эмоциональная подача',\n    image_prompt: `lifestyle product photography, ${title}, warm beige cream background, natural environment context, deep green organic accents, product in use scene, warm natural lighting, rule of thirds composition, organic aesthetic, high quality photography, 4k, no watermarks`\n  },\n  {\n    style: 'Премиум Dark Luxury',\n    palette: 'Чёрный #0A0A0A · Золотой #C9A84C · Белый #FFFFFF',\n    background: 'Тёмный бархатный градиент с бликами и отражениями',\n    layout: 'Товар по центру на тёмном фоне, золотые акценты симметрично, воздух и пространство',\n    typography: 'Заголовок: Cormorant Garamond Bold 70px\\nАкценты: золотой #C9A84C\\nПространство и воздух',\n    composition: 'Симметрия, центрирование, luxury whitespace, premium minimalism',\n    image_prompt: `ultra luxury dark product photography, ${title}, black velvet background, gold metallic accents, symmetric placement, premium brand visual, high-end fashion e-commerce aesthetic, elegant typography space, reflections and bokeh, cinematic lighting, 4k ultra quality, no watermarks`\n  }\n];\n\nreturn variants.map((v, i) => {\n  const idx = i + 1;\n  const total = 5;\n  const is_last_concept = idx === total;\n\n  const poll_url = 'https://image.pollinations.ai/p/' +\n    encodeURIComponent(v.image_prompt.slice(0, 400)) +\n    '?model=flux&width=1280&height=1280&seed=' + (10000 + idx) + '&nologo=true&enhance=true';\n\n  const prompt_text = [\n    `<b>КОНЦЕПТ ${idx}/${total} — «${v.style}»</b>`,\n    '<code>━━━━━━━━━━━━━━━━━━━━━━━━</code>',\n    `<b>Товар:</b> ${title}`,\n    `<b>Маркетплейс:</b> ${marketplace} · <b>Категория:</b> ${category}`,\n    '',\n    '<b>🎨 Цветовая палитра</b>',\n    v.palette,\n    '',\n    '<b>🔤 Типографика</b>',\n    ...v.typography.split('\\n').map(l => l.trim()).filter(Boolean),\n    '',\n    '<b>🧩 Композиция</b>',\n    v.composition,\n    '<b>Фон:</b> ' + v.background,\n    '<b>Компоновка:</b> ' + v.layout,\n    '',\n    '<b>📋 Контент-блоки карточки</b>',\n    '▸ Зона 1: главный визуал товара (hero shot)',\n    '▸ Зона 2: SEO-заголовок / оффер',\n    '▸ Зона 3: 3–5 буллетов с ключевыми выгодами',\n    '▸ Зона 4: USP-строка или призыв к действию',\n    '',\n    '<b>📐 Технические требования</b>',\n    '▸ Формат: 1:1 (1000×1000px) или 3:4 (700×900px)',\n    '▸ Safe zone: 8–10% от краёв',\n    '▸ Текст читается на мобильном с первого взгляда',\n    `▸ Паттерн топ-карточек ${marketplace} в категории «${category}»`,\n  ].join('\\n');\n\n  const caption = `Концепт ${idx}/${total} — ${v.style}`;\n\n  return {\n    json: {\n      ...j,\n      chat_id,\n      marketplace,\n      category,\n      title,\n      benefits,\n      concept_index: idx,\n      concept_total: total,\n      is_last_concept,\n      style: v.style,\n      palette: v.palette,\n      background: v.background,\n      layout_notes: v.layout,\n      prompt_text,\n      image_prompt: v.image_prompt,\n      caption,\n      photo_url: poll_url,\n      image_url: poll_url,\n      current_url: poll_url,\n      ctx_chat_id: chat_id,\n      ctx_concept_index: idx,\n      ctx_concept_total: total,\n      ctx_prompt_text: prompt_text,\n      ctx_caption: caption,\n      ctx_image_url: poll_url,\n      render_mode,\n    }\n  };\n});",
         "mode": "runOnceForAllItems"
       },
       "id": "c43a9966-8935-480d-b70c-910190caf21e",
@@ -3880,14 +3649,14 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1680,
-        520
+        6760,
+        660
       ]
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={{$json.photo_url}}",
+        "url": "={{$json.current_url}}",
         "options": {
           "response": {
             "response": {
@@ -3895,7 +3664,7 @@
               "outputPropertyName": "concept_image"
             }
           },
-          "timeout": 180000,
+          "timeout": 60000,
           "followRedirect": true
         }
       },
@@ -3904,19 +3673,36 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        1910,
-        520
+        7020,
+        1100
       ],
       "continueOnFail": true,
-      "onError": "continueErrorOutput"
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "chatId": "={{ $json.chat_id }}",
-        "text": "<b>Готово.</b> Отправил 5 визуальных вариантов дизайна.",
+        "chatId": "={{ $json.chat && $json.chat.id ? $json.chat.id : ($json.chat_id || $json.ctx_chat_id || $node[\"Session: Pick\"].json.chat_id || $('Normalize').first().json.chat_id) }}",
+        "text": "🎨 <b>Готово! 5 визуальных концептов карточки готовы.</b>\n\nВыбери понравившийся стиль и передай ТЗ дизайнеру.\n\n<i>Нажми «Сгенерировать карточку» чтобы начать заново.</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
+        },
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🔄 Сгенерировать новую карточку",
+                    "additionalFields": {
+                      "callback_data": "GEN"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
       "id": "772aca0c-dc2c-49cd-a6a5-50547a70c097",
@@ -3924,8 +3710,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2140,
-        520
+        7540,
+        220
       ],
       "credentials": {
         "telegramApi": {
@@ -3962,14 +3748,14 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        3880,
-        1520
+        5460,
+        1760
       ]
     },
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Готово. Хотите 5 дизайн-концептов для обложки и слайдов?",
+        "text": "✅ <b>Карточка готова!</b>\n\n🎨 Хочешь получить <b>5 дизайн-концептов</b> для обложки карточки?\n\nНажми кнопку — получишь ТЗ для дизайнера по каждому стилю.",
         "replyMarkup": "inlineKeyboard",
         "inlineKeyboard": {
           "rows": [
@@ -3997,8 +3783,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        4300,
-        1520
+        5980,
+        1760
       ],
       "credentials": {
         "telegramApi": {
@@ -4011,18 +3797,19 @@
       "parameters": {
         "conditions": {
           "options": {
-            "caseSensitive": true,
+            "caseSensitive": false,
             "leftValue": "",
             "typeValidation": "strict",
             "version": 2
           },
           "conditions": [
             {
-              "leftValue": "={{ !!$json.is_last_concept }}",
-              "rightValue": true,
+              "id": "fix-last-concept-guaranteed",
+              "leftValue": "={{ ($json.text || $json.caption || '').toString() }}",
+              "rightValue": "5/5",
               "operator": {
-                "type": "boolean",
-                "operation": "equals"
+                "type": "string",
+                "operation": "contains"
               }
             }
           ],
@@ -4035,14 +3822,14 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        2050,
-        520
+        7280,
+        440
       ]
     },
     {
       "parameters": {
         "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
-        "text": "Меню:",
+        "text": "<i>Быстрые команды:</i>",
         "replyMarkup": "replyKeyboard",
         "replyKeyboard": {
           "rows": [
@@ -4082,8 +3869,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2360,
-        40
+        3120,
+        -660
       ],
       "webhookId": "99d1f0fb-83ed-4746-9494-281453869025",
       "credentials": {
@@ -4121,8 +3908,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        2780,
-        3340
+        6500,
+        880
       ]
     },
     {
@@ -4139,8 +3926,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3000,
-        3480
+        6760,
+        1100
       ],
       "webhookId": "99d1f0fb-83ed-4746-9494-281453869025",
       "credentials": {
@@ -4153,7 +3940,7 @@
     {
       "parameters": {
         "chatId": "={{ $json.chat_id }}",
-        "text": "🧠 Генерирую 5 подробных дизайн-концептов (текст)...",
+        "text": "📐 <b>Генерирую 5 текстовых ТЗ для дизайна...</b>\n\n<i>Получишь подробное ТЗ для каждого стиля — передай дизайнеру или оцени сам. Обычно 15–30 секунд.</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -4164,8 +3951,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1500,
-        520
+        7540,
+        660
       ],
       "credentials": {
         "telegramApi": {
@@ -4202,19 +3989,19 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        2060,
-        640
+        7280,
+        1100
       ]
     },
     {
       "parameters": {
         "resource": "message",
         "operation": "sendPhoto",
-        "chatId": "={{ $('Build Design Concepts').item.json.ctx_chat_id || $('Build Design Concepts').item.json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id }}",
+        "chatId": "={{$json.ctx_chat_id || $json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id}}",
         "binaryData": true,
         "binaryProperty": "concept_image",
         "additionalFields": {
-          "caption": "={{ $('Build Design Concepts').item.json.caption || '' }}",
+          "caption": "={{$json.caption}}",
           "parse_mode": "HTML"
         }
       },
@@ -4222,11 +4009,9 @@
       "name": "Send Design Concept Photo Binary",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
-      "continueOnFail": true,
-      "onError": "continueErrorOutput",
       "position": [
-        2280,
-        560
+        7540,
+        880
       ],
       "credentials": {
         "telegramApi": {
@@ -4238,7 +4023,7 @@
     {
       "parameters": {
         "chatId": "={{$json.ctx_chat_id || $json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id}}",
-        "text": "={{$json.fallback_text}}",
+        "text": "={{ $json.prompt_text || $json.fallback_text || \"\" }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -4249,8 +4034,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2280,
-        720
+        7540,
+        1100
       ],
       "credentials": {
         "telegramApi": {
@@ -4269,8 +4054,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1800,
-        520
+        7280,
+        1320
       ]
     },
     {
@@ -4301,8 +4086,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        2280,
-        760
+        7540,
+        1320
       ]
     },
     {
@@ -4315,22 +4100,22 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2500,
-        680
+        7800,
+        1320
       ]
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const j = $json || {};\nlet up = {}; try { up = $('Build Design Concepts').item.json || {}; } catch(e) {}\nconst pick = (...v) => { for (const x of v) { if (x !== undefined && x !== null && `${x}` !== '') return x; } return null; };\nconst chatRaw = pick(up.ctx_chat_id, up.chat_id, j.ctx_chat_id, j.chat_id);\nconst chat_id = chatRaw === null ? null : Number(chatRaw);\nconst idx = Number(pick(up.concept_index, up.ctx_concept_index, j.ctx_concept_index, j.concept_index, 1));\nconst total = Number(pick(up.concept_total, up.ctx_concept_total, j.ctx_concept_total, j.concept_total, 5));\nconst style = (pick(up.style, j.style, 'Концепт') || 'Концепт').toString().trim();\nconst palette = (pick(up.palette, j.palette, 'не указано')).toString();\nconst background = (pick(up.background, j.background, 'не указано')).toString();\nconst layout = (pick(up.layout_notes, up.layout, j.layout_notes, j.layout, 'не указано')).toString();\nconst font = (pick(up.font, j.font, 'Современный гротеск, Bold / Medium / Regular')).toString();\nconst mood = (pick(up.mood, j.mood, '')).toString();\nconst title = (pick(up.title, j.title, 'товар') || 'товар').toString();\nconst category = (pick(up.category, j.category, 'категория') || 'категория').toString();\nconst marketplace = (pick(up.marketplace, j.marketplace, 'маркетплейс') || 'маркетплейс').toString();\nconst render_mode = ((up.render_mode || j.render_mode || 'TEXT') + '').trim().toUpperCase();\nconst hexColors = Array.isArray(up.hexColors) ? up.hexColors : (Array.isArray(j.hexColors) ? j.hexColors : []);\nconst bg = up.bg || j.bg || '4A90E2';\nconst fg = up.fg || j.fg || 'FFFFFF';\nconst styleEn = (up.styleEn || j.styleEn || style).replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\\s+/g, '+') || 'Concept';\n\nlet fallback_text;\nlet fallback_photo_url = null;\n\nif (render_mode === 'DRAW') {\n  // Build placehold.co image URL as reliable fallback\n  const hex1 = hexColors[0] ? hexColors[0].replace('#', '%23') : '';\n  const hex2 = hexColors[1] ? hexColors[1].replace('#', '%23') : '';\n  const hexLine = [hex1, hex2].filter(Boolean).join('+');\n  const textParam = hexLine\n    ? `Concept+${idx}%0A${styleEn}%0A${hexLine}`\n    : `Concept+${idx}%0A${styleEn}`;\n  fallback_photo_url = `https://placehold.co/512x512/${bg}/${fg}.png?text=${textParam}`;\n  fallback_text = `🎨 <b>Концепт ${idx}/${total} — ${style}</b>`;\n} else {\n  const hexBlock = hexColors.length > 0\n    ? ['', '<b>🎨 Цветовые коды (HEX)</b>', ...hexColors.map((h, n) => `• Цвет ${n+1}: <code>${h}</code>`)]\n    : [];\n  const lines = [\n    `<b>Концепт ${idx}/${total} — ${style}</b>`,\n    '',\n    '<b>🎯 Цель</b>',\n    `Создать продающий key visual для «${title}» (${marketplace}, ${category}).`,\n    '',\n    '<b>🎨 Палитра</b>',\n    `• ${palette}`,\n    ...hexBlock,\n    '',\n    '<b>🔤 Типографика</b>',\n    `• ${font}`,\n    '',\n    '<b>🧩 Композиция</b>',\n    `• ${layout}`,\n    `• Фон: ${background}.`,\n    '• Safe zones: не менее 8% от краёв.',\n    ...(mood ? ['', '<b>💡 Настроение</b>', `• ${mood}`] : []),\n    '',\n    '<b>🧱 Инфоблоки</b>',\n    '• 3–5 плашек с выгодами и 1 зона под CTA.',\n    '',\n    '<b>📐 Тех.требования</b>',\n    '• Формат 1:1, от 1000×1000 px.',\n    '• Чёткий главный объект, без лишнего шума.',\n  ];\n  fallback_text = lines.join('\\n').slice(0, 3800);\n}\nreturn { json: { ...j, chat_id, render_mode, concept_index: idx, concept_total: total, fallback_text, fallback_photo_url } };"
+        "jsCode": "const j = $json || {};\nconst pick = (...v) => { for (const x of v) { if (x !== undefined && x !== null && `${x}` !== '') return x; } return null; };\nconst chatRaw = pick(j.ctx_chat_id, j.chat_id);\nconst chat_id = chatRaw === null ? null : Number(chatRaw);\nconst idx = Number(pick(j.ctx_concept_index, j.concept_index, 1));\nconst total = Number(pick(j.ctx_concept_total, j.concept_total, 5));\nconst style = (pick(j.style, 'Концепт') || 'Концепт').toString().trim();\nconst palette = (pick(j.palette, 'не указано')).toString();\nconst background = (pick(j.background, 'не указано')).toString();\nconst layout = (pick(j.layout_notes, j.layout, 'не указано')).toString();\nconst title = (pick(j.title, 'товар') || 'товар').toString();\nconst category = (pick(j.category, 'категория') || 'категория').toString();\nconst marketplace = (pick(j.marketplace, 'маркетплейс') || 'маркетплейс').toString();\n\nconst lines = [\n  `<b>Концепт ${idx}/${total} — ${style}</b>`,\n  '',\n  '<b>🎯 Цель</b>',\n  `Создать продающий key visual для «${title}» (${marketplace}, ${category}).`,\n  '',\n  '<b>🎨 Палитра</b>',\n  `• ${palette}`,\n  '• Добавить 3–5 оттенков в единой иерархии контраста.',\n  '',\n  '<b>🔤 Типографика</b>',\n  '• Современный гротеск: Bold / Medium / Regular.',\n  '• Заголовок 64–84 px, подписи 28–38 px, межстрочный 110–125%.',\n  '',\n  '<b>🧩 Композиция и сетка</b>',\n  `• ${layout}`,\n  `• Фон: ${background}.`,\n  '• Safe zones: не менее 8–10% от краёв.',\n  '',\n  '<b>🧱 Инфоблоки</b>',\n  '• 3–5 плашек с выгодами и 1 зона под CTA.',\n  '• Логика чтения: сверху вниз, слева направо.',\n  '',\n  '<b>📐 Тех.требования</b>',\n  '• Формат 1:1, рекомендуемо 2000×2000.',\n  '• Чёткий главный объект, без визуального шума.',\n  '',\n  '<b>✅ Рекомендации</b>',\n  '• Избегать мелкого нечитаемого текста и перегруженных декоративных элементов.',\n  '• Сохранить баланс между эмоциональной подачей и читаемостью.',\n];\n\nconst is_last_concept = (idx >= total);\nconst fallback_text = lines.join('\\n').slice(0, 3800);\nreturn { json: { ...j, chat_id, concept_index: idx, concept_total: total, is_last_concept, fallback_text } };"
       },
       "id": "022ef161-426e-462b-9178-b0d61e5fa1dd",
       "name": "Build Concept Fallback Text",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2460,
-        840
+        7800,
+        1540
       ]
     },
     {
@@ -4343,8 +4128,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1900,
-        680
+        7020,
+        660
       ]
     },
     {
@@ -4358,8 +4143,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        2100,
-        520
+        7020,
+        880
       ]
     },
     {
@@ -4398,14 +4183,14 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1600,
-        520
+        7020,
+        1540
       ]
     },
     {
       "parameters": {
         "chatId": "={{ $json.chat_id || $(\"Normalize\").first().json.chat_id }}",
-        "text": "✨ Рисую 5 вариантов дизайна... Это может занять до 1–2 минут.",
+        "text": "🖼 <b>Рисую 5 визуальных концептов...</b>\n<i>Это займёт 1–2 минуты — каждое изображение генерируется отдельно.</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -4416,8 +4201,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1780,
-        420
+        7280,
+        1540
       ],
       "credentials": {
         "telegramApi": {
@@ -4428,8 +4213,8 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $json.ctx_chat_id || $json.chat_id || $(\"Normalize\").first().json.chat_id }}",
-        "text": "Готово ✅\n5 текстовых ТЗ сформированы. Нажмите кнопку ниже, чтобы получить 5 визуальных концептов.",
+        "chatId": "={{ $json.chat && $json.chat.id ? $json.chat.id : ($node[\"Session: Pick\"].json.chat_id || $('Normalize').first().json.chat_id) }}",
+        "text": "📐 <b>5 текстовых ТЗ для дизайнера готовы!</b>\n\n🖼 Нажми кнопку — и я сгенерирую <b>5 реальных изображений</b> в каждом стиле.",
         "replyMarkup": "inlineKeyboard",
         "inlineKeyboard": {
           "rows": [
@@ -4437,7 +4222,7 @@
               "row": {
                 "buttons": [
                   {
-                    "text": "Сгенерировать 5 визуальных концептов",
+                    "text": "🖼 Сгенерировать 5 визуальных концептов",
                     "additionalFields": {
                       "callback_data": "GENERATE_VISUALS_5"
                     }
@@ -4457,8 +4242,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2560,
-        340
+        7280,
+        1760
       ],
       "credentials": {
         "telegramApi": {
@@ -4470,7 +4255,7 @@
     {
       "parameters": {
         "chatId": "={{ $json.chat_id || $(\"Normalize\").first().json.chat_id }}",
-        "text": "={{ (['⚙️','🔄','🧩','📋','🛠'][Math.floor(Date.now()/1000)%5]) + ' Генерирую текстовую карточку... Обычно занимает 20–40 секунд.' }}",
+        "text": "⚙️ <b>Генерирую карточку...</b>\n\nАнализирую фото и данные, формирую контент.\n<i>Обычно занимает 20–40 секунд.</i>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -4481,15 +4266,16 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3160,
-        1260
+        2860,
+        1980
       ],
       "credentials": {
         "telegramApi": {
           "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
           "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -4497,13 +4283,14 @@
           "options": {
             "caseSensitive": false,
             "leftValue": "",
-            "typeValidation": "strict",
+            "typeValidation": "loose",
             "version": 2
           },
           "conditions": [
             {
-              "leftValue": "={{ ($json.render_mode || '').toString().toUpperCase() }}",
-              "rightValue": "DRAW",
+              "id": "fix-render-mode-guaranteed",
+              "leftValue": "={{ Array.isArray($json.photo) && $json.photo.length > 0 }}",
+              "rightValue": "true",
               "operator": {
                 "type": "string",
                 "operation": "equals"
@@ -4519,8 +4306,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        2280,
-        520
+        6240,
+        1320
       ]
     },
     {
@@ -4551,8 +4338,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1860,
-        520
+        6760,
+        1320
       ]
     },
     {
@@ -4574,8 +4361,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1760,
-        560
+        6500,
+        1100
       ]
     },
     {
@@ -4597,98 +4384,28 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1760,
-        460
-      ]
-    },
-    {
-      "parameters": {
-        "resource": "message",
-        "operation": "sendPhoto",
-        "chatId": "={{ $json.ctx_chat_id || $json.chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id }}",
-        "binaryData": false,
-        "file": "={{ $json.photo_url || $json.image_url }}",
-        "additionalFields": {
-          "caption": "={{ $json.caption || '' }}",
-          "parse_mode": "HTML",
-          "appendAttribution": false
-        }
-      },
-      "id": "send-concept-photo-url-001",
-      "name": "Send Concept Photo URL",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "continueOnFail": true,
-      "onError": "continueErrorOutput",
-      "position": [
-        2050,
-        420
-      ],
-      "credentials": {
-        "telegramApi": {
-          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
-          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const prev = $('Build Concept Fallback Text').item.json || {}; return { json: { is_last_concept: !!prev.is_last_concept, concept_index: Number(prev.concept_index || 0), concept_total: Number(prev.concept_total || 5), chat_id: prev.chat_id || null, render_mode: (prev.render_mode || 'TEXT').toString().toUpperCase() } };"
-      },
-      "id": "restore-concept-text-001",
-      "name": "Restore Concept Context TEXT",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2490,
-        720
-      ]
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const prev = $('Build Design Concepts').item.json || {}; return { json: { is_last_concept: !!prev.is_last_concept, concept_index: Number(prev.concept_index || 0), concept_total: Number(prev.concept_total || 5), chat_id: prev.chat_id || null, render_mode: 'DRAW' } };"
-      },
-      "id": "restore-concept-draw-001",
-      "name": "Restore Concept Context DRAW",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2490,
-        560
-      ]
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const prev = $('Split Result Parts').item.json || {}; return { json: { is_last_part: !!prev.is_last_part, part_index: Number(prev.part_index || 0), parts_total: Number(prev.parts_total || 1), chat_id: prev.chat_id || null } };"
-      },
-      "id": "restore-last-part-001",
-      "name": "Restore Last Part Context",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3780,
-        1520
+        6500,
+        1540
       ]
     },
     {
       "parameters": {
         "conditions": {
           "options": {
-            "caseSensitive": false,
+            "caseSensitive": true,
             "leftValue": "",
             "typeValidation": "strict",
             "version": 2
           },
           "conditions": [
             {
-              "leftValue": "={{ ($json.render_mode || '').toString().toUpperCase() }}",
-              "rightValue": "DRAW",
+              "id": "fix-cond-sanitize-01",
+              "leftValue": "={{ ($json._sanitize_error || '').toString().trim() }}",
+              "rightValue": "",
               "operator": {
                 "type": "string",
-                "operation": "equals"
+                "operation": "notEmpty",
+                "singleValue": true
               }
             }
           ],
@@ -4696,37 +4413,31 @@
         },
         "options": {}
       },
-      "id": "if-draw-fallback-001",
-      "name": "IF DRAW Fallback",
+      "id": "fix06-if01-sanitize-error-0000000001",
+      "name": "IF Sanitize Error",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        2080,
-        720
+        3640,
+        1870
       ]
     },
     {
       "parameters": {
-        "resource": "message",
-        "operation": "sendPhoto",
-        "chatId": "={{ $json.chat_id || $json.ctx_chat_id || $('Normalize').first().json.chat_id || $('Session: Pick').first().json.chat_id }}",
-        "binaryData": false,
-        "file": "={{ $json.fallback_photo_url }}",
+        "chatId": "={{ $node['Normalize'].json.chat_id }}",
+        "text": "={{ $json._sanitize_error || 'Произошла ошибка при обработке фото. Пожалуйста, попробуйте другое фото.' }}",
         "additionalFields": {
-          "caption": "={{ $json.fallback_text || '' }}",
-          "parse_mode": "HTML",
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
         }
       },
-      "id": "send-concept-fallback-photo-001",
-      "name": "Send Concept Fallback Photo",
+      "id": "fix06-tg02-send-photo-error-000000002",
+      "name": "Send Photo Error",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
-      "continueOnFail": true,
-      "onError": "continueErrorOutput",
       "position": [
-        2280,
-        620
+        3900,
+        1870
       ],
       "credentials": {
         "telegramApi": {
@@ -4734,6 +4445,288 @@
           "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "fix-cond-generating-01",
+              "leftValue": "={{ $json.stage }}",
+              "rightValue": "generating",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "fix12-if03-stage-generating-00000003",
+      "name": "IF Stage Generating",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2080,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node['Normalize'].json.chat_id }}",
+        "text": "Генерирую карточку, пожалуйста подождите...",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "fix12-tg04-send-please-wait-000000004",
+      "name": "Send Please Wait",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2340,
+        -220
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "binaryData": false,
+        "file": "={{ $env['IMG_WELCOME'] || 'https://image.pollinations.ai/p/futuristic%20AI%20ecommerce%20bot%20holographic%20cards%20WB%20OZON%20dark%20premium%20ultra%20quality?model=flux&width=1200&height=600&seed=1001&nologo=true&enhance=true' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "img01-welcome-000000000000000001",
+      "name": "IMG: Welcome",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2600,
+        -660
+      ],
+      "continueOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "binaryData": false,
+        "file": "={{ $env['IMG_HELP'] || 'https://image.pollinations.ai/p/5-step%20workflow%20glowing%20nodes%20dark%20blue%20neon%20cyan%20infographic%20futuristic?model=flux&width=1200&height=600&seed=1002&nologo=true&enhance=true' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "img02-help-0000000000000000002",
+      "name": "IMG: Help",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2600,
+        -440
+      ],
+      "continueOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "binaryData": false,
+        "file": "={{ $env['IMG_MARKETPLACE'] || 'https://image.pollinations.ai/p/WB%20Wildberries%20OZON%20marketplace%20abstract%20premium%20duotone%20coral%20purple%20dark?model=flux&width=1200&height=600&seed=1003&nologo=true&enhance=true' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "img03-marketplace-00000000003",
+      "name": "IMG: Marketplace",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2860,
+        -220
+      ],
+      "continueOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "binaryData": false,
+        "file": "={{ $env['IMG_CATEGORY'] || 'https://image.pollinations.ai/p/holographic%20category%20icons%20grid%20floating%20dark%20iridescent%20premium?model=flux&width=1200&height=600&seed=1004&nologo=true&enhance=true' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "img04-category-000000000000004",
+      "name": "IMG: Category",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2860,
+        880
+      ],
+      "continueOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "binaryData": false,
+        "file": "={{ $env['IMG_TITLE'] || 'https://image.pollinations.ai/p/SEO%20product%20naming%20glowing%20text%20cursor%20dark%20premium%20interface%20neon%20blue?model=flux&width=1200&height=600&seed=1005&nologo=true&enhance=true' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "img05-title-00000000000000005",
+      "name": "IMG: Title",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2860,
+        1100
+      ],
+      "continueOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "binaryData": false,
+        "file": "={{ $env['IMG_BENEFITS'] || 'https://image.pollinations.ai/p/structured%20benefits%20checklist%20neon%20green%20checkmarks%20dark%20premium%20UI?model=flux&width=1200&height=600&seed=1006&nologo=true&enhance=true' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "img06-benefits-0000000000006",
+      "name": "IMG: Benefits",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2600,
+        1320
+      ],
+      "continueOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "binaryData": false,
+        "file": "={{ $env['IMG_PHOTO_UPLOAD'] || 'https://image.pollinations.ai/p/AR%20camera%20scanning%20frame%20product%20blue%20neon%20scan%20lines%20dark%20tech?model=flux&width=1200&height=600&seed=1007&nologo=true&enhance=true' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "img07-photo-00000000000000007",
+      "name": "IMG: Photo Upload",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2600,
+        1540
+      ],
+      "continueOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $node[\"Normalize\"].json.chat_id }}",
+        "binaryData": false,
+        "file": "={{ $env['IMG_GENERATING'] || 'https://image.pollinations.ai/p/neural%20network%20AI%20processing%20glowing%20nodes%20dark%20space%20data%20streams?model=flux&width=1200&height=600&seed=1008&nologo=true&enhance=true' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "img08-generating-00000000008",
+      "name": "IMG: Generating",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2600,
+        1980
+      ],
+      "continueOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      },
+      "onError": "continueRegularOutput"
     }
   ],
   "pinData": {},
@@ -4833,7 +4826,7 @@
       "main": [
         [
           {
-            "node": "Send Menu",
+            "node": "IMG: Welcome",
             "type": "main",
             "index": 0
           }
@@ -4844,7 +4837,7 @@
       "main": [
         [
           {
-            "node": "Send Help",
+            "node": "IMG: Help",
             "type": "main",
             "index": 0
           }
@@ -4880,7 +4873,7 @@
       "main": [
         [
           {
-            "node": "Send: Choose marketplace",
+            "node": "IMG: Marketplace",
             "type": "main",
             "index": 0
           }
@@ -4927,7 +4920,7 @@
       "main": [
         [
           {
-            "node": "Send: Choose category",
+            "node": "IMG: Category",
             "type": "main",
             "index": 0
           }
@@ -4949,7 +4942,7 @@
       "main": [
         [
           {
-            "node": "Send: Choose category",
+            "node": "IMG: Category",
             "type": "main",
             "index": 0
           }
@@ -4989,7 +4982,7 @@
       "main": [
         [
           {
-            "node": "Send: Ask title",
+            "node": "IMG: Title",
             "type": "main",
             "index": 0
           }
@@ -5018,7 +5011,7 @@
       "main": [
         [
           {
-            "node": "Send: Ask benefits",
+            "node": "IMG: Benefits",
             "type": "main",
             "index": 0
           }
@@ -5047,7 +5040,7 @@
       "main": [
         [
           {
-            "node": "Send: Ask photo",
+            "node": "IMG: Photo Upload",
             "type": "main",
             "index": 0
           }
@@ -5065,7 +5058,7 @@
         ],
         [
           {
-            "node": "Send: Ask photo(repeat)",
+            "node": "IF Stage Generating",
             "type": "main",
             "index": 0
           }
@@ -5076,12 +5069,7 @@
       "main": [
         [
           {
-            "node": "Send Card Progress",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "IF has saved photo",
+            "node": "IMG: Generating",
             "type": "main",
             "index": 0
           }
@@ -5089,17 +5077,6 @@
       ]
     },
     "Send Result": {
-      "main": [
-        [
-          {
-            "node": "Restore Last Part Context",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Restore Last Part Context": {
       "main": [
         [
           {
@@ -5150,24 +5127,6 @@
         ]
       ]
     },
-    "IF Need category repeat": {
-      "main": [
-        [
-          {
-            "node": "Send: Choose category (repeat)",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "IF Category chosen",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "TG: GetFile": {
       "main": [
         [
@@ -5194,7 +5153,7 @@
       "main": [
         [
           {
-            "node": "Build Normalize Body",
+            "node": "IF Sanitize Error",
             "type": "main",
             "index": 0
           }
@@ -5212,7 +5171,7 @@
         ],
         [
           {
-            "node": "Split Result Parts",
+            "node": "Build Strategy Body",
             "type": "main",
             "index": 0
           }
@@ -5358,7 +5317,7 @@
       "main": [
         [
           {
-            "node": "Build Strategy Body",
+            "node": "IF Need Clarifications",
             "type": "main",
             "index": 0
           }
@@ -5398,7 +5357,7 @@
       "main": [
         [
           {
-            "node": "IF Need Clarifications",
+            "node": "Split Result Parts",
             "type": "main",
             "index": 0
           }
@@ -5499,7 +5458,13 @@
     },
     "Session: Done": {
       "main": [
-        []
+        [
+          {
+            "node": "Send Design CTA",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "IF Last Concept": {
@@ -5516,7 +5481,13 @@
     },
     "Send Menu": {
       "main": [
-        []
+        [
+          {
+            "node": "Send Persistent Nav",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "IF Design Feature Enabled": {
@@ -5546,16 +5517,9 @@
       "main": [
         [
           {
-            "node": "Send Design Concept Photo Binary",
+            "node": "Merge Design Download Context",
             "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Build Concept Fallback Text",
-            "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
@@ -5579,42 +5543,6 @@
       ]
     },
     "Send Design Concept Photo Binary": {
-      "main": [
-        [
-          {
-            "node": "Restore Concept Context DRAW",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Restore Concept Context DRAW",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send Concept Photo URL": {
-      "main": [
-        [
-          {
-            "node": "Restore Concept Context DRAW",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Build Concept Fallback Text",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Restore Concept Context DRAW": {
       "main": [
         [
           {
@@ -5669,17 +5597,6 @@
       "main": [
         [
           {
-            "node": "Restore Concept Context TEXT",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Restore Concept Context TEXT": {
-      "main": [
-        [
-          {
             "node": "IF Last Concept",
             "type": "main",
             "index": 0
@@ -5691,7 +5608,7 @@
       "main": [
         [
           {
-            "node": "IF DRAW Fallback",
+            "node": "Send Concept Text Fallback",
             "type": "main",
             "index": 0
           }
@@ -5727,7 +5644,13 @@
     },
     "Send Card Progress": {
       "main": [
-        []
+        [
+          {
+            "node": "IF has saved photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "IF Draw Design Paid": {
@@ -5780,7 +5703,7 @@
       "main": [
         [
           {
-            "node": "Send Concept Photo URL",
+            "node": "Prepare Image URLs",
             "type": "main",
             "index": 0
           }
@@ -5821,34 +5744,128 @@
         ]
       ]
     },
-    "IF DRAW Fallback": {
+    "IF Sanitize Error": {
       "main": [
         [
           {
-            "node": "Send Concept Fallback Photo",
+            "node": "Send Photo Error",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Send Concept Text Fallback",
+            "node": "Build Normalize Body",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send Concept Fallback Photo": {
+    "IF Stage Generating": {
       "main": [
         [
           {
-            "node": "Restore Concept Context TEXT",
+            "node": "Send Please Wait",
             "type": "main",
             "index": 0
           }
         ],
-        []
+        [
+          {
+            "node": "Send: Ask photo(repeat)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMG: Welcome": {
+      "main": [
+        [
+          {
+            "node": "Send Menu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMG: Help": {
+      "main": [
+        [
+          {
+            "node": "Send Help",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMG: Marketplace": {
+      "main": [
+        [
+          {
+            "node": "Send: Choose marketplace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMG: Category": {
+      "main": [
+        [
+          {
+            "node": "Send: Choose category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMG: Title": {
+      "main": [
+        [
+          {
+            "node": "Send: Ask title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMG: Benefits": {
+      "main": [
+        [
+          {
+            "node": "Send: Ask benefits",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMG: Photo Upload": {
+      "main": [
+        [
+          {
+            "node": "Send: Ask photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMG: Generating": {
+      "main": [
+        [
+          {
+            "node": "Send Card Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
