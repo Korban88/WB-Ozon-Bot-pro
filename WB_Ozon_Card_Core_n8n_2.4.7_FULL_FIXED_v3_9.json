@@ -3799,13 +3799,22 @@
           "options": {
             "caseSensitive": false,
             "leftValue": "",
-            "typeValidation": "strict",
+            "typeValidation": "loose",
             "version": 2
           },
           "conditions": [
             {
-              "id": "fix-last-concept-guaranteed",
-              "leftValue": "={{ ($json.text || $json.caption || '').toString() }}",
+              "id": "check-is-last-via-item-pairing",
+              "leftValue": "={{ (() => { try { return !!$('Build Concept Fallback Text').item?.json?.is_last_concept; } catch(e) { return false; } })() }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "check-5-5-in-telegram-response",
+              "leftValue": "={{ ($json.caption || $json.text || '').toString() }}",
               "rightValue": "5/5",
               "operator": {
                 "type": "string",
@@ -3813,7 +3822,7 @@
               }
             }
           ],
-          "combinator": "and"
+          "combinator": "or"
         },
         "options": {}
       },
