@@ -4750,6 +4750,33 @@
         "mode": "runOnceForAllItems",
         "jsCode": "// GEN: Together AI Image\n// Вызывает Together AI (FLUX.1-schnell-Free) для каждого концепта.\n// Требует: переменная окружения TOGETHER_API_KEY в n8n Settings → Variables.\n// Если ключ не задан или запрос упал — оставляет pollinations URL без изменений.\n\nconst API_KEY = (typeof $env !== 'undefined' ? ($env.TOGETHER_API_KEY || '') : '').toString().trim();\nconst MODEL   = 'black-forest-labs/FLUX.1-schnell-Free';\n\nconst items = $input.all();\nconst out   = [];\n\nfor (const item of items) {\n  const j = item.json;\n  let togetherUrl = '';\n  let genError    = '';\n\n  // image_prompt — готовый английский промпт из Build Design Concepts\n  // promptEn — альтернативное поле (другие версии workflow)\n  const basePrompt = String(j.image_prompt || j.promptEn || '').trim();\n  const title      = String(j.title || 'product').slice(0, 80);\n  const styleEn    = String(j.styleEn || j.style || 'minimalist');\n  const market     = String(j.marketplace || '').toUpperCase().includes('OZON') ? 'Ozon' : 'Wildberries';\n\n  // Используем готовый промпт; если пустой — собираем из полей\n  const prompt = basePrompt ||\n    [styleEn + ' product card for ' + title, market,\n     'ecommerce product card, professional photography, 4k, no watermarks'].join(', ');\n\n  if (API_KEY) {\n    try {\n      const resp = await $helpers.httpRequest({\n        method: 'POST',\n        url:    'https://api.together.xyz/v1/images/generations',\n        headers: {\n          'Authorization': 'Bearer ' + API_KEY,\n          'Content-Type':  'application/json',\n        },\n        body: JSON.stringify({\n          model:           MODEL,\n          prompt:          prompt.slice(0, 1500),\n          width:           1024,\n          height:          1024,\n          steps:           4,\n          n:               1,\n          response_format: 'url',\n        }),\n      });\n\n      const url = resp && resp.data && resp.data[0] && resp.data[0].url\n                    ? resp.data[0].url : '';\n      if (url) {\n        togetherUrl = url;\n      } else {\n        genError = 'Together AI: нет URL в ответе — ' + JSON.stringify(resp || {}).slice(0, 200);\n      }\n    } catch (e) {\n      genError = String((e && e.message) ? e.message : e).slice(0, 300);\n    }\n  } else {\n    genError = 'TOGETHER_API_KEY не задан в переменных окружения n8n';\n  }\n\n  // Together AI URL или исходный pollinations URL (fallback)\n  const photo_url = togetherUrl || j.photo_url || '';\n\n  out.push({\n    json: {\n      ...j,\n      // Обновляем все поля, которые используются в Prepare Image URLs\n      photo_url,\n      image_url:     photo_url,\n      current_url:   photo_url,\n      ctx_image_url: photo_url,\n      // Диагностика\n      together_url:   togetherUrl,\n      together_error: genError,\n      gen_provider:   togetherUrl ? 'together_ai' : 'pollinations_fallback',\n    },\n  });\n}\n\nreturn out;\n"
       }
+    },
+    {
+      "id": "eef51c9c-b69c-4d1a-90cd-0f82d0de19a6",
+      "name": "Send Concept Photo URL",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        7060,
+        760
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{$json.ctx_chat_id || $json.chat_id || $(`Normalize`).first().json.chat_id}}",
+        "photo": "={{$json.current_url || $json.ctx_image_url || $json.photo_url}}",
+        "additionalFields": {
+          "caption": "={{$json.caption || \"\"}}",
+          "parse_mode": "HTML",
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "__REPLACE_TELEGRAM_CREDENTIAL__",
+          "name": "__REPLACE_TELEGRAM_CREDENTIAL__"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -5580,7 +5607,7 @@
       "main": [
         [
           {
-            "node": "Design Context Keeper",
+            "node": "Send Concept Photo URL",
             "type": "main",
             "index": 0
           }
@@ -5896,6 +5923,17 @@
         [
           {
             "node": "IF Draw Flow Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Concept Photo URL": {
+      "main": [
+        [
+          {
+            "node": "IF Last Concept",
             "type": "main",
             "index": 0
           }
